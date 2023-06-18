@@ -50,6 +50,15 @@ public class CuaHang {
     @Column(name = "trang_thai")
     private Integer trangThai;
 
+    @Column(name = "dia_chi")
+    private String diaChi;
+
+    @Column(name = "quoc_gia")
+    private String quocGia;
+
+    @Column(name = "thanh_pho")
+    private String ThanhPho;
+
     @JsonIgnore
     @OneToMany(mappedBy = "cuaHang", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)

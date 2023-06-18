@@ -53,6 +53,9 @@ public class SanPhamChiTiet {
     @Column(name = "trang_thai")
     private Integer trangThai;
 
+    @Column(name = "so_luong_ton")
+    private Integer soLuongTon;
+
     @Column(name = "gia_ban")
     private BigDecimal giaBan;
 
@@ -76,10 +79,6 @@ public class SanPhamChiTiet {
     private VatLieu vatLieu;
 
     @ManyToOne
-    @JoinColumn(name = "id_size")
-    private Size size;
-
-    @ManyToOne
     @JoinColumn(name = "id_trong_luong")
     private TrongLuong trongLuong;
 
@@ -87,6 +86,16 @@ public class SanPhamChiTiet {
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Image> imageList = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<SizeChiTiet> sizeChiTiets = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<MauSacChiTiet> mauSacChiTiets = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)

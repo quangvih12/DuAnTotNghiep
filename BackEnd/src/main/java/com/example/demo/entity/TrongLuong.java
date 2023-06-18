@@ -35,8 +35,8 @@ public class TrongLuong {
     @Column(name = "Id")
     private Integer id;
 
-    @Column(name = "ten")
-    private String ten;
+    @Column(name = "don_vi")
+    private String donVi;
 
     @Column(name = "ma")
     private String ma;

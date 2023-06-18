@@ -65,6 +65,19 @@ public class HoaDon {
     @Column(name = "trang_thai")
     private Integer trangThai;
 
+    @Column(name = "ngay_thanh_toan")
+    private String ngayThanhToan;
+
+    @Column(name = "ngay_ship")
+    private String ngayShip;
+
+    @Column(name = "hinh_thuc_giao_hang")
+    private Integer hinhThucGiaoHang;
+
+    @ManyToOne
+    @JoinColumn(name = "id_dia_chi_sdt")
+    private DiaChi diaChi;
+
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
@@ -73,13 +86,6 @@ public class HoaDon {
     @JoinColumn(name = "id_phuong_thuc_thanh_toan")
     private PhuongThucThanhToan phuongThucThanhToan;
 
-    @ManyToOne
-    @JoinColumn(name = "id_hinh_thuc_giao_hang")
-    private HinhThucGiaoHang hinhThucGiaoHang;
-
-    @ManyToOne
-    @JoinColumn(name = "id_dia_chi_sdt")
-    private DiaChi diaChi;
 
     @JsonIgnore
     @OneToMany(mappedBy = "hoaDon", fetch = FetchType.EAGER)

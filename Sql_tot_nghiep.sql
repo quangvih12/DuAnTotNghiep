@@ -92,7 +92,7 @@ create table size(
 
 create table san_pham_chi_tiet(
  id int primary key identity,
-
+ so_luong_ton int,
  gia_nhap decimal(20,0),
  gia_ban decimal(20,0),
  ngay_sua varchar(50), 
@@ -101,8 +101,18 @@ create table san_pham_chi_tiet(
  id_san_pham int not null foreign key references san_pham (id) ,
  id_khuyen_mai int  foreign key references khuyen_mai (id) ,
  id_vat_lieu int not null foreign key references vat_lieu (id) ,
- id_size int not null foreign key references size (id) ,
  id_trong_luong int not null foreign key references trong_luong (id) 
+)
+
+create table size_ctsp(
+ id int primary key identity,
+ mo_ta nvarchar(max),
+ so_luong int,
+ ngay_sua varchar(50), 
+ ngay_tao varchar(50),
+ trang_thai int,
+ id_size int not null foreign key references size (id) ,
+ id_ctsp int not null foreign key references san_pham_chi_tiet (id) 
 )
 
 create table mau_sac_ctsp(
@@ -380,13 +390,32 @@ values
 ('TT1','Online','2022-09-07','2022-08-06',1),
 ('TT2',N'Tiền mặt','2022-09-07','2022-08-06',1)
 
-insert into san_pham_chi_tiet(gia_nhap,gia_ban,ngay_sua,ngay_tao,trang_thai,id_san_pham,id_khuyen_mai,id_vat_lieu,id_size,id_trong_luong)
+insert into san_pham_chi_tiet(gia_nhap,gia_ban,ngay_sua,ngay_tao,so_luong_ton,trang_thai,id_san_pham,id_khuyen_mai,id_vat_lieu,id_trong_luong)
 values
-('700000','780000','2023-05-05','2023-04-13',1,1,null,1,1,1),
-('600000','730000','2023-05-05','2023-04-13',1,2,null,1,1,1),
-('500000','6400000','2023-05-05','2023-04-13',1,3,null,1,1,1),
-('400000','540000','2023-05-05','2023-04-13',1,4,null,1,1,2),
-('600000','750000','2023-05-05','2023-04-13',1,5,null,1,2,1)
+('700000','780000','2023-05-05','2023-04-13',50,1,1,null,1,1),
+('600000','730000','2023-05-05','2023-04-13',100,1,2,null,1,1),
+('500000','6400000','2023-05-05','2023-04-13',25,1,3,null,1,1),
+('400000','540000','2023-05-05','2023-04-13',30,1,4,null,1,2),
+('600000','750000','2023-05-05','2023-04-13',120,1,5,null,1,1)
+
+insert into size_ctsp(so_luong,ngay_sua,ngay_tao,trang_thai,mo_ta,id_size,id_ctsp)
+values
+(23,'2023-05-05',null,1,null,1,1),
+(10,'2023-05-05',null,1,null,4,1),
+(17,'2023-05-05',null,1,null,3,1),
+(55,'2023-05-05',null,1,null,1,2),
+(2,'2023-05-05',null,1,null,2,2),
+(3,'2023-05-05',null,1,null,4,2),
+(40,'2023-05-05',null,1,null,3,2),
+(20,'2023-05-05',null,1,null,1,3),
+(5,'2023-05-05',null,1,null,3,3),
+(10,'2023-05-05',null,1,null,1,4),
+(10,'2023-05-05',null,1,null,2,4),
+(10,'2023-05-05',null,1,null,4,4),
+(40,'2023-05-05',null,1,null,1,5),
+(20,'2023-05-05',null,1,null,2,5),
+(20,'2023-05-05',null,1,null,3,5),
+(40,'2023-05-05',null,1,null,4,5)
 
 insert into mau_sac(ten,ma,ngay_sua,ngay_tao,trang_thai)
 values
