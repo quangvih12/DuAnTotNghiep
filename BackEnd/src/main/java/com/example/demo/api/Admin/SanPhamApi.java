@@ -1,8 +1,11 @@
 package com.example.demo.api.Admin;
 
 import com.example.demo.dto.request.LoaiRequest;
+import com.example.demo.dto.request.SanPhamRequest;
 import com.example.demo.entity.Loai;
+import com.example.demo.entity.SanPham;
 import com.example.demo.sevice.Impl.Admin.LoaiServiceImpl;
+import com.example.demo.sevice.Impl.Admin.SanPhamServiceImpl;
 import com.example.demo.util.DataUltil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +20,15 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/loai")
-public class LoaiApi {
-
+@RequestMapping("/api/sanPham")
+public class SanPhamApi {
     @Autowired
-    private LoaiServiceImpl loaiService;
+    private SanPhamServiceImpl sanPhamService;
 
     // getAll loai
     @GetMapping()
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages) {
-        Page<Loai> page = loaiService.getAll(pages);
+        Page<SanPham> page = sanPhamService.getAll(pages);
         HashMap<String, Object> map = DataUltil.setData("ok", page);
         return ResponseEntity.ok(map);
     }
@@ -34,7 +36,7 @@ public class LoaiApi {
     // tim kiếm theo ten hoặc mã
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam(defaultValue = "0", value = "pages") Integer pages, @RequestParam(required = false) String keyword) {
-        Page<Loai> page = loaiService.search(keyword, pages);
+        Page<SanPham> page = sanPhamService.search(keyword, pages);
         HashMap<String, Object> map = DataUltil.setData("ok", page);
         return ResponseEntity.ok(map);
     }
@@ -54,29 +56,29 @@ public class LoaiApi {
 
     // thêm
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody LoaiRequest request) {
-        HashMap<String, Object> map = loaiService.add(request);
+    public ResponseEntity<?> add(@RequestBody SanPhamRequest request) {
+        HashMap<String, Object> map = sanPhamService.add(request);
         return ResponseEntity.ok(map);
     }
 
     // sửa
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody LoaiRequest request) {
-        HashMap<String, Object> map = loaiService.update(request, id);
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody SanPhamRequest request) {
+        HashMap<String, Object> map = sanPhamService.update(request, id);
         return ResponseEntity.ok(map);
     }
 
     // xóa (đổi trạng thái về 0)
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody LoaiRequest request) {
-        HashMap<String, Object> map = loaiService.delete(request, id);
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody SanPhamRequest request) {
+        HashMap<String, Object> map = sanPhamService.delete(request, id);
         return ResponseEntity.ok(map);
     }
 
     // thêm bằng file excel
     @PostMapping("/upload")
     public ResponseEntity<?> uploadCustomersData(@RequestParam("file") MultipartFile file) {
-        this.loaiService.saveExcel(file);
+        this.sanPhamService.saveExcel(file);
         HashMap<String, Object> map = DataUltil.setData("success", " thêm sản phẩm thành công");
         return ResponseEntity.ok(map);
     }

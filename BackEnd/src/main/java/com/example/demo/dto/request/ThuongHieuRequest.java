@@ -1,8 +1,9 @@
 package com.example.demo.dto.request;
 
 import com.example.demo.adapter.DtoToEntity;
-import com.example.demo.entity.Loai;
+import com.example.demo.entity.ThuongHieu;
 import com.example.demo.util.DatetimeUtil;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class LoaiRequest implements DtoToEntity<Loai> {
+public class ThuongHieuRequest implements DtoToEntity<ThuongHieu> {
 
     private Integer id;
 
@@ -28,13 +29,12 @@ public class LoaiRequest implements DtoToEntity<Loai> {
 
     private Integer trangThai;
 
-
     @Override
-    public Loai dtoToEntity(Loai loai) {
-        loai.setMa(this.ma);
-        loai.setNgayTao(DatetimeUtil.getCurrentDate());
-        loai.setTen(this.ten);
-        loai.setTrangThai(this.trangThai);
-        return loai;
+    public ThuongHieu dtoToEntity(ThuongHieu thuongHieu) {
+        thuongHieu.setMa(this.ma);
+        thuongHieu.setTen(this.ten);
+        thuongHieu.setTrangThai(this.trangThai);
+        thuongHieu.setNgayTao(DatetimeUtil.getCurrentDate());
+        return thuongHieu;
     }
 }

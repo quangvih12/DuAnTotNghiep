@@ -1,10 +1,9 @@
 package com.example.demo.sevice.Impl.Admin;
 
-import com.example.demo.dto.request.LoaiRequest;
-import com.example.demo.entity.Loai;
+import com.example.demo.dto.request.ThuongHieuRequest;
 import com.example.demo.entity.ThuongHieu;
-import com.example.demo.reponsitory.LoaiReponsitory;
-import com.example.demo.sevice.LoaiService;
+import com.example.demo.reponsitory.ThuongHieuReponsitory;
+import com.example.demo.sevice.ThuongHieuService;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -23,41 +22,44 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+
 @Service
-public class LoaiServiceImpl implements LoaiService {
+public class ThuongHieuServiceImpl implements ThuongHieuService {
+
     @Autowired
-    private LoaiReponsitory loaiReponsitory;
+    private ThuongHieuReponsitory thuongHieuReponsitory;
+
 
     @Override
-    public Page<Loai> getAll(Integer page) {
+    public Page<ThuongHieu> getAll(Integer page) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(page, 5, sort);
-        return loaiReponsitory.findAll(pageable);
+        return thuongHieuReponsitory.findAll(pageable);
     }
 
     @Override
-    public Loai getById(Integer id) {
-        Optional<Loai> optional = this.loaiReponsitory.findById(id);
+    public ThuongHieu getById(Integer id) {
+        Optional<ThuongHieu> optional = this.thuongHieuReponsitory.findById(id);
         return optional.isPresent() ? optional.get() : null;
     }
 
     @Override
-    public Page<Loai> search(String keyword, Integer page) {
+    public Page<ThuongHieu> search(String keyword, Integer page) {
         if (keyword == null) {
             return this.getAll(page);
         } else {
             Pageable pageable = PageRequest.of(page, 5);
-            return loaiReponsitory.search("%" + keyword + "%", pageable);
+            return thuongHieuReponsitory.search("%" + keyword + "%", pageable);
         }
     }
 
     @Override
-    public HashMap<String, Object> add(LoaiRequest dto) {
-        Loai loai = dto.dtoToEntity(new Loai());
+    public HashMap<String, Object> add(ThuongHieuRequest dto) {
+        ThuongHieu thuongHieu = dto.dtoToEntity(new ThuongHieu());
         try {
-            Loai loais = loaiReponsitory.save(loai);
-            loais.setMa("L"+loais.getId());
-            loaiReponsitory.save(loais);
+            ThuongHieu thuongHieus = thuongHieuReponsitory.save(thuongHieu);
+            thuongHieus.setMa("TH" + thuongHieus.getId());
+            thuongHieuReponsitory.save(thuongHieus);
             return DataUltil.setData("success", "thêm thành công");
         } catch (Exception e) {
             return DataUltil.setData("error", "error");
@@ -65,17 +67,17 @@ public class LoaiServiceImpl implements LoaiService {
     }
 
     @Override
-    public HashMap<String, Object> update(LoaiRequest dto, Integer id) {
-        Optional<Loai> optional = loaiReponsitory.findById(id);
+    public HashMap<String, Object> update(ThuongHieuRequest dto, Integer id) {
+        Optional<ThuongHieu> optional = thuongHieuReponsitory.findById(id);
         if (optional.isPresent()) {
-            Loai loai = optional.get();
-            loai.setMa(loai.getMa());
-            loai.setTen(dto.getTen());
-            loai.setTrangThai(dto.getTrangThai());
-            loai.setNgayTao(loai.getNgayTao());
-            loai.setNgaySua(DatetimeUtil.getCurrentDate());
+            ThuongHieu thuongHieu = optional.get();
+            thuongHieu.setMa(thuongHieu.getMa());
+            thuongHieu.setTen(dto.getTen());
+            thuongHieu.setTrangThai(dto.getTrangThai());
+            thuongHieu.setNgayTao(thuongHieu.getNgayTao());
+            thuongHieu.setNgaySua(DatetimeUtil.getCurrentDate());
             try {
-                loaiReponsitory.save(loai);
+                thuongHieuReponsitory.save(thuongHieu);
                 return DataUltil.setData("success", "sửa thành công");
             } catch (Exception e) {
                 return DataUltil.setData("error", "error");
@@ -86,54 +88,56 @@ public class LoaiServiceImpl implements LoaiService {
     }
 
     @Override
-    public HashMap<String, Object> delete(LoaiRequest dto, Integer id) {
-        Optional<Loai> optional = loaiReponsitory.findById(id);
+    public HashMap<String, Object> delete(ThuongHieuRequest dto, Integer id) {
+        Optional<ThuongHieu> optional = thuongHieuReponsitory.findById(id);
         if (optional.isPresent()) {
-            Loai loai = optional.get();
-            loai.setMa(loai.getMa());
-            loai.setTen(loai.getTen());
-            loai.setTrangThai(0);
-            loai.setNgayTao(loai.getNgayTao());
-            loai.setNgaySua(DatetimeUtil.getCurrentDate());
+            ThuongHieu thuongHieu = optional.get();
+            thuongHieu.setMa(thuongHieu.getMa());
+            thuongHieu.setTen(thuongHieu.getTen());
+            thuongHieu.setTrangThai(0);
+            thuongHieu.setNgayTao(thuongHieu.getNgayTao());
+            thuongHieu.setNgaySua(DatetimeUtil.getCurrentDate());
             try {
-                loaiReponsitory.save(loai);
+                thuongHieuReponsitory.save(thuongHieu);
                 return DataUltil.setData("success", "xóa thành công");
             } catch (Exception e) {
                 return DataUltil.setData("error", "error");
             }
         } else {
-            return DataUltil.setData("error", "không tìm thấy loại sản phẩm để xóa");
+            return DataUltil.setData("error", "không tìm thấy loại sản phẩm để sửa");
         }
     }
 
+    @Override
     public void saveExcel(MultipartFile file) {
         if (this.isValidExcelFile(file)) {
             try {
-                List<Loai> loais = this.getCustomersDataFromExcel(file.getInputStream());
-                List<Loai> savedLoais = this.loaiReponsitory.saveAll(loais);
-                for (int i = 0; i < savedLoais.size(); i++) {
-                    Loai loai = savedLoais.get(i);
-                    loai.setMa("L" + savedLoais.get(i).getId());
-                    loai.setNgayTao(DatetimeUtil.getCurrentDate());
+                List<ThuongHieu> thuongHieus = this.getCustomersDataFromExcel(file.getInputStream());
+                List<ThuongHieu> savedThuongHieus = this.thuongHieuReponsitory.saveAll(thuongHieus);
+
+                for (int i = 0; i < thuongHieus.size(); i++) {
+                    ThuongHieu hieu = thuongHieus.get(i);
+                    hieu.setMa("TH" + savedThuongHieus.get(i).getId());
+                    hieu.setNgayTao(DatetimeUtil.getCurrentDate());
                 }
-                this.loaiReponsitory.saveAll(loais);
+
+                this.thuongHieuReponsitory.saveAll(thuongHieus);
             } catch (IOException e) {
                 throw new IllegalArgumentException("The file is not a valid excel file");
             }
         }
     }
 
-
     public static boolean isValidExcelFile(MultipartFile file) {
 
         return Objects.equals(file.getContentType(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
 
-    public List<Loai> getCustomersDataFromExcel(InputStream inputStream) {
-        List<Loai> listLoais = new ArrayList<>();
+    public List<ThuongHieu> getCustomersDataFromExcel(InputStream inputStream) {
+        List<ThuongHieu> thuongHieuList = new ArrayList<>();
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-            XSSFSheet sheet = workbook.getSheetAt(0);
+            XSSFSheet sheet = workbook.getSheetAt(1);
 
             if (workbook != null) {
 //                System.out.println("Workbook co ton tai");
@@ -147,18 +151,18 @@ public class LoaiServiceImpl implements LoaiService {
                         }
                         Iterator<Cell> cellIterator = row.iterator();
                         int cellIndex = 0;
-                        Loai loai = new Loai();
+                        ThuongHieu thuongHieu = new ThuongHieu();
                         while (cellIterator.hasNext()) {
                             Cell cell = cellIterator.next();
                             switch (cellIndex) {
-                                case 0 -> loai.setTen(cell.getStringCellValue());
-                                case 1 -> loai.setTrangThai((int) cell.getNumericCellValue());
+                                case 0 -> thuongHieu.setTen(cell.getStringCellValue());
+                                case 1 -> thuongHieu.setTrangThai((int) cell.getNumericCellValue());
                                 default -> {
                                 }
                             }
                             cellIndex++;
                         }
-                        listLoais.add(loai);
+                        thuongHieuList.add(thuongHieu);
                     }
                 } else {
                     System.out.println("sheet ko ton tai.");
@@ -170,6 +174,6 @@ public class LoaiServiceImpl implements LoaiService {
         } catch (IOException e) {
             e.getStackTrace();
         }
-        return listLoais;
+        return thuongHieuList;
     }
 }

@@ -1,4 +1,15 @@
 package com.example.demo.reponsitory;
 
-public interface SanPhamReponsitory {
+import com.example.demo.entity.Loai;
+import com.example.demo.entity.SanPham;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface SanPhamReponsitory extends JpaRepository<SanPham, Integer> {
+    @Query("select  pot from  SanPham  pot where pot.ten like :keyword or pot.ma like :keyword or pot.loai.ten like :keyword or pot.thuongHieu.ten like :keyword")
+    Page<SanPham> search(String keyword, Pageable pageable);
 }
