@@ -28,11 +28,11 @@ import java.util.List;
 @Builder
 @ToString
 @Entity
-@Table(name = "thuong_hieu")
+@Table(name = "loai")
 public class Loai {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id")
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "ten")

@@ -29,8 +29,8 @@ public class Image {
     @Column(name = "Id")
     private Integer id;
 
-    @Column(name = "ten")
-    private String ten;
+    @Column(name = "anh")
+    private String anh;
 
     @Column(name = "ma")
     private String ma;
@@ -40,9 +40,6 @@ public class Image {
 
     @Column(name = "ngay_tao")
     private String ngayTao;
-
-    @Column(name = "mo_ta")
-    private String moTa;
 
     @Column(name = "trang_thai")
     private Integer trangThai;

@@ -47,9 +47,6 @@ public class TrongLuong {
     @Column(name = "ngay_tao")
     private String ngayTao;
 
-    @Column(name = "mo_ta")
-    private String moTa;
-
     @Column(name = "trang_thai")
     private Integer trangThai;
 

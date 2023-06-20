@@ -61,6 +61,7 @@ create table khuyen_mai(
  ten nvarchar(50),
  ma nvarchar(50), 
  mo_ta nvarchar(max),
+ kieu_dien int,
  ngay_sua varchar(50), 
  ngay_tao varchar(50),
  trang_thai int,
@@ -77,6 +78,7 @@ create table mau_sac(
  ma nvarchar(50),
  ngay_sua varchar(50), 
  ngay_tao varchar(50),
+  mo_ta nvarchar(max),
  trang_thai int
 )
 
@@ -135,18 +137,6 @@ create table [image](
  id_san_pham_chi_tiet int not null foreign key references san_pham_chi_tiet (id) 
 )
 
-create table cua_hang(
- id int primary key identity,
- ten nvarchar(50),
- ma nvarchar(50),
- dia_chi nvarchar(100),
- thanh_pho nvarchar(100),
- quoc_gia nvarchar(100),
- ngay_sua varchar(50), 
- ngay_tao varchar(50),
- trang_thai int
-)
-
 create table chuc_vu(
  id int primary key identity,
  ten nvarchar(50),
@@ -155,7 +145,6 @@ create table chuc_vu(
  ngay_tao varchar(50),
  trang_thai int
 )
-
 
 
 create table [user](
@@ -173,8 +162,7 @@ create table [user](
  gioi_tinh int,
  sdt nvarchar(15),
  [role] nvarchar(10),	
- id_chuc_vu int not null foreign key references chuc_vu (id) ,
- id_cua_hang int not null foreign key references cua_hang (id) 
+ id_chuc_vu int foreign key references chuc_vu (id) 
 )
 create table comment(
  id int primary key identity,
@@ -231,7 +219,7 @@ create table hoa_don(
  tien_sau_khi_giam_gia decimal(20,0),
 id_user int not null foreign key references [user] (id) ,
 id_phuong_thuc_thanh_toan int not null foreign key references phuong_thuc_thanh_toan (id) ,
-id_dia_chi_sdt int not null foreign key references dia_chi (id) 
+id_dia_chi_sdt int not null foreign key references dia_chi (id)
 )
 
 create table gio_hang(
@@ -358,25 +346,19 @@ values
 ('S','S3','52-54cm','2023-11-10','2023-10-24',1),
 ('M','S4','54-55cm','2023-11-10','2023-10-24',1)
 
-insert into cua_hang(ten,ma,dia_chi,thanh_pho,quoc_gia,ngay_sua,ngay_tao,trang_thai)
-values
-(N'Cửa hàng Nón xinh','CH1',N'Số 8 Văn Khê, Hà Đông',N'Hà Nội',N'Việt Nam','2023-11-10','2023-10-24',1),
-(N'Tiến EX','CH2',N'Số 3 Dương Văn An, Thành phố Huế',N'Huế',N'Việt Nam','2023-11-10','2023-10-24',1),
-(N'Lốp Phượt Store','CH3',N'107 Phố Mới, Thuỷ Sơn',N'Hải Phòng',N'Việt Nam','2023-11-10','2023-10-24',1),
-(N' Nhựt Tân ','CH4',N'149 Đ.30 tháng 04, Xuân Khánh',N'Cần Thơ',N'Việt Nam','2023-11-10','2023-10-24',1)
+
 
 insert into chuc_vu(ten,ma,ngay_sua,ngay_tao,trang_thai)
 values
-(N'Nhân viên Sale','CV1','2023-11-10','2023-10-24',1),
-(N'Bảo vệ','CV2','2023-11-10','2023-10-24',1),
-(N'Giám đốc nhân sự','CV3','2023-11-10','2023-10-24',1),
+(N'Nhân viên','CV1','2023-11-10','2023-10-24',1),
+(N'Giám đốc','CV3','2023-11-10','2023-10-24',1),
 (N'Nhân viên Maketing','CV4','2023-11-10','2023-10-24',1)
 
-insert into [user](ten,ma,[user_name],[password],ngay_sua,ngay_tao,ngay_sinh,trang_thai,anh,email,gioi_tinh,sdt,[role],id_chuc_vu,id_cua_hang)
+insert into [user](ten,ma,[user_name],[password],ngay_sua,ngay_tao,ngay_sinh,trang_thai,anh,email,gioi_tinh,sdt,[role],id_chuc_vu)
 values
-(N'Lê Văn A','U1','levana','12345','2023-11-10','2023-10-24','2002-10-07',1,null,'levana@gmail.com',1,'0987678987','ADMIN',1,1),
-(N'Lê Văn B','U2','levanb','12345','2023-11-10','2023-10-24','2002-11-07',1,null,'levanb@gmail.com',1,'0987678987','NHANVIEN',2,2),
-(N'Lê Văn C','U3','levanc','12345','2023-11-10','2023-10-24','2002-12-07',1,null,'levanc@gmail.com',1,'0987678987','USER',3,3)
+(N'Lê Văn A','U1','levana','12345','2023-11-10','2023-10-24','2002-10-07',1,null,'levana@gmail.com',1,'0987678987','ADMIN',null),
+(N'Lê Văn B','U2','levanb','12345','2023-11-10','2023-10-24','2002-11-07',1,null,'levanb@gmail.com',1,'0987678987','NHANVIEN',1),
+(N'Lê Văn C','U3','levanc','12345','2023-11-10','2023-10-24','2002-12-07',1,null,'levanc@gmail.com',1,'0987678987','USER',null)
 
 
 insert into dia_chi(ngay_sua,ngay_tao,trang_thai,dia_chi,loai_dia_chi,id_user)

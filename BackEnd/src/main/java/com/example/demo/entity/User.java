@@ -32,7 +32,7 @@ import java.util.List;
 @Builder
 @ToString
 @Entity
-@Table(name = "user")
+@Table(name = "[user]")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,10 +77,6 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cua_hang")
-    private CuaHang cuaHang;
 
     @ManyToOne
     @JoinColumn(name = "id_chuc_vu")

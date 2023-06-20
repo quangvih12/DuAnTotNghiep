@@ -41,9 +41,6 @@ public class MauSac {
     @Column(name = "ma")
     private String ma;
 
-    @Column(name = "anh")
-    private String image;
-
     @Column(name = "ngay_sua")
     private String ngaySua;
 

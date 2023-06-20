@@ -38,12 +38,6 @@ public class SanPhamChiTiet {
     @Column(name = "Id")
     private Integer id;
 
-    @Column(name = "ten")
-    private String ten;
-
-    @Column(name = "ma")
-    private String ma;
-
     @Column(name = "ngay_sua")
     private String ngaySua;
 
@@ -65,10 +59,6 @@ public class SanPhamChiTiet {
     @ManyToOne
     @JoinColumn(name = "id_san_pham")
     private SanPham sanPham;
-
-    @ManyToOne
-    @JoinColumn(name = "id_mau_sac")
-    private MauSac mauSac;
 
     @ManyToOne
     @JoinColumn(name = "id_khuyen_mai")

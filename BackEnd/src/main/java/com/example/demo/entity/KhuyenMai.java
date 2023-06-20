@@ -69,4 +69,5 @@ public class KhuyenMai {
     @OneToMany(mappedBy = "khuyenMai", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<SanPhamChiTiet> sanPhamChiTietList = new ArrayList<>();
+
 }
