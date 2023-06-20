@@ -47,7 +47,7 @@ public class Size {
     @Column(name = "ngay_tao")
     private String ngayTao;
 
-    @Column(name = "mo_ta")
+    @Column(name = "mo_ta", length = 10000)
     private String moTa;
 
     @Column(name = "trang_thai")

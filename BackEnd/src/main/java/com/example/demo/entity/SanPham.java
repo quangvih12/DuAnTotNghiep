@@ -52,7 +52,7 @@ public class SanPham {
     @Column(name = "trang_thai")
     private Integer trangThai;
 
-    @Column(name = "mo_ta")
+    @Column(name = "mo_ta", length = 10000)
     private String moTa;
 
     @Column(name = "dem_lot")

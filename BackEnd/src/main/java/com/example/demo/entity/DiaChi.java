@@ -37,7 +37,7 @@ public class DiaChi {
     @Column(name = "Id")
     private Integer id;
 
-    @Column(name = "dia_chi")
+    @Column(name = "dia_chi", length = 10000)
     private String diaChi;
 
     @Column(name = "loai_dia_chi")

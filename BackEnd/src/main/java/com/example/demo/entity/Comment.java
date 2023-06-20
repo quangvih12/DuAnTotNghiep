@@ -29,7 +29,7 @@ public class Comment {
     @Column(name = "Id")
     private Integer id;
 
-    @Column(name = "noi_dung")
+    @Column(name = "noi_dung", length = 10000)
     private String noiDung;
 
     @Column(name = "ngay_sua")
