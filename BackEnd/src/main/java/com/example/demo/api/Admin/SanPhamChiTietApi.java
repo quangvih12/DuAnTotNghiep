@@ -1,0 +1,62 @@
+package com.example.demo.api.Admin;
+
+import com.example.demo.dto.request.ImageRequest;
+import com.example.demo.dto.request.SanPhamChiTietRequest;
+import com.example.demo.dto.request.SanPhamRequest;
+import com.example.demo.entity.Loai;
+import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.sevice.Impl.Admin.LoaiServiceImpl;
+import com.example.demo.sevice.Impl.Admin.SanPhamChiTietImpl;
+import com.example.demo.util.DataUltil;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+@RestController
+@RequestMapping("/api/ChiTietSp")
+public class SanPhamChiTietApi {
+    @Autowired
+    private SanPhamChiTietImpl sanPhamChiTiet;
+
+    // getAll san pham chi tiet
+    @GetMapping()
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages,
+                                    @RequestParam(required = false) String upAndDown, @RequestParam(required = false) Integer trangThai) {
+        Page<SanPhamChiTiet> page = sanPhamChiTiet.getAll(pages, upAndDown, trangThai);
+        HashMap<String, Object> map = DataUltil.setData("ok", page);
+        return ResponseEntity.ok(map);
+    }
+
+    // xuat excel
+    @GetMapping("/export")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=ListSanPham.xlsx";
+        response.setHeader(headerKey, headerValue);
+        sanPhamChiTiet.exportCustomerToExcel(response);
+    }
+
+    // thêm
+    @PostMapping(value = "/add")
+    public ResponseEntity<?> add(@RequestBody SanPhamChiTietRequest sanPhamChiTietRequest,
+                                 @RequestParam("file") MultipartFile file,
+                                 @RequestParam Integer idSize,
+                                 @RequestParam Integer idMauSac) {
+        HashMap<String, Object> map = sanPhamChiTiet.add(sanPhamChiTietRequest, file, idSize, idMauSac);
+        return ResponseEntity.ok(map);
+    }
+}

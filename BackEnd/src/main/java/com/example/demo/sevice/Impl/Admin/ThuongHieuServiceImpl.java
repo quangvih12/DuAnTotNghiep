@@ -83,7 +83,7 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
                 return DataUltil.setData("error", "error");
             }
         } else {
-            return DataUltil.setData("error", "không tìm thấy loại sản phẩm để sửa");
+            return DataUltil.setData("error", "không tìm thấy thương hiệu sản phẩm để sửa");
         }
     }
 
@@ -104,7 +104,7 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
                 return DataUltil.setData("error", "error");
             }
         } else {
-            return DataUltil.setData("error", "không tìm thấy loại sản phẩm để sửa");
+            return DataUltil.setData("error", "không tìm thấy thương hiệu sản phẩm để xóa");
         }
     }
 
