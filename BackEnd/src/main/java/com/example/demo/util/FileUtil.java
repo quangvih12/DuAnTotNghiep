@@ -14,4 +14,14 @@ public class FileUtil {
         return encode;
     }
 
+    public static String filesToBase64(MultipartFile[] files) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (MultipartFile file : files) {
+            byte[] fileBytes = file.getBytes();
+            String base64Image = Base64.getEncoder().encodeToString(fileBytes);
+            stringBuilder.append(base64Image);
+        }
+        return stringBuilder.toString();
+    }
+
 }

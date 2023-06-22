@@ -51,12 +51,12 @@ public class SanPhamChiTietApi {
     }
 
     // thêm
-    @PostMapping(value = "/add")
-    public ResponseEntity<?> add(@RequestBody SanPhamChiTietRequest sanPhamChiTietRequest,
-                                 @RequestParam("file") MultipartFile file,
-                                 @RequestParam Integer idSize,
-                                 @RequestParam Integer idMauSac) {
-        HashMap<String, Object> map = sanPhamChiTiet.add(sanPhamChiTietRequest, file, idSize, idMauSac);
+    @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> add(@RequestPart("request") SanPhamChiTietRequest sanPhamChiTietRequest,
+                                 @RequestPart("files") MultipartFile[] files,
+                                 @RequestPart("file") MultipartFile file
+    ) {
+        HashMap<String, Object> map = sanPhamChiTiet.add(sanPhamChiTietRequest, files, file);
         return ResponseEntity.ok(map);
     }
 }

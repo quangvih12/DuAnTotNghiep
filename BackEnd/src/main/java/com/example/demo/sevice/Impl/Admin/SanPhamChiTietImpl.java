@@ -1,6 +1,5 @@
 package com.example.demo.sevice.Impl.Admin;
 
-import com.example.demo.dto.request.ImageRequest;
 import com.example.demo.dto.request.SanPhamChiTietRequest;
 import com.example.demo.entity.Image;
 import com.example.demo.entity.MauSac;
@@ -14,6 +13,7 @@ import com.example.demo.reponsitory.MauSacChiTietReponsitory;
 import com.example.demo.reponsitory.SizeChiTietReponsitory;
 import com.example.demo.sevice.SanPhamChiTietService;
 import com.example.demo.util.DataUltil;
+import com.example.demo.util.DatetimeUtil;
 import com.example.demo.util.ExcelExportUtils;
 import com.example.demo.util.FileUtil;
 import jakarta.servlet.http.HttpServletResponse;
@@ -73,44 +73,76 @@ public class SanPhamChiTietImpl implements SanPhamChiTietService {
     }
 
     @Override
-    public HashMap<String, Object> add(SanPhamChiTietRequest dto, MultipartFile file, Integer idSize, Integer idMauSac) {
+    public HashMap<String, Object> add(SanPhamChiTietRequest dto, MultipartFile[] files, MultipartFile file) {
         SanPhamChiTiet sanPham = dto.dtoToEntity(new SanPhamChiTiet());
-        Image image = new Image();
-        List<Image> imageList = new ArrayList<>();
         try {
             SanPhamChiTiet sanPhamChiTiet = this.chiTietSanPhamReponsitory.save(sanPham);
-
-            // gán id size  và id san pham chi tiết vào đối tượng size chi tiết
-            SizeChiTiet sizeChiTiet = new SizeChiTiet();
-            sizeChiTiet.setSize(Size.builder().id(idSize).build());
-            sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-
-            // gán id màu sắc  và id san pham chi tiết vào đối tượng màu sắc chi tiết
-            MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
-            mauSacChiTiet.setMauSac(MauSac.builder().id(idMauSac).build());
-            mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-
-            System.out.println(file);
-            String encode;
-//            try {
-//                encode = FileUtil.fileToBase64(file);
-//                image.setAnh(encode);
-//                image.setSanPhamChiTiet(sanPhamChiTiet);
-//                System.out.println(image.getAnh());
-//                imageList.add(image);
-//            } catch (IOException e) {
-//                return DataUltil.setData("error", "lỗi tải ảnh lên");
-//            }
-
-            this.sizeChiTietReponsitory.save(sizeChiTiet);
-            this.mauSacChiTietReponsitory.save(mauSacChiTiet);
-            this.imageReponsitory.saveAll(imageList);
-
+            this.saveMauSac(Integer.valueOf(dto.getIdMauSac()), dto.getMoTaMauSacChiTiet(), sanPhamChiTiet, file);
+            this.saveSize(Integer.valueOf(dto.getIdSize()), sanPhamChiTiet, Integer.valueOf(dto.getSoLuongSize()));
+            this.saveImage(files, sanPhamChiTiet);
             return DataUltil.setData("success", "thêm thành công");
         } catch (Exception e) {
             return DataUltil.setData("error", "error");
         }
     }
+
+    //lưu mau sắc chi tiết
+    public MauSacChiTiet saveMauSac(Integer idMauSac, String moTa, SanPhamChiTiet sanPhamChiTiet, MultipartFile file) {
+        // gán id màu sắc  và id san pham chi tiết vào đối tượng màu sắc chi tiết
+        MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
+        mauSacChiTiet.setMauSac(MauSac.builder().id(idMauSac).build());
+        mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+        mauSacChiTiet.setMoTa(moTa);
+        mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+        String encode;
+        try {
+            encode = FileUtil.fileToBase64(file);
+            mauSacChiTiet.setAnh(encode);
+//            System.out.println(encode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return this.mauSacChiTietReponsitory.save(mauSacChiTiet);
+    }
+
+    // lưu size chi tiet
+    public SizeChiTiet saveSize(Integer idSize, SanPhamChiTiet sanPhamChiTiet, Integer soLuongSize) {
+        // gán id size  và id san pham chi tiết vào đối tượng size chi tiết
+        SizeChiTiet sizeChiTiet = new SizeChiTiet();
+        sizeChiTiet.setSize(Size.builder().id(idSize).build());
+        sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+        sizeChiTiet.setSoLuong(soLuongSize);
+        sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+        sizeChiTiet.setTrangThai(1);
+        return this.sizeChiTietReponsitory.save(sizeChiTiet);
+    }
+
+
+    // lưu ảnh
+    public Iterable<Image> saveImage(MultipartFile[] files, SanPhamChiTiet sanPhamChiTiet) {
+        List<Image> imageList = new ArrayList<>();
+        for (MultipartFile file : files) {
+            try {
+                Image image = new Image();
+                String encode = FileUtil.fileToBase64(file);
+                image.setAnh(encode);
+                image.setSanPhamChiTiet(sanPhamChiTiet);
+                image.setTrangThai(1);
+                image.setNgayTao(DatetimeUtil.getCurrentDate());
+                imageList.add(image);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        List<Image> images = this.imageReponsitory.saveAll(imageList);
+        for (int i = 0; i < images.size(); i++) {
+            Image image = images.get(i);
+            image.setMa("IM" + images.get(i).getId());
+        }
+        return this.imageReponsitory.saveAll(imageList);
+    }
+
 
     @Override
     public HashMap<String, Object> update(SanPhamChiTietRequest dto, Integer id) {

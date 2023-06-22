@@ -54,8 +54,6 @@ public class SanPhamChiTietRequest implements DtoToEntity<SanPhamChiTiet> {
     @NotBlank(message = "Không bỏ trống sản phẩm")
     private String sanPham;
 
-//    private MultipartFile file;
-
     private String khuyenMai;
 
     @NotBlank(message = "Không bỏ trống vật liệu")
@@ -63,6 +61,17 @@ public class SanPhamChiTietRequest implements DtoToEntity<SanPhamChiTiet> {
 
     @NotBlank(message = "Không bỏ trống trọng lượng")
     private String trongLuong;
+
+    private String moTaMauSacChiTiet;
+
+    @NotBlank(message = "Không bỏ trống số lượng size")
+    private String soLuongSize;
+
+    @NotBlank(message = "Không bỏ trống Màu sắc")
+    private String idMauSac;
+
+    @NotBlank(message = "Không bỏ trống Size")
+    private String idSize;
 
     @Override
     public SanPhamChiTiet dtoToEntity(SanPhamChiTiet sanPhamChiTiet) {

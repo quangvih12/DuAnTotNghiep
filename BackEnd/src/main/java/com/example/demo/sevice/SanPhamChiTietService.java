@@ -17,7 +17,7 @@ public interface SanPhamChiTietService {
 
     SanPhamChiTiet getOne(Integer id);
 
-    HashMap<String, Object> add(SanPhamChiTietRequest dto, MultipartFile file, Integer idSize, Integer idMauSac);
+    HashMap<String, Object> add(SanPhamChiTietRequest dto, MultipartFile[] files, MultipartFile file);
 
     HashMap<String, Object> update(SanPhamChiTietRequest dto, Integer id);
 
