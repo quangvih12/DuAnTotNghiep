@@ -1,12 +1,8 @@
 package com.example.demo.api.Admin;
 
-import com.example.demo.dto.request.ImageRequest;
 import com.example.demo.dto.request.SanPhamChiTietRequest;
-import com.example.demo.dto.request.SanPhamRequest;
-import com.example.demo.entity.Loai;
 import com.example.demo.entity.SanPhamChiTiet;
-import com.example.demo.sevice.Impl.Admin.LoaiServiceImpl;
-import com.example.demo.sevice.Impl.Admin.SanPhamChiTietImpl;
+import com.example.demo.sevice.Impl.Admin.SanPhamChiTietServiceImpl;
 import com.example.demo.util.DataUltil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -29,7 +24,7 @@ import java.util.HashMap;
 @RequestMapping("/api/ChiTietSp")
 public class SanPhamChiTietApi {
     @Autowired
-    private SanPhamChiTietImpl sanPhamChiTiet;
+    private SanPhamChiTietServiceImpl sanPhamChiTiet;
 
     // getAll san pham chi tiet
     @GetMapping()

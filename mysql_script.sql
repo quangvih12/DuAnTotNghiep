@@ -292,7 +292,7 @@ DROP TABLE IF EXISTS `image`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `image` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `anh` varchar(255) DEFAULT NULL,
+  `anh` varchar(5000) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
@@ -413,7 +413,7 @@ DROP TABLE IF EXISTS `mau_sac_ctsp`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mau_sac_ctsp` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `anh` varchar(255) DEFAULT NULL,
+  `anh` varchar(5000) DEFAULT NULL,
   `mo_ta` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
@@ -704,7 +704,7 @@ CREATE TABLE `user` (
   `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(255) DEFAULT NULL,
   `gioi_tinh` int DEFAULT NULL,
-  `anh` varchar(255) DEFAULT NULL,
+  `anh` varchar(5000) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
   `ngay_sinh` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
