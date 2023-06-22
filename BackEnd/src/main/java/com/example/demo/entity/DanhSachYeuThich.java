@@ -28,14 +28,8 @@ import java.math.BigDecimal;
 public class DanhSachYeuThich {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id")
+    @Column(name = "id")
     private Integer id;
-
-    @Column(name = "ten")
-    private String ten;
-
-    @Column(name = "ma")
-    private String ma;
 
     @Column(name = "ngay_sua")
     private String ngaySua;
@@ -45,12 +39,6 @@ public class DanhSachYeuThich {
 
     @Column(name = "trang_thai")
     private Integer trangThai;
-
-    @Column(name = "don_gia")
-    private BigDecimal donGia;
-
-    @Column(name = "so_luong")
-    private Integer soLuong;
 
     @ManyToOne
     @JoinColumn(name = "id_user")

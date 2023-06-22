@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +20,7 @@ import lombok.ToString;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +35,7 @@ import java.util.List;
 public class KhuyenMai {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id")
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "ten")
@@ -62,12 +65,15 @@ public class KhuyenMai {
     @Column(name = "so_luong")
     private Integer soLuong;
 
-    @Column(name = "giam_gia")
-    private Integer giamGia;
+    @Column(precision = 20, scale = 0)
+    private BigDecimal dieuKien;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "khuyenMai", fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
-    private List<SanPhamChiTiet> sanPhamChiTietList = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private KieuGiamGia kieuGiamGia;
 
+    @Column(precision = 20, scale = 0)
+    private BigDecimal giaTriGiam;
+
+    @Column(precision = 20, scale = 0)
+    private BigDecimal giamToiDa;
 }

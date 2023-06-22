@@ -43,7 +43,7 @@ public class GioHangChiTiet {
     @Column(name = "trang_thai")
     private Integer trangThai;
 
-    @Column(name = "don_gia")
+    @Column(name = "don_gia", precision = 20, scale = 0)
     private BigDecimal donGia;
 
     @Column(name = "so_luong")
