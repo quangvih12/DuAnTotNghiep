@@ -288,11 +288,7 @@ DROP TABLE IF EXISTS `image`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `image` (
   `id` int NOT NULL AUTO_INCREMENT,
-<<<<<<< HEAD
-  `anh` varchar(5000) DEFAULT NULL,
-=======
   `anh` varchar(10000) DEFAULT NULL,
->>>>>>> origin/nguyen
   `ma` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
