@@ -24,7 +24,7 @@ public class SanPhamRequest implements DtoToEntity<SanPham> {
 
     @NotBlank(message = "không bỏ trống tên")
     private String ten;
-    @NotBlank(message = "không bỏ trống mã")
+
     private String ma;
 
     private String ngaySua;

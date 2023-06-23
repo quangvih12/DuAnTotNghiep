@@ -43,7 +43,7 @@ public class SanPhamApi {
 
     // check validate
     @PostMapping("/validation")
-    public ResponseEntity<?> validation(@RequestBody @Valid LoaiRequest request, BindingResult result) {
+    public ResponseEntity<?> validation(@RequestBody @Valid SanPhamRequest request, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             HashMap<String, Object> map = DataUltil.setData("error", list);
