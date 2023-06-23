@@ -50,19 +50,15 @@ public class SanPhamChiTiet {
     @Column(name = "so_luong_ton")
     private Integer soLuongTon;
 
-    @Column(name = "gia_ban")
+    @Column(name = "gia_ban", precision = 20, scale = 0)
     private BigDecimal giaBan;
 
-    @Column(name = "gia_nhap")
+    @Column(name = "gia_nhap", precision = 20, scale = 0)
     private BigDecimal giaNhap;
 
     @ManyToOne
     @JoinColumn(name = "id_san_pham")
     private SanPham sanPham;
-
-    @ManyToOne
-    @JoinColumn(name = "id_khuyen_mai")
-    private KhuyenMai khuyenMai;
 
     @ManyToOne
     @JoinColumn(name = "id_vat_lieu")

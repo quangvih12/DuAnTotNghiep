@@ -34,7 +34,7 @@ public class HoaDonChiTiet {
     @Column(name = "ma")
     private String ma;
 
-    @Column(name = "don_gia")
+    @Column(name = "don_gia", precision = 20, scale = 0)
     private BigDecimal donGia;
 
     @Column(name = "so_luong")

@@ -32,7 +32,7 @@ CREATE TABLE `chuc_vu` (
   `ten` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `chuc_vu` (
 
 LOCK TABLES `chuc_vu` WRITE;
 /*!40000 ALTER TABLE `chuc_vu` DISABLE KEYS */;
-INSERT INTO `chuc_vu` VALUES (1,'CV1','2023-11-10','2023-10-24','Nhân viên Sale',1),(2,'CV2','2023-11-10','2023-10-24','Bảo vệ',1),(3,'CV3','2023-11-10','2023-10-24','Giám đốc nhân sự',1),(4,'CV4','2023-11-10','2023-10-24','Nhân viên Maketing',1);
+INSERT INTO `chuc_vu` VALUES (1,'CV1','2023-11-10','2023-10-24','Nhân viên',1),(2,'CV3','2023-11-10','2023-10-24','Giám đốc',1),(3,'CV4','2023-11-10','2023-10-24','Nhân viên Maketing',1);
 /*!40000 ALTER TABLE `chuc_vu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -86,12 +86,8 @@ DROP TABLE IF EXISTS `danh_sach_yeu_thich`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `danh_sach_yeu_thich` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `don_gia` decimal(38,2) DEFAULT NULL,
-  `ma` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
-  `so_luong` int DEFAULT NULL,
-  `ten` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   `id_san_pham_chi_tiet` int DEFAULT NULL,
   `id_user` int DEFAULT NULL,
@@ -181,7 +177,7 @@ DROP TABLE IF EXISTS `gio_hang_chi_tiet`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `gio_hang_chi_tiet` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `don_gia` decimal(38,2) DEFAULT NULL,
+  `don_gia` decimal(20,0) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
@@ -223,9 +219,9 @@ CREATE TABLE `hoa_don` (
   `ngay_tao` varchar(255) DEFAULT NULL,
   `ngay_thanh_toan` varchar(255) DEFAULT NULL,
   `ten_nguoi_nhan` varchar(255) DEFAULT NULL,
-  `tien_sau_khi_giam_gia` decimal(38,2) DEFAULT NULL,
-  `tien_ship` decimal(38,2) DEFAULT NULL,
-  `tong_tien` decimal(38,2) DEFAULT NULL,
+  `tien_sau_khi_giam_gia` decimal(20,0) DEFAULT NULL,
+  `tien_ship` decimal(20,0) DEFAULT NULL,
+  `tong_tien` decimal(20,0) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   `id_dia_chi_sdt` int DEFAULT NULL,
   `id_phuong_thuc_thanh_toan` int DEFAULT NULL,
@@ -258,7 +254,7 @@ DROP TABLE IF EXISTS `hoa_don_chi_tiet`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `hoa_don_chi_tiet` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `don_gia` decimal(38,2) DEFAULT NULL,
+  `don_gia` decimal(20,0) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
@@ -292,7 +288,11 @@ DROP TABLE IF EXISTS `image`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `image` (
   `id` int NOT NULL AUTO_INCREMENT,
+<<<<<<< HEAD
   `anh` varchar(5000) DEFAULT NULL,
+=======
+  `anh` varchar(10000) DEFAULT NULL,
+>>>>>>> origin/nguyen
   `ma` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
@@ -323,7 +323,10 @@ DROP TABLE IF EXISTS `khuyen_mai`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `khuyen_mai` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `giam_gia` int DEFAULT NULL,
+  `dieu_kien` decimal(20,0) DEFAULT NULL,
+  `gia_tri_giam` decimal(20,0) DEFAULT NULL,
+  `giam_toi_da` decimal(20,0) DEFAULT NULL,
+  `kieu_giam_gia` varchar(255) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
   `mo_ta` varchar(10000) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
@@ -343,8 +346,40 @@ CREATE TABLE `khuyen_mai` (
 
 LOCK TABLES `khuyen_mai` WRITE;
 /*!40000 ALTER TABLE `khuyen_mai` DISABLE KEYS */;
-INSERT INTO `khuyen_mai` VALUES (1,5,'KM1','giảm 5% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-11-10','2023-10-24',100,'giảm 5%','2023-11-15','2023-11-23',1),(2,15,'KM2','giảm 15% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-10-10','2023-09-24',80,'giảm 15%','2023-10-15','2023-10-23',1),(3,20,'KM2','giảm 20% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-07-10','2023-06-24',60,'giảm 20%','2023-07-15','2023-07-23',0),(4,25,'KM4','giảm 25% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-09-10','2023-08-24',400,'giảm 25%','2023-09-15','2023-09-23',1);
+INSERT INTO `khuyen_mai` VALUES (1,NULL,5,NULL,NULL,'KM1','giảm 5% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-11-10','2023-10-24',100,'giảm 5%','2023-11-15','2023-11-23',1),(2,NULL,15,NULL,NULL,'KM2','giảm 15% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-10-10','2023-09-24',80,'giảm 15%','2023-10-15','2023-10-23',1),(3,NULL,20,NULL,NULL,'KM2','giảm 20% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-07-10','2023-06-24',60,'giảm 20%','2023-07-15','2023-07-23',0),(4,NULL,25,NULL,NULL,'KM4','giảm 25% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-09-10','2023-08-24',400,'giảm 25%','2023-09-15','2023-09-23',1);
 /*!40000 ALTER TABLE `khuyen_mai` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `khuyen_mai_ctsp`
+--
+
+DROP TABLE IF EXISTS `khuyen_mai_ctsp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `khuyen_mai_ctsp` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `ngay_sua` varchar(255) DEFAULT NULL,
+  `ngay_tao` varchar(255) DEFAULT NULL,
+  `so_tien_con_lai` decimal(20,0) DEFAULT NULL,
+  `trang_thai` int DEFAULT NULL,
+  `id_khuyen_mai` int DEFAULT NULL,
+  `id_ctsp` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKe781xl7r1mbttpsw0k5tydfky` (`id_khuyen_mai`),
+  KEY `FKknc3jbrh4y8bl4umf81oce3v` (`id_ctsp`),
+  CONSTRAINT `FKe781xl7r1mbttpsw0k5tydfky` FOREIGN KEY (`id_khuyen_mai`) REFERENCES `khuyen_mai` (`id`),
+  CONSTRAINT `FKknc3jbrh4y8bl4umf81oce3v` FOREIGN KEY (`id_ctsp`) REFERENCES `san_pham_chi_tiet` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `khuyen_mai_ctsp`
+--
+
+LOCK TABLES `khuyen_mai_ctsp` WRITE;
+/*!40000 ALTER TABLE `khuyen_mai_ctsp` DISABLE KEYS */;
+/*!40000 ALTER TABLE `khuyen_mai_ctsp` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -512,22 +547,19 @@ DROP TABLE IF EXISTS `san_pham_chi_tiet`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `san_pham_chi_tiet` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `gia_ban` decimal(38,2) DEFAULT NULL,
-  `gia_nhap` decimal(38,2) DEFAULT NULL,
+  `gia_ban` decimal(20,0) DEFAULT NULL,
+  `gia_nhap` decimal(20,0) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
   `so_luong_ton` int DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
-  `id_khuyen_mai` int DEFAULT NULL,
   `id_san_pham` int DEFAULT NULL,
   `id_trong_luong` int DEFAULT NULL,
   `id_vat_lieu` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK1rjmi0xu7agob46sq32ns1587` (`id_khuyen_mai`),
   KEY `FKmby561odp360b0sfqx4mmarja` (`id_san_pham`),
   KEY `FKdrjkavdharm2dd7tsh3wywlr1` (`id_trong_luong`),
   KEY `FK4sre5v1q6gi2fhpeogsgd71bc` (`id_vat_lieu`),
-  CONSTRAINT `FK1rjmi0xu7agob46sq32ns1587` FOREIGN KEY (`id_khuyen_mai`) REFERENCES `khuyen_mai` (`id`),
   CONSTRAINT `FK4sre5v1q6gi2fhpeogsgd71bc` FOREIGN KEY (`id_vat_lieu`) REFERENCES `vat_lieu` (`id`),
   CONSTRAINT `FKdrjkavdharm2dd7tsh3wywlr1` FOREIGN KEY (`id_trong_luong`) REFERENCES `trong_luong` (`id`),
   CONSTRAINT `FKmby561odp360b0sfqx4mmarja` FOREIGN KEY (`id_san_pham`) REFERENCES `san_pham` (`id`)
@@ -540,7 +572,7 @@ CREATE TABLE `san_pham_chi_tiet` (
 
 LOCK TABLES `san_pham_chi_tiet` WRITE;
 /*!40000 ALTER TABLE `san_pham_chi_tiet` DISABLE KEYS */;
-INSERT INTO `san_pham_chi_tiet` VALUES (1,780000.00,700000.00,'2023-05-05','2023-04-13',NULL,1,NULL,1,1,1),(2,730000.00,600000.00,'2023-05-05','2023-04-13',NULL,1,NULL,2,1,1),(3,6400000.00,500000.00,'2023-05-05','2023-04-13',NULL,1,NULL,3,1,1),(4,540000.00,400000.00,'2023-05-05','2023-04-13',NULL,1,NULL,4,2,1),(5,750000.00,600000.00,'2023-05-05','2023-04-13',NULL,1,NULL,5,1,1);
+INSERT INTO `san_pham_chi_tiet` VALUES (1,780000,700000,'2023-05-05','2023-04-13',50,1,1,1,1),(2,730000,600000,'2023-05-05','2023-04-13',100,1,2,1,1),(3,6400000,500000,'2023-05-05','2023-04-13',25,1,3,1,1),(4,540000,400000,'2023-05-05','2023-04-13',30,1,4,2,1),(5,750000,600000,'2023-05-05','2023-04-13',120,1,5,1,1);
 /*!40000 ALTER TABLE `san_pham_chi_tiet` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -594,7 +626,7 @@ CREATE TABLE `size_ctsp` (
   KEY `FKkvjo22xxixaj9gu4dstu4q313` (`id_size`),
   CONSTRAINT `FK7sx2xsvfe1gorvlkii0nw12q2` FOREIGN KEY (`id_ctsp`) REFERENCES `san_pham_chi_tiet` (`id`),
   CONSTRAINT `FKkvjo22xxixaj9gu4dstu4q313` FOREIGN KEY (`id_size`) REFERENCES `size` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -603,6 +635,7 @@ CREATE TABLE `size_ctsp` (
 
 LOCK TABLES `size_ctsp` WRITE;
 /*!40000 ALTER TABLE `size_ctsp` DISABLE KEYS */;
+INSERT INTO `size_ctsp` VALUES (1,NULL,'2023-05-05',NULL,23,1,1,1),(2,NULL,'2023-05-05',NULL,10,1,1,4),(3,NULL,'2023-05-05',NULL,17,1,1,3),(4,NULL,'2023-05-05',NULL,55,1,2,1),(5,NULL,'2023-05-05',NULL,2,1,2,2),(6,NULL,'2023-05-05',NULL,3,1,2,4),(7,NULL,'2023-05-05',NULL,40,1,2,3),(8,NULL,'2023-05-05',NULL,20,1,3,1),(9,NULL,'2023-05-05',NULL,5,1,3,3),(10,NULL,'2023-05-05',NULL,10,1,4,1),(11,NULL,'2023-05-05',NULL,10,1,4,2),(12,NULL,'2023-05-05',NULL,10,1,4,4),(13,NULL,'2023-05-05',NULL,40,1,5,1),(14,NULL,'2023-05-05',NULL,20,1,5,2),(15,NULL,'2023-05-05',NULL,20,1,5,3),(16,NULL,'2023-05-05',NULL,40,1,5,4);
 /*!40000 ALTER TABLE `size_ctsp` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -728,8 +761,37 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'levana@gmail.com',1,NULL,'U1','2002-10-07','2023-11-10','2023-10-24','12345','ADMIN','0987678987','Lê Văn A',1,'levana',1),(2,'levanb@gmail.com',1,NULL,'U2','2002-11-07','2023-11-10','2023-10-24','12345','NHANVIEN','0987678987','Lê Văn B',1,'levanb',2),(3,'levanc@gmail.com',1,NULL,'U3','2002-12-07','2023-11-10','2023-10-24','12345','USER','0987678987','Lê Văn C',1,'levanc',3);
+INSERT INTO `user` VALUES (1,'levana@gmail.com',1,NULL,'U1','2002-10-07','2023-11-10','2023-10-24','12345','ADMIN','0987678987','Lê Văn A',1,'levana',NULL),(2,'levanb@gmail.com',1,NULL,'U2','2002-11-07','2023-11-10','2023-10-24','12345','NHANVIEN','0987678987','Lê Văn B',1,'levanb',1),(3,'levanc@gmail.com',1,NULL,'U3','2002-12-07','2023-11-10','2023-10-24','12345','USER','0987678987','Lê Văn C',1,'levanc',NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_voucher`
+--
+
+DROP TABLE IF EXISTS `user_voucher`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_voucher` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `dieu_kien` decimal(20,0) DEFAULT NULL,
+  `id_user` int DEFAULT NULL,
+  `id_voucher` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKm34eg0v242ck9tt3fw8yo0vko` (`id_user`),
+  KEY `FKeilm6oxouwrda1lqagxv9f22a` (`id_voucher`),
+  CONSTRAINT `FKeilm6oxouwrda1lqagxv9f22a` FOREIGN KEY (`id_voucher`) REFERENCES `voucher` (`id`),
+  CONSTRAINT `FKm34eg0v242ck9tt3fw8yo0vko` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_voucher`
+--
+
+LOCK TABLES `user_voucher` WRITE;
+/*!40000 ALTER TABLE `user_voucher` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_voucher` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -760,6 +822,33 @@ LOCK TABLES `vat_lieu` WRITE;
 INSERT INTO `vat_lieu` VALUES (1,'VL1','độ bền cao','2023-11-10','2023-10-24','nhựa ABS nguyên sinh',1),(2,'VL2','êm ái, thông thoáng bảo','2023-11-10','2023-10-24','xốp EPS ',1),(3,'VL3','không gỉ,độ bền cao','2023-11-10','2023-10-24','da simili',1);
 /*!40000 ALTER TABLE `vat_lieu` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `voucher`
+--
+
+DROP TABLE IF EXISTS `voucher`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `voucher` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `giam_toi_da` decimal(20,0) DEFAULT NULL,
+  `mo_ta` varchar(10000) DEFAULT NULL,
+  `ten` varchar(255) DEFAULT NULL,
+  `thoi_gian_bat_dau` varchar(255) DEFAULT NULL,
+  `thoi_gian_ket_thuc` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `voucher`
+--
+
+LOCK TABLES `voucher` WRITE;
+/*!40000 ALTER TABLE `voucher` DISABLE KEYS */;
+/*!40000 ALTER TABLE `voucher` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -769,5 +858,3 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2023-06-21  5:14:22
