@@ -18,6 +18,7 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -68,10 +69,14 @@ public class SanPhamChiTietRequest implements DtoToEntity<SanPhamChiTiet> {
     private String soLuongSize;
 
     @NotBlank(message = "Không bỏ trống Màu sắc")
-    private String idMauSac;
+    private List<String> idMauSac;
 
     @NotBlank(message = "Không bỏ trống Size")
-    private String idSize;
+    private List<String> idSize;
+
+    private List<String> imgMauSac;
+
+    private List<String> images;
 
     @Override
     public SanPhamChiTiet dtoToEntity(SanPhamChiTiet sanPhamChiTiet) {

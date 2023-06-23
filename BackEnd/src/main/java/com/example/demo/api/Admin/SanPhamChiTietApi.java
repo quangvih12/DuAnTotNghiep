@@ -35,6 +35,14 @@ public class SanPhamChiTietApi {
         return ResponseEntity.ok(map);
     }
 
+    // thêm bằng file excel
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadCustomersData(@RequestParam("file") MultipartFile file) {
+        this.sanPhamChiTiet.saveExcel(file);
+        HashMap<String, Object> map = DataUltil.setData("success", " thêm sản phẩm thành công");
+        return ResponseEntity.ok(map);
+    }
+
     // xuat excel
     @GetMapping("/export")
     public void exportToExcel(HttpServletResponse response) throws IOException {

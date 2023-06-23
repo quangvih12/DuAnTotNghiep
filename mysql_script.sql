@@ -288,7 +288,7 @@ DROP TABLE IF EXISTS `image`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `image` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `anh` varchar(10000) DEFAULT NULL,
+  `anh` varchar(50000) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
@@ -444,7 +444,7 @@ DROP TABLE IF EXISTS `mau_sac_ctsp`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mau_sac_ctsp` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `anh` varchar(5000) DEFAULT NULL,
+  `anh` varchar(50000) DEFAULT NULL,
   `mo_ta` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
@@ -733,7 +733,7 @@ CREATE TABLE `user` (
   `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(255) DEFAULT NULL,
   `gioi_tinh` int DEFAULT NULL,
-  `anh` varchar(5000) DEFAULT NULL,
+  `anh` varchar(50000) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
   `ngay_sinh` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
@@ -833,10 +833,17 @@ CREATE TABLE `voucher` (
   `ten` varchar(255) DEFAULT NULL,
   `thoi_gian_bat_dau` varchar(255) DEFAULT NULL,
   `thoi_gian_ket_thuc` varchar(255) DEFAULT NULL,
+  `trang_thai` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+INSERT INTO `voucher`(`giam_toi_da`,`mo_ta`, `ten`, `thoi_gian_bat_dau`,`thoi_gian_ket_thuc`, `trang_thai`)
+     VALUES (15000,'ma giam gia zomot','zô mốt','2023/06/23','2023/06/25',1),
+                           (13000,'freeship','freeship','2023/06/23','2023/06/25',1),
+                           (16000,'thời trang','thời trang','2023/06/23','2023/06/25',1),
+                           (15000,'siêu voucher','siêu voucher','2023/06/23','2023/06/25',1),
+                           (11000,'06-06','06-06','2023/06/23','2023/06/25',1);
 --
 -- Dumping data for table `voucher`
 --
