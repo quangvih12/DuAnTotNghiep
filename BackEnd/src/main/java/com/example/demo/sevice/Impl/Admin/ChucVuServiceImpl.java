@@ -119,7 +119,7 @@ public class ChucVuServiceImpl implements ChucVuService {
                 List<ChucVu> saveAll = this.repository.saveAll(chucVus);
                 for (int i = 0; i < saveAll.size(); i++) {
                     ChucVu cv = saveAll.get(i);
-                    cv.setMa("L" + saveAll.get(i).getId());
+                    cv.setMa("CV" + saveAll.get(i).getId());
                     cv.setNgayTao(DatetimeUtil.getCurrentDate());
                 }
                 this.repository.saveAll(chucVus);

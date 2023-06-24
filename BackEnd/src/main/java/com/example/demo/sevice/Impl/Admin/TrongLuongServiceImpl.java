@@ -122,7 +122,7 @@ public class TrongLuongServiceImpl implements TrongLuongService {
                 List<TrongLuong> saveAll = this.repository.saveAll(trongLuongs);
                 for (int i = 0; i < saveAll.size(); i++) {
                     TrongLuong tl = saveAll.get(i);
-                    tl.setMa("L" + saveAll.get(i).getId());
+                    tl.setMa("TL" + saveAll.get(i).getId());
                     tl.setNgayTao(DatetimeUtil.getCurrentDate());
                 }
                 this.repository.saveAll(trongLuongs);
