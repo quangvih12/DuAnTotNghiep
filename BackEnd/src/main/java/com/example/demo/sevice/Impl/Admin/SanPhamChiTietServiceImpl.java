@@ -19,10 +19,21 @@ import com.example.demo.sevice.SanPhamChiTietService;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import com.example.demo.util.ExcelExportUtils;
-import com.example.demo.util.FileUtil;
+import com.example.demo.util.ImageToAzureUtil;
+import com.microsoft.azure.storage.StorageException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Color;
+import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Shape;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFDrawing;
+import org.apache.poi.xssf.usermodel.XSSFPicture;
+import org.apache.poi.xssf.usermodel.XSSFPictureData;
+import org.apache.poi.xssf.usermodel.XSSFShape;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +44,22 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
@@ -67,6 +84,10 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Autowired
     private TrongLuongServiceImpl trongLuongService;
+
+    @Autowired
+    private ImageToAzureUtil imageToAzureUtil;
+
 
     @Override
     public Page<SanPhamChiTiet> getAll(Integer page, String upAndDown, Integer trangThai) {
@@ -122,9 +143,9 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
         String encode;
         try {
-            encode = FileUtil.fileToBase64(file);
-            mauSacChiTiet.setAnh(encode);
-        } catch (IOException e) {
+            String imageUrl = imageToAzureUtil.uploadImage(file);
+            mauSacChiTiet.setAnh(imageUrl);
+        } catch (IOException | StorageException | URISyntaxException e) {
             e.printStackTrace();
         }
         return this.mauSacChiTietReponsitory.save(mauSacChiTiet);
@@ -151,13 +172,13 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         for (MultipartFile file : files) {
             try {
                 Image image = new Image();
-                String encode = FileUtil.fileToBase64(file);
-                image.setAnh(encode);
+                String imageUrl = imageToAzureUtil.uploadImage(file);
+                image.setAnh(imageUrl);
                 image.setSanPhamChiTiet(sanPhamChiTiet);
                 image.setTrangThai(1);
                 image.setNgayTao(DatetimeUtil.getCurrentDate());
                 imageList.add(image);
-            } catch (IOException e) {
+            } catch (IOException | StorageException | URISyntaxException e) {
                 e.printStackTrace();
             }
         }
@@ -185,10 +206,16 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         if (this.isValidExcelFile(file)) {
             try {
                 List<SanPhamChiTietRequest> sanPhamChiTietRequests = this.getCustomersDataFromExcel(file.getInputStream());
-                List<SanPhamChiTiet> saveSanPhamChiTiet = this.saveAll(sanPhamChiTietRequests);
-                this.saveAllMauSacChiTiet(sanPhamChiTietRequests, saveSanPhamChiTiet);
-                this.saveAllSizeChiTiet(sanPhamChiTietRequests, saveSanPhamChiTiet);
-                this.saveAllImage(sanPhamChiTietRequests, saveSanPhamChiTiet);
+                for (SanPhamChiTietRequest o : sanPhamChiTietRequests) {
+//                    for (String z: o.getImages()
+//                         ) {
+//                        System.out.println(z);
+//                    }
+                }
+//                List<SanPhamChiTiet> saveSanPhamChiTiet = this.saveAll(sanPhamChiTietRequests);
+//                this.saveAllMauSacChiTiet(sanPhamChiTietRequests, saveSanPhamChiTiet);
+//                this.saveAllSizeChiTiet(sanPhamChiTietRequests, saveSanPhamChiTiet);
+//                this.saveAllImage(sanPhamChiTietRequests, saveSanPhamChiTiet);
             } catch (IOException e) {
                 throw new IllegalArgumentException("The file is not a valid excel file");
             }
@@ -358,11 +385,21 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
             XSSFSheet sheet = workbook.getSheetAt(3);
 
+            String tempDirPath = "D:\\imgDATN";
+            File tempDir = new File(tempDirPath);
+            if (!tempDir.exists()) {
+                if (tempDir.mkdirs()) {
+                    System.out.println("Thư mục tạm đã được tạo thành công.");
+                } else {
+                    System.out.println("Không thể tạo thư mục tạm.");
+                }
+            }
             if (workbook != null) {
 //                System.out.println("Workbook co ton tai");
                 if (sheet != null) {
 //                    System.out.println("sheet ton tai");
                     int rowIndex = 0;
+                    XSSFDrawing drawing = sheet.createDrawingPatriarch();
                     for (Row row : sheet) {
                         if (rowIndex == 0) {
                             rowIndex++;
@@ -374,41 +411,83 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                         while (cellIterator.hasNext()) {
                             Cell cell = cellIterator.next();
                             switch (cellIndex) {
-                                case 0 -> {
-                                    int id = (int) cell.getNumericCellValue();
-                                    SanPham sanPham = sanPhamService.getById(id);
-                                    sanPhamChiTiet.setSanPham(sanPham.getId().toString());
-                                }
-                                case 1 -> sanPhamChiTiet.setTrangThai(String.valueOf((int) cell.getNumericCellValue()));
-                                case 2 -> {
-                                    int id = (int) cell.getNumericCellValue();
-                                    VatLieu vatLieu = vatLieuReponsitory.findById(id).orElse(null);
-                                    sanPhamChiTiet.setVatLieu(vatLieu.getId().toString());
-                                }
-                                case 3 -> {
-                                    int id = (int) cell.getNumericCellValue();
-                                    TrongLuong trongLuong = trongLuongService.getById(id);
-                                    sanPhamChiTiet.setTrongLuong(trongLuong.getId().toString());
-                                }
-                                case 4 -> sanPhamChiTiet.setGiaBan(String.valueOf((int) cell.getNumericCellValue()));
-                                case 5 -> sanPhamChiTiet.setGiaNhap(String.valueOf((int) cell.getNumericCellValue()));
-                                case 6 -> sanPhamChiTiet.setSoLuongTon(String.valueOf((int) cell.getNumericCellValue()));
-                                case 7 -> {
-                                    String id = cell.getStringCellValue();
-                                    sanPhamChiTiet.setIdMauSac(new ArrayList<>(Arrays.asList(id.split(","))));
-                                }
-                                case 8 -> {
-                                    String id = cell.getStringCellValue();
-                                    sanPhamChiTiet.setIdSize(new ArrayList<>(Arrays.asList(id.split(","))));
-                                }
-                                case 9 -> sanPhamChiTiet.setSoLuongSize(String.valueOf((int) cell.getNumericCellValue()));
-                                case 10 -> {
-                                    String img = cell.getStringCellValue();
-                                    sanPhamChiTiet.setImgMauSac(new ArrayList<>(Arrays.asList(img.split(","))));
-                                }
+//                                case 0 -> {
+//                                    int id = (int) cell.getNumericCellValue();
+//                                    SanPham sanPham = sanPhamService.getById(id);
+//                                    sanPhamChiTiet.setSanPham(sanPham.getId().toString());
+//                                }
+//                                case 1 -> sanPhamChiTiet.setTrangThai(String.valueOf((int) cell.getNumericCellValue()));
+//                                case 2 -> {
+//                                    int id = (int) cell.getNumericCellValue();
+//                                    VatLieu vatLieu = vatLieuReponsitory.findById(id).orElse(null);
+//                                    sanPhamChiTiet.setVatLieu(vatLieu.getId().toString());
+//                                }
+//                                case 3 -> {
+//                                    int id = (int) cell.getNumericCellValue();
+//                                    TrongLuong trongLuong = trongLuongService.getById(id);
+//                                    sanPhamChiTiet.setTrongLuong(trongLuong.getId().toString());
+//                                }
+//                                case 4 -> sanPhamChiTiet.setGiaBan(String.valueOf((int) cell.getNumericCellValue()));
+//                                case 5 -> sanPhamChiTiet.setGiaNhap(String.valueOf((int) cell.getNumericCellValue()));
+//                                case 6 -> sanPhamChiTiet.setSoLuongTon(String.valueOf((int) cell.getNumericCellValue()));
+//                                case 7 -> {
+//                                    String id = cell.getStringCellValue();
+//                                    sanPhamChiTiet.setIdMauSac(new ArrayList<>(Arrays.asList(id.split(","))));
+//                                }
+//                                case 8 -> {
+//                                    String id = cell.getStringCellValue();
+//                                    sanPhamChiTiet.setIdSize(new ArrayList<>(Arrays.asList(id.split(","))));
+//                                }
+//                                case 9 -> sanPhamChiTiet.setSoLuongSize(String.valueOf((int) cell.getNumericCellValue()));
+//                                case 9 -> sanPhamChiTiet.setMoTaMauSacChiTiet(cell.getStringCellValue());
+//                                case 10 -> {
+//                                    String img = cell.getStringCellValue();
+//                                    sanPhamChiTiet.setImgMauSac(new ArrayList<>(Arrays.asList(img.split(","))));
+//                                }
                                 case 11 -> {
-                                    String img = cell.getStringCellValue();
-                                    sanPhamChiTiet.setImages(new ArrayList<>(Arrays.asList(img.split(","))));
+                                    List<String> filePathList = new ArrayList<>(); // danh sách chứa đường dẫn tới tệp tin của các ảnh
+                                    List<byte[]> uniqueImages = new ArrayList<>(); // Danh sách lưu trữ các ảnh duy nhất
+                                    List<String> imageHashes = new ArrayList<>(); // Danh sách lưu trữ các giá trị băm tương ứng
+
+                                    for (XSSFShape shape : drawing.getShapes()) {
+                                        if (shape instanceof XSSFPicture) {
+                                                XSSFPictureData pictureData = ((XSSFPicture) shape).getPictureData();
+                                                byte[] imageData = pictureData.getData();
+                                                String imageHash = Arrays.hashCode(imageData) + ""; // Tạo giá trị băm cho ảnh
+                                                uniqueImages.add(imageData); // Thêm ảnh vào danh sách
+
+                                        }
+                                    }
+
+                                    for (byte[] imageData : uniqueImages) {
+                                        // Tạo tên tệp tin duy nhất cho hình ảnh
+                                        String fileName = UUID.randomUUID().toString() + ".jpg";
+                                        // Đường dẫn tệp tin tạm thời
+                                        String tempFilePath = tempDirPath + File.separator + fileName;
+                                        // Lưu hình ảnh tạm thời vào địa chỉ trên đĩa cục bộ
+                                        File tempFile = new File(tempFilePath);
+                                        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                                            fos.write(imageData);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        filePathList.add(tempFilePath);
+                                    }
+
+
+                                    // Tải tệp tin từ thư mục tạm thời lên Azure Blob Storage
+//                                    for (String tempFilePath : filePathList) {
+                                        // Thực hiện quá trình tải lên Azure Blob Storage ở đây
+                                        // String azureImageUrl = imageToAzureUtil.uploadImageToAzure(tempFilePath);
+                                        // sanPhamChiTiet.getImages().add(azureImageUrl);
+                                        // ...
+                                        // Sau khi tải lên thành công, bạn có thể xóa tệp tin tạm thời như sau:
+                                        // File tempFile = new File(tempFilePath);
+                                        // tempFile.delete();
+//                                    }
+
+                                    break;
                                 }
                                 default -> {
                                 }
@@ -424,9 +503,12 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 System.out.println("Workbook is null. Không thể đọc dữ liệu từ Excel.");
             }
 
-        } catch (IOException e) {
-            e.getStackTrace();
+        } catch (
+                IOException e) {
+            e.printStackTrace();
         }
         return sanPhamChiTietList;
     }
+
+
 }
