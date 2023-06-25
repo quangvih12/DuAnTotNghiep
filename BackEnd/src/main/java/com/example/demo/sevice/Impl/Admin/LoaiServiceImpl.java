@@ -56,7 +56,7 @@ public class LoaiServiceImpl implements LoaiService {
         Loai loai = dto.dtoToEntity(new Loai());
         try {
             Loai loais = loaiReponsitory.save(loai);
-            loais.setMa("L"+loais.getId());
+            loais.setMa("L" + loais.getId());
             loaiReponsitory.save(loais);
             return DataUltil.setData("success", "thêm thành công");
         } catch (Exception e) {
@@ -110,13 +110,31 @@ public class LoaiServiceImpl implements LoaiService {
         if (this.isValidExcelFile(file)) {
             try {
                 List<Loai> loais = this.getCustomersDataFromExcel(file.getInputStream());
-                List<Loai> savedLoais = this.loaiReponsitory.saveAll(loais);
+                List<Loai> listLoai = new ArrayList<>();
+                for (Loai o : loais) {
+                    Optional<Loai> optional = loaiReponsitory.findByTen(o.getTen());
+                    if (optional.isPresent()) {
+                        // Cập nhật thông tin loai
+                        Loai loai = optional.get();
+                        loai.setTen(o.getTen());
+                        loai.setTrangThai(o.getTrangThai());
+                        listLoai.add(loai);
+                    } else {
+                        // Thiết lập thông tin loai mới
+                        Loai loai = new Loai();
+                        loai.setTen(o.getTen());
+                        loai.setTrangThai(o.getTrangThai());
+                        listLoai.add(loai);
+                    }
+                }
+                List<Loai> savedLoais = this.loaiReponsitory.saveAll(listLoai);
                 for (int i = 0; i < savedLoais.size(); i++) {
                     Loai loai = savedLoais.get(i);
                     loai.setMa("L" + savedLoais.get(i).getId());
                     loai.setNgayTao(DatetimeUtil.getCurrentDate());
                 }
-                this.loaiReponsitory.saveAll(loais);
+                this.loaiReponsitory.saveAll(listLoai);
+
             } catch (IOException e) {
                 throw new IllegalArgumentException("The file is not a valid excel file");
             }

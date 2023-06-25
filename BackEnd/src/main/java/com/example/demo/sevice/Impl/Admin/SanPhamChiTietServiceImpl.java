@@ -211,16 +211,34 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     public List<SanPhamChiTiet> saveAll(List<SanPhamChiTietRequest> sanPhamChiTietRequests) {
         List<SanPhamChiTiet> sanPhamChiTiets = new ArrayList<>();
         for (SanPhamChiTietRequest request : sanPhamChiTietRequests) {
-            SanPhamChiTiet sanPhamChiTiet = new SanPhamChiTiet();
-            sanPhamChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-            sanPhamChiTiet.setSanPham(SanPham.builder().id(Integer.valueOf(request.getSanPham())).build());
-            sanPhamChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(request.getVatLieu())).build());
-            sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(Integer.parseInt(request.getTrongLuong())).build());
-            sanPhamChiTiet.setTrangThai(Integer.valueOf(request.getTrangThai()));
-            sanPhamChiTiet.setSoLuongTon(Integer.valueOf(request.getSoLuongTon()));
-            sanPhamChiTiet.setGiaBan(BigDecimal.valueOf(Long.valueOf(request.getGiaBan())));
-            sanPhamChiTiet.setGiaNhap(BigDecimal.valueOf(Long.valueOf(request.getGiaNhap())));
-            sanPhamChiTiets.add(sanPhamChiTiet);
+            Optional<SanPhamChiTiet> existingChiTiet = chiTietSanPhamReponsitory.findById(Integer.valueOf(request.getSanPham()));
+            if (existingChiTiet.isPresent()) {
+                SanPhamChiTiet sanPhamChiTiet = existingChiTiet.get();
+                // Cập nhật thông tin sản phẩm chi tiết
+                sanPhamChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                sanPhamChiTiet.setSanPham(SanPham.builder().id(Integer.valueOf(request.getSanPham())).build());
+                sanPhamChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(request.getVatLieu())).build());
+                sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(Integer.parseInt(request.getTrongLuong())).build());
+                sanPhamChiTiet.setTrangThai(Integer.valueOf(request.getTrangThai()));
+                sanPhamChiTiet.setSoLuongTon(Integer.valueOf(request.getSoLuongTon()));
+                sanPhamChiTiet.setGiaBan(BigDecimal.valueOf(Long.valueOf(request.getGiaBan())));
+                sanPhamChiTiet.setGiaNhap(BigDecimal.valueOf(Long.valueOf(request.getGiaNhap())));
+
+                sanPhamChiTiets.add(sanPhamChiTiet);
+            } else {
+                SanPhamChiTiet sanPhamChiTiet = new SanPhamChiTiet();
+                // Thiết lập thông tin sản phẩm chi tiết mới
+                sanPhamChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                sanPhamChiTiet.setSanPham(SanPham.builder().id(Integer.valueOf(request.getSanPham())).build());
+                sanPhamChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(request.getVatLieu())).build());
+                sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(Integer.parseInt(request.getTrongLuong())).build());
+                sanPhamChiTiet.setTrangThai(Integer.valueOf(request.getTrangThai()));
+                sanPhamChiTiet.setSoLuongTon(Integer.valueOf(request.getSoLuongTon()));
+                sanPhamChiTiet.setGiaBan(BigDecimal.valueOf(Long.valueOf(request.getGiaBan())));
+                sanPhamChiTiet.setGiaNhap(BigDecimal.valueOf(Long.valueOf(request.getGiaNhap())));
+
+                sanPhamChiTiets.add(sanPhamChiTiet);
+            }
         }
         return this.chiTietSanPhamReponsitory.saveAll(sanPhamChiTiets);
     }
@@ -231,17 +249,33 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         for (SanPhamChiTietRequest request : sanPhamChiTietRequests) {
             int index = sanPhamChiTietRequests.indexOf(request);
             SanPhamChiTiet sanPhamChiTiet = savedSanPhamChiTiets.get(index);
+            Optional<MauSacChiTiet> optional = mauSacChiTietReponsitory.findById(Integer.valueOf(request.getSanPham()));
             for (String mauSac : request.getIdMauSac()) {
-                MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
-                mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
-                mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                mauSacChiTiet.setTrangThai(1);
-                for (String img : request.getImgMauSac()) {
-                    mauSacChiTiet.setAnh(img);
+                if (optional.isPresent()) {
+                    // Cập nhật thông tin màu sắc chi tiết
+                    MauSacChiTiet mauSacChiTiet = optional.get();
+                    mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
+                    mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                    mauSacChiTiet.setTrangThai(1);
+                    for (String img : request.getImgMauSac()) {
+                        mauSacChiTiet.setAnh(img);
+                    }
+                    mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                    mauSacChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
+                    mauSacChiTiets.add(mauSacChiTiet);
+                } else {
+                    // Thiết lập thông tin màu sắc chi tiết mới
+                    MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
+                    mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
+                    mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                    mauSacChiTiet.setTrangThai(1);
+                    for (String img : request.getImgMauSac()) {
+                        mauSacChiTiet.setAnh(img);
+                    }
+                    mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                    mauSacChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
+                    mauSacChiTiets.add(mauSacChiTiet);
                 }
-                mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-                mauSacChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
-                mauSacChiTiets.add(mauSacChiTiet);
             }
         }
         return this.mauSacChiTietReponsitory.saveAll(mauSacChiTiets);
@@ -253,15 +287,29 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         for (SanPhamChiTietRequest request : sanPhamChiTietRequests) {
             int index = sanPhamChiTietRequests.indexOf(request);
             SanPhamChiTiet sanPhamChiTiet = savedSanPhamChiTiets.get(index);
+            Optional<SizeChiTiet> optional = sizeChiTietReponsitory.findById(Integer.valueOf(request.getSanPham()));
             for (String size : request.getIdSize()) {
-                SizeChiTiet sizeChiTiet = new SizeChiTiet();
-                sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(size)).build());
-                sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                sizeChiTiet.setTrangThai(1);
-                sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-                sizeChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
-                sizeChiTiet.setSoLuong(Integer.valueOf(request.getSoLuongSize()));
-                sizeChiTiets.add(sizeChiTiet);
+                if (optional.isPresent()) {
+                    // Cập nhật thông tin size chi tiết
+                    SizeChiTiet sizeChiTiet = optional.get();
+                    sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(size)).build());
+                    sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                    sizeChiTiet.setTrangThai(1);
+                    sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                    sizeChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
+                    sizeChiTiet.setSoLuong(Integer.valueOf(request.getSoLuongSize()));
+                    sizeChiTiets.add(sizeChiTiet);
+                } else {
+                    // Thiết lập thông tin size  chi tiết mới
+                    SizeChiTiet sizeChiTiet = new SizeChiTiet();
+                    sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(size)).build());
+                    sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                    sizeChiTiet.setTrangThai(1);
+                    sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                    sizeChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
+                    sizeChiTiet.setSoLuong(Integer.valueOf(request.getSoLuongSize()));
+                    sizeChiTiets.add(sizeChiTiet);
+                }
             }
         }
         return this.sizeChiTietReponsitory.saveAll(sizeChiTiets);
@@ -273,13 +321,26 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         for (SanPhamChiTietRequest request : sanPhamChiTietRequests) {
             int index = sanPhamChiTietRequests.indexOf(request);
             SanPhamChiTiet sanPhamChiTiet = savedSanPhamChiTiets.get(index);
+            Optional<Image> optional = imageReponsitory.findById(Integer.valueOf(request.getSanPham()));
             for (String images : request.getImages()) {
-                Image image = new Image();
-                image.setSanPhamChiTiet(sanPhamChiTiet);
-                image.setTrangThai(1);
-                image.setNgayTao(DatetimeUtil.getCurrentDate());
-                image.setAnh(images);
-                imageList.add(image);
+                if (optional.isPresent()) {
+                    // Cập nhật thông tin image
+                    Image image = optional.get();
+                    image.setSanPhamChiTiet(sanPhamChiTiet);
+                    image.setTrangThai(1);
+                    image.setNgayTao(DatetimeUtil.getCurrentDate());
+                    image.setAnh(images);
+                    imageList.add(image);
+                } else {
+                    // Thiết lập thông tin image mới
+                    Image image = new Image();
+                    image.setSanPhamChiTiet(sanPhamChiTiet);
+                    image.setTrangThai(1);
+                    image.setNgayTao(DatetimeUtil.getCurrentDate());
+                    image.setAnh(images);
+                    imageList.add(image);
+                }
+
             }
         }
         List<Image> listImg = this.imageReponsitory.saveAll(imageList);
