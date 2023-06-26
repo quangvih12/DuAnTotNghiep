@@ -4,6 +4,7 @@ import com.example.demo.dto.request.SanPhamChiTietRequest;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.sevice.Impl.Admin.SanPhamChiTietServiceImpl;
 import com.example.demo.util.DataUltil;
+import com.microsoft.azure.storage.StorageException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 
 @RestController
