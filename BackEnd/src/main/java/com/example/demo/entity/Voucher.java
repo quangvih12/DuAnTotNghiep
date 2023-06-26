@@ -33,6 +33,9 @@ public class Voucher {
     @Column(length = 10000)
     private String moTa;
 
+    @Column(name = "so_luong")
+    private Integer soLuong;
+
     @Column(precision = 20, scale = 0)
     private BigDecimal giamToiDa;
 }

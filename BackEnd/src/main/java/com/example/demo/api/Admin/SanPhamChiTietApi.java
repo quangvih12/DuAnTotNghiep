@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,27 +21,35 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
 import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/ChiTietSp")
 public class SanPhamChiTietApi {
     @Autowired
-    private SanPhamChiTietServiceImpl sanPhamChiTiet;
+    private SanPhamChiTietServiceImpl sanPhamChiTietService;
 
     // getAll san pham chi tiet
     @GetMapping()
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages,
                                     @RequestParam(required = false) String upAndDown, @RequestParam(required = false) Integer trangThai) {
-        Page<SanPhamChiTiet> page = sanPhamChiTiet.getAll(pages, upAndDown, trangThai);
+        Page<SanPhamChiTiet> page = sanPhamChiTietService.getAll(pages, upAndDown, trangThai);
         HashMap<String, Object> map = DataUltil.setData("ok", page);
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/getOne/{id}")
+    public ResponseEntity<?> getOne(@PathVariable Integer id) {
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.getOne(id);
+        HashMap<String, Object> map = DataUltil.setData("ok", sanPhamChiTiet);
         return ResponseEntity.ok(map);
     }
 
     // thêm bằng file excel
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadCustomersData(@RequestParam("file") MultipartFile file) {
-        this.sanPhamChiTiet.saveExcel(file);
+    public ResponseEntity<?> uploadCustomersData(@RequestParam("file") MultipartFile file) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
+        this.sanPhamChiTietService.saveExcel(file);
         HashMap<String, Object> map = DataUltil.setData("success", " thêm sản phẩm thành công");
         return ResponseEntity.ok(map);
     }
@@ -52,7 +61,7 @@ public class SanPhamChiTietApi {
         String headerKey = "Content-Disposition";
         String headerValue = "attachment; filename=ListSanPham.xlsx";
         response.setHeader(headerKey, headerValue);
-        sanPhamChiTiet.exportCustomerToExcel(response);
+        sanPhamChiTietService.exportCustomerToExcel(response);
     }
 
     // thêm
@@ -61,7 +70,7 @@ public class SanPhamChiTietApi {
                                  @RequestPart("files") MultipartFile[] files,
                                  @RequestPart("file") MultipartFile file
     ) {
-        HashMap<String, Object> map = sanPhamChiTiet.add(sanPhamChiTietRequest, files, file);
+        HashMap<String, Object> map = sanPhamChiTietService.add(sanPhamChiTietRequest, files, file);
         return ResponseEntity.ok(map);
     }
 }

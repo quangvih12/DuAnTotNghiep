@@ -834,6 +834,7 @@ CREATE TABLE `voucher` (
   `thoi_gian_bat_dau` varchar(255) DEFAULT NULL,
   `thoi_gian_ket_thuc` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
+   `so_luong` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
