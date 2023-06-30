@@ -12,11 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.security.InvalidKeyException;
-import java.util.UUID;
 
 @Component
 public class ImageToAzureUtil {
@@ -43,7 +40,7 @@ public class ImageToAzureUtil {
         CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
         CloudBlobContainer container = blobClient.getContainerReference(containerName);
 
-         String fileName = this.getImageFileName(imagePath);
+        String fileName = this.getImageFileName(imagePath);
         // Tạo một đối tượng CloudBlockBlob để lưu trữ ảnh trên Azure Blob Storage
         CloudBlockBlob blob = container.getBlockBlobReference(fileName);
 

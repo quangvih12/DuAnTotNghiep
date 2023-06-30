@@ -68,7 +68,7 @@ public class SanPhamChiTietApi {
     @PostMapping(value = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> add(@RequestPart("request") SanPhamChiTietRequest sanPhamChiTietRequest,
                                  @RequestPart("files") MultipartFile[] files,
-                                 @RequestPart("file") MultipartFile file
+                                 @RequestPart("file") MultipartFile[] file
     ) {
         HashMap<String, Object> map = sanPhamChiTietService.add(sanPhamChiTietRequest, files, file);
         return ResponseEntity.ok(map);

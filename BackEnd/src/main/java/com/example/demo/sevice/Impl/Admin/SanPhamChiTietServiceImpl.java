@@ -24,11 +24,7 @@ import com.microsoft.azure.storage.StorageException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
-import org.apache.poi.xssf.usermodel.XSSFPicture;
-import org.apache.poi.xssf.usermodel.XSSFPictureData;
-import org.apache.poi.xssf.usermodel.XSSFShape;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +35,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -53,7 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
@@ -110,7 +104,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
-    public HashMap<String, Object> add(SanPhamChiTietRequest dto, MultipartFile[] files, MultipartFile file) {
+    public HashMap<String, Object> add(SanPhamChiTietRequest dto, MultipartFile[] files, MultipartFile[] file) {
         SanPhamChiTiet sanPham = dto.dtoToEntity(new SanPhamChiTiet());
         try {
             SanPhamChiTiet sanPhamChiTiet = this.chiTietSanPhamReponsitory.save(sanPham);
@@ -125,33 +119,41 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     //lưu mau sắc chi tiết
-    public MauSacChiTiet saveMauSac(List<String> idMauSac, String moTa, SanPhamChiTiet sanPhamChiTiet, MultipartFile file) {
+    public Iterable<MauSacChiTiet> saveMauSac(List<String> idMauSac, String moTa, SanPhamChiTiet sanPhamChiTiet, MultipartFile[] files) {
         // gán id màu sắc  và id san pham chi tiết vào đối tượng màu sắc chi tiết
-        MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
-        for (String mauSac : idMauSac) {
+        List<MauSacChiTiet> mauSacChiTietList = new ArrayList<>();
+
+        // duyệt qua danh sách files theo thứ tự và lấy phần tử tương ứng
+        AtomicInteger count = new AtomicInteger(0);
+
+        idMauSac.forEach(mauSac -> {
+            MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
             mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
-        }
-        mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-        mauSacChiTiet.setMoTa(moTa);
-        mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-        mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-        String encode;
-        try {
-            String imageUrl = imageToAzureUtil.uploadImage(file);
-            mauSacChiTiet.setAnh(imageUrl);
-        } catch (IOException | StorageException | URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return this.mauSacChiTietReponsitory.save(mauSacChiTiet);
+            mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+            mauSacChiTiet.setMoTa(moTa);
+            mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+            mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+            MultipartFile file = files[count.get()];
+            try {
+                String imageUrl = imageToAzureUtil.uploadImage(file);
+                mauSacChiTiet.setAnh(imageUrl);
+            } catch (IOException | StorageException | URISyntaxException e) {
+                e.printStackTrace();
+            }
+            mauSacChiTietList.add(mauSacChiTiet);
+            count.getAndIncrement();
+        });
+
+        return this.mauSacChiTietReponsitory.saveAll(mauSacChiTietList);
     }
 
     // lưu size chi tiet
     public SizeChiTiet saveSize(List<String> idSize, SanPhamChiTiet sanPhamChiTiet, Integer soLuongSize) {
         // gán id size  và id san pham chi tiết vào đối tượng size chi tiết
         SizeChiTiet sizeChiTiet = new SizeChiTiet();
-        for (String size : idSize) {
+        idSize.forEach(size -> {
             sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(size)).build());
-        }
+        });
         sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
         sizeChiTiet.setSoLuong(soLuongSize);
         sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
@@ -199,17 +201,10 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     public void saveExcel(MultipartFile file) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         if (this.isValidExcelFile(file)) {
             List<SanPhamChiTietRequest> sanPhamChiTietRequests = this.getCustomersDataFromExcel(file.getInputStream());
-            sanPhamChiTietRequests.forEach(sanPhamChiTietRequest -> {
-                sanPhamChiTietRequest.getImgMauSac().forEach(s -> {
-                    System.out.println("sa: " + s);
-                });
-            });
-
             List<SanPhamChiTiet> saveSanPhamChiTiet = this.saveAll(sanPhamChiTietRequests);
             List<MauSacChiTiet> mauSac = this.saveAllMauSacChiTiet(sanPhamChiTietRequests, saveSanPhamChiTiet);
-
-//            this.saveAllSizeChiTiet(sanPhamChiTietRequests, saveSanPhamChiTiet);
-//            this.saveAllImage(sanPhamChiTietRequests, saveSanPhamChiTiet);
+            this.saveAllSizeChiTiet(sanPhamChiTietRequests, saveSanPhamChiTiet);
+            this.saveAllImage(sanPhamChiTietRequests, saveSanPhamChiTiet);
         }
     }
 
@@ -228,7 +223,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     // Lưu danh sách sản phẩm chi tiết vào cơ sở dữ liệu
     public List<SanPhamChiTiet> saveAll(List<SanPhamChiTietRequest> sanPhamChiTietRequests) {
         List<SanPhamChiTiet> sanPhamChiTiets = new ArrayList<>();
-        for (SanPhamChiTietRequest request : sanPhamChiTietRequests) {
+        sanPhamChiTietRequests.forEach(request -> {
             Optional<SanPhamChiTiet> existingChiTiet = chiTietSanPhamReponsitory.findBySanPhamId(Integer.valueOf(request.getSanPham()));
             if (existingChiTiet.isPresent()) {
                 SanPhamChiTiet sanPhamChiTiet = existingChiTiet.get();
@@ -241,7 +236,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 sanPhamChiTiet.setSoLuongTon(Integer.valueOf(request.getSoLuongTon()));
                 sanPhamChiTiet.setGiaBan(BigDecimal.valueOf(Long.valueOf(request.getGiaBan())));
                 sanPhamChiTiet.setGiaNhap(BigDecimal.valueOf(Long.valueOf(request.getGiaNhap())));
-
                 sanPhamChiTiets.add(sanPhamChiTiet);
             } else {
                 SanPhamChiTiet sanPhamChiTiet = new SanPhamChiTiet();
@@ -254,34 +248,28 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 sanPhamChiTiet.setSoLuongTon(Integer.valueOf(request.getSoLuongTon()));
                 sanPhamChiTiet.setGiaBan(BigDecimal.valueOf(Long.valueOf(request.getGiaBan())));
                 sanPhamChiTiet.setGiaNhap(BigDecimal.valueOf(Long.valueOf(request.getGiaNhap())));
-
                 sanPhamChiTiets.add(sanPhamChiTiet);
             }
-        }
+        });
         return chiTietSanPhamReponsitory.saveAll(sanPhamChiTiets);
     }
 
     // Lưu danh sách màu sắc chi tiết vào cơ sở dữ liệu
     public List<MauSacChiTiet> saveAllMauSacChiTiet(List<SanPhamChiTietRequest> sanPhamChiTietRequests, List<SanPhamChiTiet> savedSanPhamChiTiets) {
         List<MauSacChiTiet> mauSacChiTiets = new ArrayList<>();
-        for (SanPhamChiTietRequest request : sanPhamChiTietRequests) {
+        sanPhamChiTietRequests.forEach(request -> {
             int index = sanPhamChiTietRequests.indexOf(request);
             SanPhamChiTiet sanPhamChiTiet = savedSanPhamChiTiets.get(index);
             request.getIdMauSac().forEach(mauSac -> {
-                List<MauSacChiTiet> mauSacChiTietList = mauSacChiTietReponsitory.findBySanPhamChiTietIdAndMauSacId(Integer.valueOf(request.getSanPham()), Integer.valueOf(mauSac));
-
+                List<MauSacChiTiet> mauSacChiTietList = mauSacChiTietReponsitory.findBySanPhamChiTietIdAndMauSacId(sanPhamChiTiet.getId(), Integer.valueOf(mauSac));
                 if (mauSacChiTietList.isEmpty()) {
                     // Thiết lập thông tin màu sắc chi tiết mới và thêm vào danh sách
                     MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
                     mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
                     mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
                     mauSacChiTiet.setTrangThai(1);
-                    List<String> tempImgMauSac = new ArrayList<>();
-                    request.getImgMauSac().forEach(s -> {
-                        tempImgMauSac.add(s);
-                    });
-//                    mauSacChiTiet.setImgMauSac(tempImgMauSac);
-                    mauSacChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
+                    mauSacChiTiet.setAnh(request.getImgMauSac().get(Integer.parseInt(mauSac)));
+                    mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
                     mauSacChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
                     mauSacChiTiets.add(mauSacChiTiet);
                 } else {
@@ -289,47 +277,43 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                     mauSacChiTiets.removeAll(mauSacChiTietList);
 
                     // Cập nhật thông tin màu sắc chi tiết cho danh sách đã tìm thấy
-                    mauSacChiTietList.forEach(mauSacChiTiet -> {
+                    mauSacChiTietList.stream().map(mauSacChiTiet -> {
                         mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
                         mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
                         mauSacChiTiet.setTrangThai(1);
-                        List<String> tempImgMauSac = new ArrayList<>();
-                        request.getImgMauSac().forEach(s -> {
-                            tempImgMauSac.add(s);
-                        });
-//                        mauSacChiTiet.setImgMauSac(tempImgMauSac);
-                        mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                        mauSacChiTiet.setAnh(request.getImgMauSac().get(Integer.parseInt(mauSac)));
+                        mauSacChiTiet.setNgayTao(mauSacChiTiet.getNgayTao());
+                        mauSacChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
                         mauSacChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
-                        mauSacChiTiets.add(mauSacChiTiet);
-                    });
+                        return mauSacChiTiet;
+                    }).forEach(mauSacChiTiets::add);
                 }
             });
-        }
+        });
         return this.mauSacChiTietReponsitory.saveAll(mauSacChiTiets);
-        //        this.mauSacChiTietReponsitory.saveAll(mauSacChiTiets);
     }
 
 
     // Lưu danh sách size chi tiết vào cơ sở dữ liệu
     public List<SizeChiTiet> saveAllSizeChiTiet(List<SanPhamChiTietRequest> sanPhamChiTietRequests, List<SanPhamChiTiet> savedSanPhamChiTiets) {
         List<SizeChiTiet> sizeChiTiets = new ArrayList<>();
-        for (SanPhamChiTietRequest request : sanPhamChiTietRequests) {
+        sanPhamChiTietRequests.forEach(request -> {
             int index = sanPhamChiTietRequests.indexOf(request);
             SanPhamChiTiet sanPhamChiTiet = savedSanPhamChiTiets.get(index);
 
-            for (String size : request.getIdSize()) {
+            request.getIdSize().forEach(size -> {
                 List<SizeChiTiet> sizeChiTietList = sizeChiTietReponsitory.findBySanPhamChiTietIdAndSizeId(Integer.valueOf(request.getSanPham()), Integer.valueOf(size));
                 if (!sizeChiTietList.isEmpty()) {
                     // Cập nhật thông tin size chi tiết
-                    for (SizeChiTiet sizeChiTiet : sizeChiTietList) {
+                    sizeChiTietList.stream().map(sizeChiTiet -> {
                         sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(size)).build());
                         sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
                         sizeChiTiet.setTrangThai(1);
                         sizeChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
                         sizeChiTiet.setSoLuong(Integer.valueOf(request.getSoLuongSize()));
                         sizeChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
-                        sizeChiTiets.add(sizeChiTiet);
-                    }
+                        return sizeChiTiet;
+                    }).forEach(sizeChiTiets::add);
                 } else {
                     // Thiết lập thông tin size  chi tiết mới
                     SizeChiTiet sizeChiTiet = new SizeChiTiet();
@@ -341,27 +325,30 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                     sizeChiTiet.setSoLuong(Integer.valueOf(request.getSoLuongSize()));
                     sizeChiTiets.add(sizeChiTiet);
                 }
-            }
-        }
+            });
+        });
         return this.sizeChiTietReponsitory.saveAll(sizeChiTiets);
     }
 
     // Lưu danh sách image  vào cơ sở dữ liệu
     public void saveAllImage(List<SanPhamChiTietRequest> sanPhamChiTietRequests, List<SanPhamChiTiet> savedSanPhamChiTiets) {
         List<Image> imageList = new ArrayList<>();
-        for (SanPhamChiTietRequest request : sanPhamChiTietRequests) {
+        sanPhamChiTietRequests.forEach(request -> {
             int index = sanPhamChiTietRequests.indexOf(request);
             SanPhamChiTiet sanPhamChiTiet = savedSanPhamChiTiets.get(index);
-            Optional<Image> optional = imageReponsitory.findBySanPhamChiTietId(Integer.valueOf(request.getSanPham()));
-            for (String images : request.getImages()) {
-                if (optional.isPresent()) {
+            List<Image> list = imageReponsitory.findBySanPhamId(Integer.valueOf(request.getSanPham()));
+            request.getImages().forEach(images -> {
+                if (!list.isEmpty()) {
                     // Cập nhật thông tin image
-                    Image image = optional.get();
-                    image.setSanPhamChiTiet(sanPhamChiTiet);
-                    image.setTrangThai(1);
-                    image.setNgaySua(DatetimeUtil.getCurrentDate());
-                    image.setAnh(images);
-                    imageList.add(image);
+                    list.stream().map(image -> {
+                        image.setSanPhamChiTiet(sanPhamChiTiet);
+                        image.setTrangThai(1);
+                        image.setNgaySua(DatetimeUtil.getCurrentDate());
+                        image.setAnh(images);
+                        imageList.add(image);
+                        return image;
+                    }).forEach(imageList::add);
+
                 } else {
                     // Thiết lập thông tin image mới
                     Image image = new Image();
@@ -372,33 +359,22 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                     imageList.add(image);
                 }
 
-            }
-        }
-        List<Image> listImg = this.imageReponsitory.saveAll(imageList);
-        for (int i = 0; i < listImg.size(); i++) {
-            Image img = listImg.get(i);
-            img.setMa("IM" + listImg.get(i).getId());
-        }
-        this.imageReponsitory.saveAll(listImg);
+            });
+        });
+        List<Image> list = this.imageReponsitory.saveAll(imageList);
+        list.forEach(image -> {
+            image.setMa("IM" + image.getId());
+        });
+        this.imageReponsitory.saveAll(list);
     }
 
 
     public List<SanPhamChiTietRequest> getCustomersDataFromExcel(InputStream inputStream) {
-        List<SanPhamChiTietRequest> sanPhamChiTietLists = new ArrayList<>();
         List<SanPhamChiTietRequest> sanPhamChiTietList = new ArrayList<>();
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
             XSSFSheet sheet = workbook.getSheetAt(3);
 
-            String tempDirPath = "D:\\imgDATN";
-            File tempDir = new File(tempDirPath);
-            if (!tempDir.exists()) {
-                if (tempDir.mkdirs()) {
-                    System.out.println("Thư mục tạm đã được tạo thành công.");
-                } else {
-                    System.out.println("Không thể tạo thư mục tạm.");
-                }
-            }
             if (workbook != null) {
 //                System.out.println("Workbook co ton tai");
                 if (sheet != null) {
@@ -446,6 +422,37 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                                 }
                                 case 9 -> sanPhamChiTiet.setSoLuongSize(String.valueOf((int) cell.getNumericCellValue()));
 //                                case 9 -> sanPhamChiTiet.setMoTaMauSacChiTiet(cell.getStringCellValue());
+                                case 10 -> {
+                                    String id = cell.getStringCellValue();
+                                    List<String> url = new ArrayList<>(Arrays.asList(id.split(",")));
+                                    List<String> imgMauSacList = new ArrayList<>();
+                                    url.forEach(s -> {
+                                        String azureImageUrl = null;
+                                        try {
+                                            azureImageUrl = imageToAzureUtil.uploadImageToAzure(s);
+                                        } catch (URISyntaxException | StorageException | IOException | InvalidKeyException e) {
+                                            e.printStackTrace();
+                                        }
+                                        imgMauSacList.add(azureImageUrl);
+
+                                    });
+                                    sanPhamChiTiet.setImgMauSac(imgMauSacList);
+                                }
+                                case 11 -> {
+                                    String id = cell.getStringCellValue();
+                                    List<String> url = new ArrayList<>(Arrays.asList(id.split(",")));
+                                    List<String> imgList = new ArrayList<>();
+                                    url.forEach(s -> {
+                                        String azureImageUrl = null;
+                                        try {
+                                            azureImageUrl = imageToAzureUtil.uploadImageToAzure(s);
+                                        } catch (URISyntaxException | StorageException | IOException | InvalidKeyException e) {
+                                            e.printStackTrace();
+                                        }
+                                        imgList.add(azureImageUrl);
+                                    });
+                                    sanPhamChiTiet.setImages(imgList);
+                                }
                                 default -> {
                                 }
                             }
@@ -454,138 +461,17 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                         sanPhamChiTietList.add(sanPhamChiTiet);
                     }
 
-
-                    List<String> filePathList = new ArrayList<>(); // danh sách chứa đường dẫn tới tệp tin của các ảnh
-                    List<byte[]> uniqueImages = new ArrayList<>(); // Danh sách lưu trữ các ảnh duy nhất
-                    List<byte[]> uniqueImagesMauSac = new ArrayList<>(); // Danh sách lưu trữ các ảnh duy nhất
-                    List<String> filePathListMauSac = new ArrayList<>();
-                    for (XSSFShape shape : drawing.getShapes()) {
-                        if (shape instanceof XSSFPicture) {
-                            XSSFPicture picture = (XSSFPicture) shape;
-                            XSSFClientAnchor anchor = picture.getClientAnchor();
-
-                            int col1 = anchor.getCol1(); // Chỉ số cột bắt đầu của ảnh
-                            int col2 = anchor.getCol2();// Chỉ số cột kết thúc của ảnh
-                            switch (col1) {
-                                case 11:
-                                    // Lưu ảnh theo cột 10 (ví dụ: setImageMauSac)
-                                    XSSFPictureData pictureData10 = picture.getPictureData();
-                                    byte[] imageData10 = pictureData10.getData();
-                                    String imageHash10 = Arrays.hashCode(imageData10) + "";
-                                    uniqueImagesMauSac.add(imageData10);
-                                    break;
-                                case 12:
-                                    // Lưu ảnh theo cột 11
-                                    XSSFPictureData pictureData = ((XSSFPicture) shape).getPictureData();
-                                    byte[] imageData = pictureData.getData();
-                                    String imageHash = Arrays.hashCode(imageData) + "";
-                                    uniqueImages.add(imageData); // Thêm ảnh vào danh sách
-                                    break;
-                                // Thêm các trường hợp khác nếu cần
-                            }
-
-
-                        }
-                    }
-                    for (byte[] imageDataMauSac : uniqueImagesMauSac) {
-                        // Tạo tên tệp tin duy nhất cho hình ảnh
-                        String fileNamee = UUID.randomUUID().toString() + ".jpg";
-                        // Đường dẫn tệp tin tạm thời
-                        String tempFilePathh = tempDirPath + File.separator + fileNamee;
-                        // Lưu hình ảnh tạm thời vào địa chỉ trên đĩa cục bộ
-                        File tempFiles = new File(tempFilePathh);
-                        try (FileOutputStream fos = new FileOutputStream(tempFiles)) {
-                            fos.write(imageDataMauSac);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        filePathListMauSac.add(tempFilePathh);
-                    }
-
-                    for (byte[] imageData : uniqueImages) {
-                        // Tạo tên tệp tin duy nhất cho hình ảnh
-                        String fileName = UUID.randomUUID().toString() + ".jpg";
-                        // Đường dẫn tệp tin tạm thời
-                        String tempFilePath = tempDirPath + File.separator + fileName;
-                        // Lưu hình ảnh tạm thời vào địa chỉ trên đĩa cục bộ
-                        File tempFile = new File(tempFilePath);
-                        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-                            fos.write(imageData);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        filePathList.add(tempFilePath);
-                    }
-
-//                    sanPhamChiTietList.add(sanPhamChiTiet);
-                    for (SanPhamChiTietRequest o : sanPhamChiTietList) {
-                        List<String> imgUrlsMauSac = new ArrayList<>();
-                        List<String> imgUrls = new ArrayList<>();
-                        SanPhamChiTietRequest sanPhamChiTiet = new SanPhamChiTietRequest();
-                        sanPhamChiTiet.setSanPham(o.getSanPham());
-                        sanPhamChiTiet.setTrangThai(o.getTrangThai());
-                        sanPhamChiTiet.setVatLieu(o.getVatLieu());
-                        sanPhamChiTiet.setTrongLuong(o.getTrongLuong());
-                        sanPhamChiTiet.setGiaBan(o.getGiaBan());
-                        sanPhamChiTiet.setGiaNhap(o.getGiaNhap());
-                        sanPhamChiTiet.setSoLuongTon(o.getSoLuongTon());
-                        sanPhamChiTiet.setIdMauSac(o.getIdMauSac());
-                        sanPhamChiTiet.setIdSize(o.getIdSize());
-                        sanPhamChiTiet.setSoLuongSize(o.getSoLuongSize());
-//                      sanPhamChiTiet.setMoTaMauSacChiTiet(o.getMoTaMauSacChiTiet());
-
-                        // Tải tệp tin từ thư mục tạm thời lên Azure Blob Storage
-                        for (String tempFilePath : filePathList) {
-//                     Thực hiện quá trình tải lên Azure Blob Storage ở đây
-                            String azureImageUrl = imageToAzureUtil.uploadImageToAzure(tempFilePath);
-                            imgUrls.add(azureImageUrl);
-                        }
-                        for (String tempFilePath : filePathListMauSac) {
-//                     Thực hiện quá trình tải lên Azure Blob Storage ở đây
-                            String azureImageUrl = imageToAzureUtil.uploadImageToAzure(tempFilePath);
-                            imgUrlsMauSac.add(azureImageUrl);
-                        }
-                        sanPhamChiTiet.setImages(imgUrls);
-                        sanPhamChiTiet.setImgMauSac(imgUrlsMauSac);
-                        sanPhamChiTietLists.add(sanPhamChiTiet);
-
-                        break;
-                    }
                 } else {
                     System.out.println("sheet ko ton tai.");
                 }
             } else {
                 System.out.println("Workbook is null. Không thể đọc dữ liệu từ Excel.");
             }
-
-//            if (tempDir.exists()) {
-//                deleteDirectory(tempDir);
-//            } else System.out.println("thư mục không tồn tại");
         } catch (
                 IOException e) {
             e.printStackTrace();
-        } catch (StorageException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
         }
-        return sanPhamChiTietLists;
-    }
-
-    private void deleteDirectory(File directory) {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    deleteDirectory(file);
-                } else {
-                    file.delete();
-                }
-            }
-        }
-        directory.delete();
+        return sanPhamChiTietList;
     }
 
 }
