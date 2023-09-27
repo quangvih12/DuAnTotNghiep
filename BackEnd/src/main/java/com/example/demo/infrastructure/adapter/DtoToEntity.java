@@ -1,4 +1,4 @@
-package com.example.demo.adapter;
+package com.example.demo.infrastructure.adapter;
 
 public interface DtoToEntity<ENTITY> {
     ENTITY dtoToEntity(ENTITY e);

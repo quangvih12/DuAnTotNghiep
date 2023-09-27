@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SizeRequest implements DtoToEntity<Size> {
+public class AdminSizeRequest implements DtoToEntity<Size> {
     private Integer id;
 
     @NotBlank(message = "không bỏ trống tên")

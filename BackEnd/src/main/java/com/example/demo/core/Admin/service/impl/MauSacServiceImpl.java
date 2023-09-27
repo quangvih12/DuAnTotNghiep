@@ -1,11 +1,9 @@
-package com.example.demo.sevice.Impl.Admin;
+package com.example.demo.core.Admin.service.impl;
 
-import com.example.demo.dto.request.MauSacRequest;
-import com.example.demo.dto.request.SizeRequest;
+import com.example.demo.core.Admin.model.request.AdminMauSacRequest;
 import com.example.demo.entity.MauSac;
-import com.example.demo.entity.Size;
 import com.example.demo.reponsitory.MauSacReponsitory;
-import com.example.demo.sevice.MauSacService;
+import com.example.demo.core.Admin.service.AdMauSacService;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -24,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 @Service
-public class MauSacServiceImpl implements MauSacService {
+public class MauSacServiceImpl implements AdMauSacService {
     @Autowired
     private MauSacReponsitory mauSacReponsitory;
 
@@ -47,7 +45,7 @@ public class MauSacServiceImpl implements MauSacService {
     }
 
     @Override
-    public HashMap<String, Object> add(MauSacRequest dto) {
+    public HashMap<String, Object> add(AdminMauSacRequest dto) {
         MauSac mausac = dto.dtoToEntity(new MauSac());
         try {
             MauSac mausacs = mauSacReponsitory.save(mausac);
@@ -60,7 +58,7 @@ public class MauSacServiceImpl implements MauSacService {
     }
 
     @Override
-    public HashMap<String, Object> update(MauSacRequest dto, Integer id) {
+    public HashMap<String, Object> update(AdminMauSacRequest dto, Integer id) {
         Optional<MauSac> optional = mauSacReponsitory.findById(id);
         if (optional.isPresent()) {
             MauSac mauSac = optional.get();
@@ -81,7 +79,7 @@ public class MauSacServiceImpl implements MauSacService {
     }
 
     @Override
-    public HashMap<String, Object> delete(MauSacRequest dto, Integer id) {
+    public HashMap<String, Object> delete(AdminMauSacRequest dto, Integer id) {
         Optional<MauSac> optional = mauSacReponsitory.findById(id);
         if (optional.isPresent()) {
             MauSac mauSac = optional.get();

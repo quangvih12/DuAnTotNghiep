@@ -1,10 +1,9 @@
-package com.example.demo.sevice.Impl.Admin;
+package com.example.demo.core.Admin.service.impl;
 
-import com.example.demo.dto.request.TrongLuongRequest;
-import com.example.demo.entity.Loai;
+import com.example.demo.core.Admin.model.request.AdminTrongLuongRequest;
 import com.example.demo.entity.TrongLuong;
 import com.example.demo.reponsitory.TrongLuongRepository;
-import com.example.demo.sevice.TrongLuongService;
+import com.example.demo.core.Admin.service.AdTrongLuongService;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -29,7 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class TrongLuongServiceImpl implements TrongLuongService {
+public class TrongLuongServiceImpl implements AdTrongLuongService {
 
     @Autowired
     private TrongLuongRepository repository;
@@ -58,7 +57,7 @@ public class TrongLuongServiceImpl implements TrongLuongService {
     }
 
     @Override
-    public HashMap<String, Object> add(TrongLuongRequest request) {
+    public HashMap<String, Object> add(AdminTrongLuongRequest request) {
         TrongLuong trongLuong = request.dtoToEntity(new TrongLuong());
         try {
             TrongLuong trongLuong1 = repository.save(trongLuong);
@@ -71,7 +70,7 @@ public class TrongLuongServiceImpl implements TrongLuongService {
     }
 
     @Override
-    public HashMap<String, Object> update(TrongLuongRequest request, Integer id) {
+    public HashMap<String, Object> update(AdminTrongLuongRequest request, Integer id) {
         Optional<TrongLuong> optional = repository.findById(id);
         if (optional.isPresent()) {
             TrongLuong tl = optional.get();
@@ -93,7 +92,7 @@ public class TrongLuongServiceImpl implements TrongLuongService {
     }
 
     @Override
-    public HashMap<String, Object> delete(TrongLuongRequest request, Integer id) {
+    public HashMap<String, Object> delete(AdminTrongLuongRequest request, Integer id) {
         Optional<TrongLuong> optional = repository.findById(id);
         if (optional.isPresent()) {
             TrongLuong tl = optional.get();

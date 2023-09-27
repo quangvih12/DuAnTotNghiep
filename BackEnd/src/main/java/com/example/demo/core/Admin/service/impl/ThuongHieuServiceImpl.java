@@ -1,9 +1,9 @@
-package com.example.demo.sevice.Impl.Admin;
+package com.example.demo.core.Admin.service.impl;
 
-import com.example.demo.dto.request.ThuongHieuRequest;
+import com.example.demo.core.Admin.model.request.AdminThuongHieuRequest;
 import com.example.demo.entity.ThuongHieu;
 import com.example.demo.reponsitory.ThuongHieuReponsitory;
-import com.example.demo.sevice.ThuongHieuService;
+import com.example.demo.core.Admin.service.AdThuongHieuService;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -24,7 +24,7 @@ import java.util.*;
 
 
 @Service
-public class ThuongHieuServiceImpl implements ThuongHieuService {
+public class ThuongHieuServiceImpl implements AdThuongHieuService {
 
     @Autowired
     private ThuongHieuReponsitory thuongHieuReponsitory;
@@ -54,7 +54,7 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
     }
 
     @Override
-    public HashMap<String, Object> add(ThuongHieuRequest dto) {
+    public HashMap<String, Object> add(AdminThuongHieuRequest dto) {
         ThuongHieu thuongHieu = dto.dtoToEntity(new ThuongHieu());
         try {
             ThuongHieu thuongHieus = thuongHieuReponsitory.save(thuongHieu);
@@ -67,7 +67,7 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
     }
 
     @Override
-    public HashMap<String, Object> update(ThuongHieuRequest dto, Integer id) {
+    public HashMap<String, Object> update(AdminThuongHieuRequest dto, Integer id) {
         Optional<ThuongHieu> optional = thuongHieuReponsitory.findById(id);
         if (optional.isPresent()) {
             ThuongHieu thuongHieu = optional.get();
@@ -88,7 +88,7 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
     }
 
     @Override
-    public HashMap<String, Object> delete(ThuongHieuRequest dto, Integer id) {
+    public HashMap<String, Object> delete(AdminThuongHieuRequest dto, Integer id) {
         Optional<ThuongHieu> optional = thuongHieuReponsitory.findById(id);
         if (optional.isPresent()) {
             ThuongHieu thuongHieu = optional.get();

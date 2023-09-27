@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TrongLuongRequest implements DtoToEntity<TrongLuong> {
+public class AdminTrongLuongRequest implements DtoToEntity<TrongLuong> {
 
     private Integer id;
 

@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.infrastructure.config;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.blob.CloudBlobClient;

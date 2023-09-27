@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @Builder
-public class SanPhamChiTietRequest implements DtoToEntity<SanPhamChiTiet> {
+public class AdminSanPhamChiTietRequest implements DtoToEntity<SanPhamChiTiet> {
 
     @NotBlank(message = "không bỏ trống tên")
     private String ten;

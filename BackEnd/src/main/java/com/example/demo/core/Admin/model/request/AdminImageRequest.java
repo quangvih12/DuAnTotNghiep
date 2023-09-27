@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ImageRequest implements DtoToEntity<Image> {
+public class AdminImageRequest implements DtoToEntity<Image> {
 
     private Integer id;
 

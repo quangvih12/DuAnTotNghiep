@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class LoaiRequest implements DtoToEntity<Loai> {
+public class AdminLoaiRequest implements DtoToEntity<Loai> {
 
     private Integer id;
 

@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SanPhamRequest implements DtoToEntity<SanPham> {
+public class AdminSanPhamRequest implements DtoToEntity<SanPham> {
 
 
     @NotBlank(message = "không bỏ trống tên")

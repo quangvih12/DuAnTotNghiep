@@ -1,8 +1,8 @@
-package com.example.demo.core.Admin;
+package com.example.demo.core.Admin.controller;
 
-import com.example.demo.dto.request.ChucVuRequest;
+import com.example.demo.core.Admin.model.request.AdminChucVuRequest;
 import com.example.demo.entity.ChucVu;
-import com.example.demo.sevice.ChucVuService;
+import com.example.demo.core.Admin.service.AdChucVuService;
 import com.example.demo.util.DataUltil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import java.util.List;
 public class ChucVuApi {
 
     @Autowired
-    private ChucVuService service;
+    private AdChucVuService service;
 
     @GetMapping()
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages) {
@@ -45,7 +45,7 @@ public class ChucVuApi {
     }
 
     @PostMapping("/validation")
-    public ResponseEntity<?> validation(@RequestBody @Valid ChucVuRequest request, BindingResult result) {
+    public ResponseEntity<?> validation(@RequestBody @Valid AdminChucVuRequest request, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             HashMap<String, Object> map = DataUltil.setData("error", list);
@@ -57,20 +57,20 @@ public class ChucVuApi {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody ChucVuRequest request) {
+    public ResponseEntity<?> add(@RequestBody AdminChucVuRequest request) {
         HashMap<String, Object> map = service.add(request);
         return ResponseEntity.ok(map);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody ChucVuRequest request) {
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody AdminChucVuRequest request) {
         HashMap<String, Object> map = service.update(request, id);
         return ResponseEntity.ok(map);
     }
 
     // xóa (đổi trạng thái về 0)
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody ChucVuRequest request) {
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody AdminChucVuRequest request) {
         HashMap<String, Object> map = service.delete(request, id);
         return ResponseEntity.ok(map);
     }

@@ -1,56 +1,42 @@
-package com.example.demo.sevice.Impl.Admin;
+package com.example.demo.core.Admin.service.impl;
 
-import com.example.demo.dto.request.SanPhamChiTietRequest;
+import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
 import com.example.demo.entity.Image;
 import com.example.demo.entity.MauSac;
 import com.example.demo.entity.MauSacChiTiet;
-import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.entity.Size;
 import com.example.demo.entity.SizeChiTiet;
-import com.example.demo.entity.TrongLuong;
-import com.example.demo.entity.VatLieu;
 import com.example.demo.reponsitory.ChiTietSanPhamReponsitory;
 import com.example.demo.reponsitory.ImageReponsitory;
 import com.example.demo.reponsitory.MauSacChiTietReponsitory;
 import com.example.demo.reponsitory.SizeChiTietReponsitory;
 import com.example.demo.reponsitory.VatLieuReponsitory;
-import com.example.demo.sevice.SanPhamChiTietService;
-import com.example.demo.util.DataUltil;
+import com.example.demo.core.Admin.service.AdSanPhamChiTietService;
 import com.example.demo.util.DatetimeUtil;
 import com.example.demo.util.ExcelExportUtils;
 import com.example.demo.util.ImageToAzureUtil;
 import com.microsoft.azure.storage.StorageException;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFDrawing;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
+public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
 
     @Autowired
     private ChiTietSanPhamReponsitory chiTietSanPhamReponsitory;
@@ -104,7 +90,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
-    public SanPhamChiTiet add(SanPhamChiTietRequest dto) {
+    public SanPhamChiTiet add(AdminSanPhamChiTietRequest dto) {
 //        SanPhamChiTiet sanPhamChiTiet = dto.dtoToEntity(new SanPhamChiTiet());
         System.out.println(dto.toString());
 //            SanPhamChiTiet sanPhamChiTiet = this.chiTietSanPhamReponsitory.save(sanPham);
@@ -185,12 +171,12 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
 
     @Override
-    public HashMap<String, Object> update(SanPhamChiTietRequest dto, Integer id) {
+    public HashMap<String, Object> update(AdminSanPhamChiTietRequest dto, Integer id) {
         return null;
     }
 
     @Override
-    public HashMap<String, Object> delete(SanPhamChiTietRequest dto, Integer id) {
+    public HashMap<String, Object> delete(AdminSanPhamChiTietRequest dto, Integer id) {
         return null;
     }
 

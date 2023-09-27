@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class MauSacRequest implements DtoToEntity<MauSac> {
+public class AdminMauSacRequest implements DtoToEntity<MauSac> {
     private Integer id;
 
     @NotBlank(message = "không bỏ trống tên")

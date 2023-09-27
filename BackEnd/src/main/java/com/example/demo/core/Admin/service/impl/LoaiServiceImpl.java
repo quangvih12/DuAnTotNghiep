@@ -1,10 +1,9 @@
-package com.example.demo.sevice.Impl.Admin;
+package com.example.demo.core.Admin.service.impl;
 
-import com.example.demo.dto.request.LoaiRequest;
+import com.example.demo.core.Admin.model.request.AdminLoaiRequest;
+import com.example.demo.core.Admin.repository.AdLoaiReponsitory;
+import com.example.demo.core.Admin.service.AdLoaiService;
 import com.example.demo.entity.Loai;
-import com.example.demo.entity.ThuongHieu;
-import com.example.demo.reponsitory.LoaiReponsitory;
-import com.example.demo.sevice.LoaiService;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -24,9 +23,9 @@ import java.io.InputStream;
 import java.util.*;
 
 @Service
-public class LoaiServiceImpl implements LoaiService {
+public class LoaiServiceImpl implements AdLoaiService {
     @Autowired
-    private LoaiReponsitory loaiReponsitory;
+    private AdLoaiReponsitory loaiReponsitory;
 
     @Override
     public Page<Loai> getAll(Integer page) {
@@ -52,7 +51,7 @@ public class LoaiServiceImpl implements LoaiService {
     }
 
     @Override
-    public HashMap<String, Object> add(LoaiRequest dto) {
+    public HashMap<String, Object> add(AdminLoaiRequest dto) {
         Loai loai = dto.dtoToEntity(new Loai());
         try {
             Loai loais = loaiReponsitory.save(loai);
@@ -65,7 +64,7 @@ public class LoaiServiceImpl implements LoaiService {
     }
 
     @Override
-    public HashMap<String, Object> update(LoaiRequest dto, Integer id) {
+    public HashMap<String, Object> update(AdminLoaiRequest dto, Integer id) {
         Optional<Loai> optional = loaiReponsitory.findById(id);
         if (optional.isPresent()) {
             Loai loai = optional.get();
@@ -86,7 +85,7 @@ public class LoaiServiceImpl implements LoaiService {
     }
 
     @Override
-    public HashMap<String, Object> delete(LoaiRequest dto, Integer id) {
+    public HashMap<String, Object> delete(AdminLoaiRequest dto, Integer id) {
         Optional<Loai> optional = loaiReponsitory.findById(id);
         if (optional.isPresent()) {
             Loai loai = optional.get();

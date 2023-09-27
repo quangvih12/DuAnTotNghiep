@@ -1,11 +1,11 @@
-package com.example.demo.sevice.Impl.Admin;
+package com.example.demo.core.Admin.service.impl;
 
-import com.example.demo.dto.request.SanPhamRequest;
+import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
+import com.example.demo.core.Admin.repository.AdSanPhamReponsitory;
+import com.example.demo.core.Admin.service.ADSanPhamSevice;
 import com.example.demo.entity.Loai;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.ThuongHieu;
-import com.example.demo.reponsitory.SanPhamReponsitory;
-import com.example.demo.sevice.SanPhamSevice;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -25,10 +25,10 @@ import java.io.InputStream;
 import java.util.*;
 
 @Service
-public class SanPhamServiceImpl implements SanPhamSevice {
+public class SanPhamServiceImpl implements ADSanPhamSevice {
 
     @Autowired
-    private SanPhamReponsitory sanPhamReponsitory;
+    private AdSanPhamReponsitory sanPhamReponsitory;
     @Autowired
     private LoaiServiceImpl loaiService;
     @Autowired
@@ -58,7 +58,7 @@ public class SanPhamServiceImpl implements SanPhamSevice {
     }
 
     @Override
-    public HashMap<String, Object> add(SanPhamRequest dto) {
+    public HashMap<String, Object> add(AdminSanPhamRequest dto) {
         SanPham sanPham = dto.dtoToEntity(new SanPham());
         try {
             SanPham sanPhams = sanPhamReponsitory.save(sanPham);
@@ -71,7 +71,7 @@ public class SanPhamServiceImpl implements SanPhamSevice {
     }
 
     @Override
-    public HashMap<String, Object> update(SanPhamRequest dto, Integer id) {
+    public HashMap<String, Object> update(AdminSanPhamRequest dto, Integer id) {
         Optional<SanPham> optional = sanPhamReponsitory.findById(id);
         if (optional.isPresent()) {
             SanPham sanPham = optional.get();
@@ -92,7 +92,7 @@ public class SanPhamServiceImpl implements SanPhamSevice {
     }
 
     @Override
-    public HashMap<String, Object> delete(SanPhamRequest dto, Integer id) {
+    public HashMap<String, Object> delete(AdminSanPhamRequest dto, Integer id) {
         Optional<SanPham> optional = sanPhamReponsitory.findById(id);
         if (optional.isPresent()) {
             SanPham sanPham = optional.get();

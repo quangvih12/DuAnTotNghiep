@@ -1,4 +1,4 @@
-package com.example.demo.authentication;
+package com.example.demo.infrastructure.authentication;
 
 public class JwtAuthenticationEntryPoint {
 }

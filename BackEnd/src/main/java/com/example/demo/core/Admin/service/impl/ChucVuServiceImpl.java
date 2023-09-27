@@ -1,10 +1,9 @@
-package com.example.demo.sevice.Impl.Admin;
+package com.example.demo.core.Admin.service.impl;
 
-import com.example.demo.dto.request.ChucVuRequest;
+import com.example.demo.core.Admin.model.request.AdminChucVuRequest;
+import com.example.demo.core.Admin.repository.AdChucVuRepository;
+import com.example.demo.core.Admin.service.AdChucVuService;
 import com.example.demo.entity.ChucVu;
-import com.example.demo.entity.TrongLuong;
-import com.example.demo.reponsitory.ChucVuRepository;
-import com.example.demo.sevice.ChucVuService;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -21,18 +20,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
-public class ChucVuServiceImpl implements ChucVuService {
+public class ChucVuServiceImpl implements AdChucVuService {
 
     @Autowired
-    private ChucVuRepository repository;
+    private AdChucVuRepository repository;
 
     @Override
     public Page<ChucVu> getAll(Integer page) {
@@ -58,7 +52,7 @@ public class ChucVuServiceImpl implements ChucVuService {
     }
 
     @Override
-    public HashMap<String, Object> add(ChucVuRequest dto) {
+    public HashMap<String, Object> add(AdminChucVuRequest dto) {
         ChucVu chucVu = dto.dtoToEntity(new ChucVu());
         try {
             ChucVu cv = repository.save(chucVu);
@@ -71,7 +65,7 @@ public class ChucVuServiceImpl implements ChucVuService {
     }
 
     @Override
-    public HashMap<String, Object> update(ChucVuRequest dto, Integer id) {
+    public HashMap<String, Object> update(AdminChucVuRequest dto, Integer id) {
         Optional<ChucVu> optional = repository.findById(id);
         if (optional.isPresent()) {
             ChucVu cv = optional.get();
@@ -92,7 +86,7 @@ public class ChucVuServiceImpl implements ChucVuService {
     }
 
     @Override
-    public HashMap<String, Object> delete(ChucVuRequest dto, Integer id) {
+    public HashMap<String, Object> delete(AdminChucVuRequest dto, Integer id) {
         Optional<ChucVu> optional = repository.findById(id);
         if (optional.isPresent()) {
             ChucVu cv = optional.get();

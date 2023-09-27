@@ -10,6 +10,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SanPhamReponsitory extends JpaRepository<SanPham, Integer> {
-    @Query("select  pot from  SanPham  pot where pot.ten like :keyword or pot.ma like :keyword or pot.loai.ten like :keyword or pot.thuongHieu.ten like :keyword")
-    Page<SanPham> search(String keyword, Pageable pageable);
+
 }

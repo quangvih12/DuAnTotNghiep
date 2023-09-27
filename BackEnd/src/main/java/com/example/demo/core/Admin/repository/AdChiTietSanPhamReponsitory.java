@@ -1,6 +1,7 @@
 package com.example.demo.core.Admin.repository;
 
 import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.reponsitory.ChiTietSanPhamReponsitory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ChiTietSanPhamReponsitory extends  {
+public interface AdChiTietSanPhamReponsitory extends ChiTietSanPhamReponsitory {
+
     @Query("select  pt  from  SanPhamChiTiet  pt where pt.trangThai =:trangThai")
     Page<SanPhamChiTiet> getbyTrangThai(Integer trangThai, Pageable pageable);
 

@@ -1,8 +1,8 @@
-package com.example.demo.core.Admin;
+package com.example.demo.core.Admin.controller;
 
-import com.example.demo.dto.request.ThuongHieuRequest;
+import com.example.demo.core.Admin.model.request.AdminThuongHieuRequest;
 import com.example.demo.entity.ThuongHieu;
-import com.example.demo.sevice.Impl.Admin.ThuongHieuServiceImpl;
+import com.example.demo.core.Admin.service.impl.ThuongHieuServiceImpl;
 import com.example.demo.util.DataUltil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class ThuongHieuApi {
 
     // check validate
     @PostMapping("/validation")
-    public ResponseEntity<?> validation(@RequestBody @Valid ThuongHieuRequest request, BindingResult result) {
+    public ResponseEntity<?> validation(@RequestBody @Valid AdminThuongHieuRequest request, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             HashMap<String, Object> map = DataUltil.setData("error", list);
@@ -53,21 +53,21 @@ public class ThuongHieuApi {
 
     // thêm
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody ThuongHieuRequest request) {
+    public ResponseEntity<?> add(@RequestBody AdminThuongHieuRequest request) {
         HashMap<String, Object> map = thuongHieuService.add(request);
         return ResponseEntity.ok(map);
     }
 
     // sửa
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody ThuongHieuRequest request) {
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody AdminThuongHieuRequest request) {
         HashMap<String, Object> map = thuongHieuService.update(request, id);
         return ResponseEntity.ok(map);
     }
 
     // xóa (đổi trạng thái về 0)
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody ThuongHieuRequest request) {
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody AdminThuongHieuRequest request) {
         HashMap<String, Object> map = thuongHieuService.delete(request, id);
         return ResponseEntity.ok(map);
     }

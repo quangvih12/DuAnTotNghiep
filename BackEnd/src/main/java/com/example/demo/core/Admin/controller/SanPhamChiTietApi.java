@@ -1,8 +1,8 @@
-package com.example.demo.core.Admin;
+package com.example.demo.core.Admin.controller;
 
-import com.example.demo.dto.request.SanPhamChiTietRequest;
+import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
 import com.example.demo.entity.SanPhamChiTiet;
-import com.example.demo.sevice.Impl.Admin.SanPhamChiTietServiceImpl;
+import com.example.demo.core.Admin.service.impl.SanPhamChiTietServiceImpl;
 import com.example.demo.util.DataUltil;
 import com.microsoft.azure.storage.StorageException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -61,7 +61,7 @@ public class SanPhamChiTietApi {
     }
 
     @PostMapping()
-    public ResponseEntity<?> adds(@Valid @RequestBody SanPhamChiTietRequest sanPhamChiTietRequest
+    public ResponseEntity<?> adds(@Valid @RequestBody AdminSanPhamChiTietRequest sanPhamChiTietRequest
             , BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();

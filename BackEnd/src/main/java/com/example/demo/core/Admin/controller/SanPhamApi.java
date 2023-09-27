@@ -1,8 +1,8 @@
-package com.example.demo.core.Admin;
+package com.example.demo.core.Admin.controller;
 
-import com.example.demo.dto.request.SanPhamRequest;
+import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
 import com.example.demo.entity.SanPham;
-import com.example.demo.sevice.Impl.Admin.SanPhamServiceImpl;
+import com.example.demo.core.Admin.service.impl.SanPhamServiceImpl;
 import com.example.demo.util.DataUltil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class SanPhamApi {
 
     // check validate
     @PostMapping("/validation")
-    public ResponseEntity<?> validation(@RequestBody @Valid SanPhamRequest request, BindingResult result) {
+    public ResponseEntity<?> validation(@RequestBody @Valid AdminSanPhamRequest request, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             HashMap<String, Object> map = DataUltil.setData("error", list);
@@ -53,21 +53,21 @@ public class SanPhamApi {
 
     // thêm
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody SanPhamRequest request) {
+    public ResponseEntity<?> add(@RequestBody AdminSanPhamRequest request) {
         HashMap<String, Object> map = sanPhamService.add(request);
         return ResponseEntity.ok(map);
     }
 
     // sửa
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody SanPhamRequest request) {
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody AdminSanPhamRequest request) {
         HashMap<String, Object> map = sanPhamService.update(request, id);
         return ResponseEntity.ok(map);
     }
 
     // xóa (đổi trạng thái về 0)
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody SanPhamRequest request) {
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody AdminSanPhamRequest request) {
         HashMap<String, Object> map = sanPhamService.delete(request, id);
         return ResponseEntity.ok(map);
     }

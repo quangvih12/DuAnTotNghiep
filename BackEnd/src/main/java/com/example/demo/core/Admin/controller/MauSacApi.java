@@ -1,8 +1,8 @@
-package com.example.demo.core.Admin;
+package com.example.demo.core.Admin.controller;
 
-import com.example.demo.dto.request.MauSacRequest;
+import com.example.demo.core.Admin.model.request.AdminMauSacRequest;
 import com.example.demo.entity.MauSac;
-import com.example.demo.sevice.Impl.Admin.MauSacServiceImpl;
+import com.example.demo.core.Admin.service.impl.MauSacServiceImpl;
 import com.example.demo.util.DataUltil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class MauSacApi {
 
     // check validate
     @PostMapping("/validation")
-    public ResponseEntity<?> validation(@RequestBody @Valid MauSacRequest request, BindingResult result) {
+    public ResponseEntity<?> validation(@RequestBody @Valid AdminMauSacRequest request, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             HashMap<String, Object> map = DataUltil.setData("error", list);
@@ -45,21 +45,21 @@ public class MauSacApi {
 
     // thêm
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody MauSacRequest request) {
+    public ResponseEntity<?> add(@RequestBody AdminMauSacRequest request) {
         HashMap<String, Object> map = mauSacService.add(request);
         return ResponseEntity.ok(map);
     }
 
     // sửa
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody MauSacRequest request) {
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody AdminMauSacRequest request) {
         HashMap<String, Object> map = mauSacService.update(request, id);
         return ResponseEntity.ok(map);
     }
 
     // xóa (đổi trạng thái về 0)
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody MauSacRequest request) {
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody AdminMauSacRequest request) {
         HashMap<String, Object> map = mauSacService.delete(request, id);
         return ResponseEntity.ok(map);
     }

@@ -1,12 +1,14 @@
 package com.example.demo.core.Admin.repository;
 
 import com.example.demo.entity.Image;
+import com.example.demo.reponsitory.ImageReponsitory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
-public interface ImageReponsitory extends JpaRepository<Image, Integer> {
+@Repository
+public interface AdImageReponsitory extends ImageReponsitory {
 
     @Query("select im from  Image im where im.sanPhamChiTiet.sanPham.id =:id")
     List<Image> findBySanPhamId(Integer id);

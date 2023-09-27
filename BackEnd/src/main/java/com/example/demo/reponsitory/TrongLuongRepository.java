@@ -10,6 +10,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TrongLuongRepository extends JpaRepository<TrongLuong, Integer> {
-    @Query("select  pot from  TrongLuong  pot where pot.donVi like :keyword or pot.ma like :keyword")
-    Page<TrongLuong> search(String keyword, Pageable pageable);
+
 }

@@ -1,8 +1,8 @@
-package com.example.demo.core.Admin;
+package com.example.demo.core.Admin.controller;
 
-import com.example.demo.dto.request.LoaiRequest;
+import com.example.demo.core.Admin.model.request.AdminLoaiRequest;
 import com.example.demo.entity.Loai;
-import com.example.demo.sevice.Impl.Admin.LoaiServiceImpl;
+import com.example.demo.core.Admin.service.impl.LoaiServiceImpl;
 import com.example.demo.util.DataUltil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class LoaiApi {
 
     // check validate
     @PostMapping("/validation")
-    public ResponseEntity<?> validation(@RequestBody @Valid LoaiRequest request, BindingResult result) {
+    public ResponseEntity<?> validation(@RequestBody @Valid AdminLoaiRequest request, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             HashMap<String, Object> map = DataUltil.setData("error", list);
@@ -54,21 +54,21 @@ public class LoaiApi {
 
     // thêm
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody LoaiRequest request) {
+    public ResponseEntity<?> add(@RequestBody AdminLoaiRequest request) {
         HashMap<String, Object> map = loaiService.add(request);
         return ResponseEntity.ok(map);
     }
 
     // sửa
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody LoaiRequest request) {
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody AdminLoaiRequest request) {
         HashMap<String, Object> map = loaiService.update(request, id);
         return ResponseEntity.ok(map);
     }
 
     // xóa (đổi trạng thái về 0)
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody LoaiRequest request) {
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody AdminLoaiRequest request) {
         HashMap<String, Object> map = loaiService.delete(request, id);
         return ResponseEntity.ok(map);
     }

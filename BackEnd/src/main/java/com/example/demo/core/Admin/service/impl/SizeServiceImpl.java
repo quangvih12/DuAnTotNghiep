@@ -1,12 +1,9 @@
-package com.example.demo.sevice.Impl.Admin;
+package com.example.demo.core.Admin.service.impl;
 
-import com.example.demo.dto.request.SizeRequest;
-import com.example.demo.entity.Loai;
-import com.example.demo.entity.SanPham;
+import com.example.demo.core.Admin.model.request.AdminSizeRequest;
 import com.example.demo.entity.Size;
-import com.example.demo.entity.ThuongHieu;
 import com.example.demo.reponsitory.SizeReponsitory;
-import com.example.demo.sevice.SizeService;
+import com.example.demo.core.Admin.service.AdSizeService;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -26,7 +23,7 @@ import java.io.InputStream;
 import java.util.*;
 
 @Service
-public class SizeServiceImpl implements SizeService {
+public class SizeServiceImpl implements AdSizeService {
     @Autowired
     private SizeReponsitory sizeReponsitory;
 
@@ -49,7 +46,7 @@ public class SizeServiceImpl implements SizeService {
     }
 
     @Override
-    public HashMap<String, Object> add(SizeRequest dto) {
+    public HashMap<String, Object> add(AdminSizeRequest dto) {
         Size size = dto.dtoToEntity(new Size());
         try {
             Size sizes = sizeReponsitory.save(size);
@@ -62,7 +59,7 @@ public class SizeServiceImpl implements SizeService {
     }
 
     @Override
-    public HashMap<String, Object> update(SizeRequest dto, Integer id) {
+    public HashMap<String, Object> update(AdminSizeRequest dto, Integer id) {
         Optional<Size> optional = sizeReponsitory.findById(id);
         if (optional.isPresent()) {
             Size size = optional.get();
@@ -83,7 +80,7 @@ public class SizeServiceImpl implements SizeService {
     }
 
     @Override
-    public HashMap<String, Object> delete(SizeRequest dto, Integer id) {
+    public HashMap<String, Object> delete(AdminSizeRequest dto, Integer id) {
         Optional<Size> optional = sizeReponsitory.findById(id);
         if (optional.isPresent()) {
             Size size = optional.get();

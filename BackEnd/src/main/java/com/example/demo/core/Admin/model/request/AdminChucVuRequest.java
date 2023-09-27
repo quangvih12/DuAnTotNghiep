@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ChucVuRequest implements DtoToEntity<ChucVu> {
+public class AdminChucVuRequest implements DtoToEntity<ChucVu> {
 
     private Integer id;
 

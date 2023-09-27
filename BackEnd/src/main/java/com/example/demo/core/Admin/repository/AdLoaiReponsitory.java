@@ -1,6 +1,7 @@
 package com.example.demo.core.Admin.repository;
 
 import com.example.demo.entity.Loai;
+import com.example.demo.reponsitory.LoaiReponsitory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface LoaiReponsitory extends JpaRepository<Loai, Integer> {
+public interface AdLoaiReponsitory extends LoaiReponsitory {
     @Query("select  pot from  Loai  pot where pot.ten like :keyword or pot.ma like :keyword")
     Page<Loai> search(String keyword, Pageable pageable);
 

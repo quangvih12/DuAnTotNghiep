@@ -1,8 +1,8 @@
-package com.example.demo.core.Admin;
+package com.example.demo.core.Admin.controller;
 
-import com.example.demo.dto.request.SizeRequest;
+import com.example.demo.core.Admin.model.request.AdminSizeRequest;
 import com.example.demo.entity.Size;
-import com.example.demo.sevice.Impl.Admin.SizeServiceImpl;
+import com.example.demo.core.Admin.service.impl.SizeServiceImpl;
 import com.example.demo.util.DataUltil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class SizeApi {
 
     // check validate
     @PostMapping("/validation")
-    public ResponseEntity<?> validation(@RequestBody @Valid SizeRequest request, BindingResult result) {
+    public ResponseEntity<?> validation(@RequestBody @Valid AdminSizeRequest request, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             HashMap<String, Object> map = DataUltil.setData("error", list);
@@ -43,21 +43,21 @@ public class SizeApi {
 
     // thêm
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody SizeRequest request) {
+    public ResponseEntity<?> add(@RequestBody AdminSizeRequest request) {
         HashMap<String, Object> map = sizeService.add(request);
         return ResponseEntity.ok(map);
     }
 
     // sửa
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody SizeRequest request) {
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody AdminSizeRequest request) {
         HashMap<String, Object> map = sizeService.update(request, id);
         return ResponseEntity.ok(map);
     }
 
     // xóa (đổi trạng thái về 0)
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody SizeRequest request) {
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody AdminSizeRequest request) {
         HashMap<String, Object> map = sizeService.delete(request, id);
         return ResponseEntity.ok(map);
     }

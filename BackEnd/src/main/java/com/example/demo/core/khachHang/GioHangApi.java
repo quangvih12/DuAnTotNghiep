@@ -1,4 +1,4 @@
-package com.example.demo.api.khachHang;
+package com.example.demo.core.khachHang;
 
 public class GioHangApi {
 }

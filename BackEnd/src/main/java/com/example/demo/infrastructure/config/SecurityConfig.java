@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.infrastructure.config;
 
 public class SecurityConfig {
 }

@@ -1,7 +1,6 @@
 package com.example.demo.core.Admin.service;
 
-import com.example.demo.core.Admin.model.request.ImageRequest;
-import com.example.demo.core.Admin.model.request.SanPhamChiTietRequest;
+import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.microsoft.azure.storage.StorageException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,19 +13,19 @@ import java.security.InvalidKeyException;
 import java.util.HashMap;
 import java.util.List;
 
-public interface SanPhamChiTietService {
+public interface AdSanPhamChiTietService {
 
     Page<SanPhamChiTiet> getAll(Integer page, String upAndDown, Integer trangThai);
 
     SanPhamChiTiet getOne(Integer id);
 
-    SanPhamChiTiet add(SanPhamChiTietRequest dto
-          //  , MultipartFile[] files, MultipartFile[] file
+    SanPhamChiTiet add(AdminSanPhamChiTietRequest dto
+                       //  , MultipartFile[] files, MultipartFile[] file
     );
 
-    HashMap<String, Object> update(SanPhamChiTietRequest dto, Integer id);
+    HashMap<String, Object> update(AdminSanPhamChiTietRequest dto, Integer id);
 
-    HashMap<String, Object> delete(SanPhamChiTietRequest dto, Integer id);
+    HashMap<String, Object> delete(AdminSanPhamChiTietRequest dto, Integer id);
 
     void saveExcel(MultipartFile file) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
 
