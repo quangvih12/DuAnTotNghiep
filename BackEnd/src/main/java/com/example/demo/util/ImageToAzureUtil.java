@@ -10,12 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.security.InvalidKeyException;
-import java.util.UUID;
 
 @Component
 public class ImageToAzureUtil {
@@ -37,18 +35,19 @@ public class ImageToAzureUtil {
         return blob.getUri().toString();
     }
 
-    public String uploadImageToAzure(String imageUrl) throws URISyntaxException, StorageException, IOException, InvalidKeyException {
+    public String uploadImageToAzure(String imagePath) throws URISyntaxException, StorageException, IOException, InvalidKeyException {
         CloudStorageAccount storageAccount = CloudStorageAccount.parse(connectionString);
         CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
         CloudBlobContainer container = blobClient.getContainerReference(containerName);
 
-        // Lấy tên tệp ảnh từ đường dẫn
-        String fileName = getImageFileName(imageUrl);
+        String fileName = this.getImageFileName(imagePath);
+        // Tạo một đối tượng CloudBlockBlob để lưu trữ ảnh trên Azure Blob Storage
         CloudBlockBlob blob = container.getBlockBlobReference(fileName);
 
-        URL url = new URL(imageUrl);
-        try (InputStream inputStream = url.openStream()) {
-            blob.upload(inputStream, -1);
+        // Đọc dữ liệu từ tệp ảnh
+        try (FileInputStream fileInputStream = new FileInputStream(imagePath)) {
+            // Tải lên ảnh lên Azure Blob Storage
+            blob.upload(fileInputStream, -1);
         }
 
         return blob.getUri().toString();
