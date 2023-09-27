@@ -1,9 +1,9 @@
 package com.example.demo.core.Admin.service.impl;
 
 import com.example.demo.core.Admin.model.request.AdminThuongHieuRequest;
-import com.example.demo.entity.ThuongHieu;
-import com.example.demo.reponsitory.ThuongHieuReponsitory;
+import com.example.demo.core.Admin.repository.AdThuongHieuReponsitory;
 import com.example.demo.core.Admin.service.AdThuongHieuService;
+import com.example.demo.entity.ThuongHieu;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -27,7 +27,7 @@ import java.util.*;
 public class ThuongHieuServiceImpl implements AdThuongHieuService {
 
     @Autowired
-    private ThuongHieuReponsitory thuongHieuReponsitory;
+    private AdThuongHieuReponsitory thuongHieuReponsitory;
 
 
     @Override

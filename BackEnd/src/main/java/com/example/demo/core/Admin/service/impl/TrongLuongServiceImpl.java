@@ -1,9 +1,9 @@
 package com.example.demo.core.Admin.service.impl;
 
 import com.example.demo.core.Admin.model.request.AdminTrongLuongRequest;
-import com.example.demo.entity.TrongLuong;
-import com.example.demo.reponsitory.TrongLuongRepository;
+import com.example.demo.core.Admin.repository.AdTrongLuongRepository;
 import com.example.demo.core.Admin.service.AdTrongLuongService;
+import com.example.demo.entity.TrongLuong;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -20,18 +20,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TrongLuongServiceImpl implements AdTrongLuongService {
 
     @Autowired
-    private TrongLuongRepository repository;
+    private AdTrongLuongRepository repository;
 
     @Override
     public Page<TrongLuong> getAll(Integer page) {

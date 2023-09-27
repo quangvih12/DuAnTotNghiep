@@ -12,4 +12,8 @@ import org.springframework.stereotype.Repository;
 public interface AdSanPhamReponsitory extends SanPhamReponsitory {
     @Query("select  pot from  SanPham  pot where pot.ten like :keyword or pot.ma like :keyword or pot.loai.ten like :keyword or pot.thuongHieu.ten like :keyword")
     Page<SanPham> search(String keyword, Pageable pageable);
+
+    @Query("select  pot from  SanPham  pot " +
+            "where pot.ten like :keyword ")
+    SanPham findByTenSanPhamExcel(String keyword);
 }

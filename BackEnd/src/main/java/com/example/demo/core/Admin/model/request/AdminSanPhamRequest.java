@@ -6,34 +6,27 @@ import com.example.demo.entity.SanPham;
 import com.example.demo.entity.ThuongHieu;
 import com.example.demo.util.DatetimeUtil;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
+@ToString
 @Setter
 public class AdminSanPhamRequest implements DtoToEntity<SanPham> {
 
-
-    @NotBlank(message = "không bỏ trống tên")
     private String ten;
 
     private String moTa;
 
-    @NotBlank(message = "không bỏ trống đệm lót")
     private String demLot;
 
-    @NotBlank(message = "không bỏ trống quai đeo")
     private String quaiDeo;
 
-    @NotBlank(message = "không bỏ trống thương hiệu")
-    private String thuongHieu;
+    private Integer thuongHieu;
 
-    @NotBlank(message = "không bỏ trống lọai")
-    private String loai;
+    private Integer loai;
 
     @Override
     public SanPham dtoToEntity(SanPham sanPham) {
@@ -43,8 +36,8 @@ public class AdminSanPhamRequest implements DtoToEntity<SanPham> {
         sanPham.setMoTa(this.getMoTa());
         sanPham.setDemLot(this.getDemLot());
         sanPham.setQuaiDeo(this.getQuaiDeo());
-        sanPham.setThuongHieu(ThuongHieu.builder().id(Integer.parseInt(this.getThuongHieu())).build());
-        sanPham.setLoai(Loai.builder().id(Integer.parseInt(this.getLoai())).build());
+        sanPham.setThuongHieu(ThuongHieu.builder().id(this.getThuongHieu()).build());
+        sanPham.setLoai(Loai.builder().id(this.getLoai()).build());
         return sanPham;
     }
 }

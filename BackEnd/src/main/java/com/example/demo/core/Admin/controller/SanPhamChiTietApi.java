@@ -1,8 +1,9 @@
 package com.example.demo.core.Admin.controller;
 
 import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
+import com.example.demo.core.Admin.service.impl.SanPham.CreateExcelSanPhamServiceImpl;
 import com.example.demo.entity.SanPhamChiTiet;
-import com.example.demo.core.Admin.service.impl.SanPhamChiTietServiceImpl;
+import com.example.demo.core.Admin.service.impl.SanPham.SanPhamChiTietServiceImpl;
 import com.example.demo.util.DataUltil;
 import com.microsoft.azure.storage.StorageException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,6 +28,9 @@ public class SanPhamChiTietApi {
     @Autowired
     private SanPhamChiTietServiceImpl sanPhamChiTietService;
 
+    @Autowired
+    private CreateExcelSanPhamServiceImpl createExcelSanPhamService;
+
     // getAll san pham chi tiet
     @GetMapping()
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages,
@@ -45,7 +49,7 @@ public class SanPhamChiTietApi {
     // thêm bằng file excel
     @PostMapping("/upload")
     public ResponseEntity<?> uploadCustomersData(@RequestParam("file") MultipartFile file) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
-        this.sanPhamChiTietService.saveExcel(file);
+        this.createExcelSanPhamService.saveExcel(file);
         HashMap<String, Object> map = DataUltil.setData("success", " thêm sản phẩm thành công");
         return ResponseEntity.ok(map);
     }
