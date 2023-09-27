@@ -11,10 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface LoaiReponsitory extends JpaRepository<Loai, Integer> {
-    @Query("select  pot from  Loai  pot where pot.ten like :keyword or pot.ma like :keyword")
-    Page<Loai> search(String keyword, Pageable pageable);
-
-    Optional<Loai> findByTen(String ten);
 
 
 }
