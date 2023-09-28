@@ -2,8 +2,10 @@ package com.example.demo.core.Admin.controller;
 
 import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
 import com.example.demo.core.Admin.service.impl.SanPham.CreateExcelSanPhamServiceImpl;
+import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.core.Admin.service.impl.SanPham.SanPhamChiTietServiceImpl;
+import com.example.demo.entity.VatLieu;
 import com.example.demo.util.DataUltil;
 import com.microsoft.azure.storage.StorageException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,7 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ChiTietSp")
+@RequestMapping("/api/products")
+@CrossOrigin(origins = {"*"})
 public class SanPhamChiTietApi {
     @Autowired
     private SanPhamChiTietServiceImpl sanPhamChiTietService;
@@ -43,6 +46,13 @@ public class SanPhamChiTietApi {
     public ResponseEntity<?> getOne(@PathVariable Integer id) {
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.getOne(id);
         HashMap<String, Object> map = DataUltil.setData("ok", sanPhamChiTiet);
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getOneVL(@PathVariable String id) {
+        SanPham vatLieu = createExcelSanPhamService.getSp(id);
+        HashMap<String, Object> map = DataUltil.setData("ok", vatLieu);
         return ResponseEntity.ok(map);
     }
 

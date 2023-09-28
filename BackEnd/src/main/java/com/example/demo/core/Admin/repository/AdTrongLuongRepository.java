@@ -16,6 +16,6 @@ public interface AdTrongLuongRepository extends TrongLuongRepository {
 
 
     @Query("select  pot from  TrongLuong  pot " +
-            "where pot.value like :keyword ")
-    TrongLuong findByTenTrongLuongExcel(String keyword);
+            "where pot.value=:keyword ")
+    TrongLuong findByTenTrongLuongExcel(Integer keyword);
 }

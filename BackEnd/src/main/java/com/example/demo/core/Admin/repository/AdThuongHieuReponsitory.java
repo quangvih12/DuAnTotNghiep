@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface AdThuongHieuReponsitory extends ThuongHieuReponsitory {
     @Query("select  pot from  ThuongHieu  pot where pot.ten like :keyword or pot.ma like :keyword")
     Page<ThuongHieu> search(String keyword, Pageable pageable);
+
+    ThuongHieu findByTen(String ten);
 }

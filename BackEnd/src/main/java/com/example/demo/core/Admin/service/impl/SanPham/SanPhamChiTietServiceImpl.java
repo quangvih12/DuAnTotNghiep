@@ -3,6 +3,9 @@ package com.example.demo.core.Admin.service.impl.SanPham;
 import com.example.demo.core.Admin.model.request.AdminCreatExcelSanPhamRequest;
 import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
 import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
+import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
+import com.example.demo.core.Admin.repository.AdImageReponsitory;
+import com.example.demo.core.Admin.repository.AdSizeChiTietReponsitory;
 import com.example.demo.core.Admin.service.impl.TrongLuongServiceImpl;
 import com.example.demo.entity.*;
 import com.example.demo.infrastructure.status.ChiTietSanPham;
@@ -36,13 +39,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
 
     @Autowired
-    private ChiTietSanPhamReponsitory chiTietSanPhamReponsitory;
+    private AdChiTietSanPhamReponsitory chiTietSanPhamReponsitory;
 
     @Autowired
-    private ImageReponsitory imageReponsitory;
+    private AdImageReponsitory imageReponsitory;
 
     @Autowired
-    private SizeChiTietReponsitory sizeChiTietReponsitory;
+    private AdSizeChiTietReponsitory sizeChiTietReponsitory;
 
     @Autowired
     private MauSacChiTietReponsitory mauSacChiTietReponsitory;
