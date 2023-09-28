@@ -37,6 +37,8 @@ public class AdminCreatExcelSanPhamRequest {
 
     private String vatLieu;
 
+    private String moTaMauSacChiTiet;
+
     private String trongLuong;
 
     private List<String> soLuongSize;
