@@ -35,6 +35,18 @@ public class SizeServiceImpl implements AdSizeService {
     }
 
     @Override
+    public List<Size> findAll() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return sizeReponsitory.findAll(sort);
+    }
+
+    @Override
+    public List<Size> getAllByTrangThai(Integer trangThai) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return sizeReponsitory.getAllByTrangThai(trangThai, sort);
+    }
+
+    @Override
     public Size getById(Integer id) {
         Optional<Size> optional = this.sizeReponsitory.findById(id);
         return optional.isPresent() ? optional.get() : null;
@@ -47,12 +59,13 @@ public class SizeServiceImpl implements AdSizeService {
 
     @Override
     public HashMap<String, Object> add(AdminSizeRequest dto) {
+        dto.setTrangThai("1");
+        dto.setNgayTao(DatetimeUtil.getCurrentDate());
         Size size = dto.dtoToEntity(new Size());
         try {
             Size sizes = sizeReponsitory.save(size);
-            sizes.setMa("SP" + sizes.getId());
-            sizeReponsitory.save(sizes);
-            return DataUltil.setData("success", "thêm thành công");
+            sizes.setMa("S" + sizes.getId());
+            return DataUltil.setData("success", sizeReponsitory.save(sizes));
         } catch (Exception e) {
             return DataUltil.setData("error", "error");
         }
@@ -63,14 +76,12 @@ public class SizeServiceImpl implements AdSizeService {
         Optional<Size> optional = sizeReponsitory.findById(id);
         if (optional.isPresent()) {
             Size size = optional.get();
-            size.setMa(size.getMa());
             size.setTen(dto.getTen());
-            size.setTrangThai(Integer.parseInt(dto.getTrangThai()));
-            size.setNgayTao(size.getNgayTao());
+            size.setMoTa(dto.getMoTa());
             size.setNgaySua(DatetimeUtil.getCurrentDate());
             try {
-                sizeReponsitory.save(size);
-                return DataUltil.setData("success", "sửa thành công");
+                System.out.println(size.toString());
+                return DataUltil.setData("success", sizeReponsitory.save(size));
             } catch (Exception e) {
                 return DataUltil.setData("error", "error");
             }
@@ -80,14 +91,11 @@ public class SizeServiceImpl implements AdSizeService {
     }
 
     @Override
-    public HashMap<String, Object> delete(AdminSizeRequest dto, Integer id) {
+    public HashMap<String, Object> delete(Integer id) {
         Optional<Size> optional = sizeReponsitory.findById(id);
         if (optional.isPresent()) {
             Size size = optional.get();
-            size.setMa(size.getMa());
-            size.setTen(size.getTen());
             size.setTrangThai(0);
-            size.setNgayTao(size.getNgayTao());
             size.setNgaySua(DatetimeUtil.getCurrentDate());
             try {
                 sizeReponsitory.save(size);
@@ -120,6 +128,7 @@ public class SizeServiceImpl implements AdSizeService {
         }
 
     }
+
     public static boolean isValidExcelFile(MultipartFile file) {
 
         return Objects.equals(file.getContentType(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");

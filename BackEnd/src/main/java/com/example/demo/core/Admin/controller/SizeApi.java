@@ -18,12 +18,29 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/size")
+@CrossOrigin(origins = {"*"})
 public class SizeApi {
     @Autowired
     private SizeServiceImpl sizeService;
+//    @GetMapping()
+//    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages) {
+//        Page<Size> page = sizeService.getAll(pages);
+//        HashMap<String, Object> map = DataUltil.setData("ok", page);
+//        return ResponseEntity.ok(map);
+//    }
+
+    // hiển thị tất cả
     @GetMapping()
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages) {
-        Page<Size> page = sizeService.getAll(pages);
+    public ResponseEntity<?> getAll() {
+        List<Size> page = sizeService.findAll();
+        HashMap<String, Object> map = DataUltil.setData("ok", page);
+        return ResponseEntity.ok(map);
+    }
+
+    // hiển thị theo trạng thái
+    @GetMapping("/trang-thai")
+    public ResponseEntity<?> getAllByTrangThai(@RequestParam("trangThai") Integer trangThai) {
+        List<Size> page = sizeService.getAllByTrangThai(trangThai);
         HashMap<String, Object> map = DataUltil.setData("ok", page);
         return ResponseEntity.ok(map);
     }
@@ -57,8 +74,8 @@ public class SizeApi {
 
     // xóa (đổi trạng thái về 0)
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody AdminSizeRequest request) {
-        HashMap<String, Object> map = sizeService.delete(request, id);
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+        HashMap<String, Object> map = sizeService.delete(id);
         return ResponseEntity.ok(map);
     }
 

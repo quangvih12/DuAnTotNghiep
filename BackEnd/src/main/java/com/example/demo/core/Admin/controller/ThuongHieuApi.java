@@ -17,15 +17,32 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/thuongHieu")
+@RequestMapping("/api/thuong-hieu")
+@CrossOrigin(origins = {"*"})
 public class ThuongHieuApi {
 
     @Autowired
     private ThuongHieuServiceImpl thuongHieuService;
 
+//    @GetMapping()
+//    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages) {
+//        Page<ThuongHieu> page = thuongHieuService.getAll(pages);
+//        HashMap<String, Object> map = DataUltil.setData("ok", page);
+//        return ResponseEntity.ok(map);
+//    }
+
+    // hiển thị tất cả
     @GetMapping()
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages) {
-        Page<ThuongHieu> page = thuongHieuService.getAll(pages);
+    public ResponseEntity<?> getAll() {
+        List<ThuongHieu> page = thuongHieuService.findAll();
+        HashMap<String, Object> map = DataUltil.setData("ok", page);
+        return ResponseEntity.ok(map);
+    }
+
+    //hiển thị theo trạng thái
+    @GetMapping("/trang-thai")
+    public ResponseEntity<?> getAllByTrangThai(@RequestParam("trangThai") Integer trangThai) {
+        List<ThuongHieu> page = thuongHieuService.getAllByTrangThai(trangThai);
         HashMap<String, Object> map = DataUltil.setData("ok", page);
         return ResponseEntity.ok(map);
     }
@@ -67,8 +84,8 @@ public class ThuongHieuApi {
 
     // xóa (đổi trạng thái về 0)
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody AdminThuongHieuRequest request) {
-        HashMap<String, Object> map = thuongHieuService.delete(request, id);
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+        HashMap<String, Object> map = thuongHieuService.delete(id);
         return ResponseEntity.ok(map);
     }
 
