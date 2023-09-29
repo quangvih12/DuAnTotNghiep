@@ -18,4 +18,6 @@ public interface AdThuongHieuReponsitory extends ThuongHieuReponsitory {
 
     List<ThuongHieu> findAllByTrangThai(Integer trangThai, Sort sort);
 
+    ThuongHieu findByTen(String ten);
+
 }

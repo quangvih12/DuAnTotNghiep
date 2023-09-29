@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface AdImageReponsitory extends ImageReponsitory {
 
-    @Query("select im from  Image im where im.sanPhamChiTiet.sanPham.id =:id")
+    @Query("select im from  Image im where im.sanPhamChiTiet.id =:id")
     List<Image> findBySanPhamId(Integer id);
 }

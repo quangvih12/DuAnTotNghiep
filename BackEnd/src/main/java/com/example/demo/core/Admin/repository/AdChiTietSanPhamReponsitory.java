@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,6 +17,10 @@ public interface AdChiTietSanPhamReponsitory extends ChiTietSanPhamReponsitory {
     @Query("select  pt  from  SanPhamChiTiet  pt where pt.trangThai =:trangThai")
     Page<SanPhamChiTiet> getbyTrangThai(Integer trangThai, Pageable pageable);
 
-    Optional<SanPhamChiTiet> findBySanPhamId(Integer id);
+    @Query(value = "select  pt  from  SanPhamChiTiet  pt where pt.sanPham.id =:id")
+    SanPhamChiTiet findBySanPhamId(Integer id);
+
+    @Query(value = "select  pt  from  SanPhamChiTiet  pt where pt.sanPham.ten like :ten")
+    SanPhamChiTiet findBySanPhamTen(String ten);
 
 }
