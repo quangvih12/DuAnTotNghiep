@@ -14,30 +14,30 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AdminSizeRequest implements DtoToEntity<Size> {
+
     private Integer id;
 
     @NotBlank(message = "không bỏ trống tên")
     private String ten;
-    @NotBlank(message = "không bỏ trống mã")
+
     private String ma;
 
     private String ngaySua;
 
     private String ngayTao;
 
-    @NotBlank(message = "không bỏ trống trạng thái")
     private String trangThai;
 
-
+    private String moTa;
 
     @Override
     public Size dtoToEntity(Size size) {
+        size.setMoTa(this.moTa);
         size.setMa(this.ma);
         size.setTen(this.ten);
         size.setNgayTao(DatetimeUtil.getCurrentDate());
         size.setTrangThai(Integer.parseInt(this.trangThai));
         return size;
     }
-
 
 }
