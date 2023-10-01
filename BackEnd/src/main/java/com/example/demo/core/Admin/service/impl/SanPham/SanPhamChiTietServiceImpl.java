@@ -1,0 +1,237 @@
+package com.example.demo.core.Admin.service.impl.SanPham;
+
+import com.example.demo.core.Admin.model.request.AdminCreatExcelSanPhamRequest;
+import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
+import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
+import com.example.demo.core.Admin.service.impl.TrongLuongServiceImpl;
+import com.example.demo.entity.*;
+import com.example.demo.infrastructure.status.ChiTietSanPham;
+import com.example.demo.reponsitory.*;
+import com.example.demo.core.Admin.service.AdSanPhamChiTietService;
+import com.example.demo.util.DatetimeUtil;
+import com.example.demo.util.ExcelExportUtils;
+import com.example.demo.util.ImageToAzureUtil;
+import com.microsoft.azure.storage.StorageException;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFDrawing;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+@Service
+public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
+
+    @Autowired
+    private ChiTietSanPhamReponsitory chiTietSanPhamReponsitory;
+
+    @Autowired
+    private ImageReponsitory imageReponsitory;
+
+    @Autowired
+    private SizeChiTietReponsitory sizeChiTietReponsitory;
+
+    @Autowired
+    private MauSacChiTietReponsitory mauSacChiTietReponsitory;
+
+    @Autowired
+    private SanPhamReponsitory sanPhamReponsitory;
+
+
+
+    @Override
+    public Page<SanPhamChiTiet> getAll(Integer page, String upAndDown, Integer trangThai) {
+//        if (upAndDown == null && trangThai == null) {
+//            Sort sort = Sort.by(Sort.Direction.DESC, "id");
+//            Pageable pageable = PageRequest.of(page, 5, sort);
+//            return chiTietSanPhamReponsitory.findAll(pageable);
+//        } else if (trangThai != null && upAndDown == null) {
+//            Pageable pageable = PageRequest.of(page, 5);
+//            return chiTietSanPhamReponsitory.getbyTrangThai(trangThai, pageable);
+//        } else if (trangThai == null && upAndDown != null) {
+//            Sort sort = (upAndDown == null || upAndDown.equals("asc")) ? Sort.by(Sort.Direction.ASC, "giaBan") : Sort.by(Sort.Direction.DESC, "giaBan");
+//            Pageable pageable = PageRequest.of(page, 5, sort);
+//            return chiTietSanPhamReponsitory.findAll(pageable);
+//        } else {
+//            Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page, 5);
+        return chiTietSanPhamReponsitory.findAll(pageable);
+        //   }
+    }
+
+    @Override
+    public SanPhamChiTiet getOne(Integer id) {
+        Optional<SanPhamChiTiet> optional = this.chiTietSanPhamReponsitory.findById(id);
+        return optional.isPresent() ? optional.get() : null;
+    }
+
+    @Override
+    public SanPhamChiTiet add(AdminSanPhamChiTietRequest request) {
+
+        // bước 1: lấy các thuộc tính của bảng sản phẩm từ request và lưu và bảng sản phẩm
+        AdminSanPhamRequest sanPhamRequest = AdminSanPhamRequest.builder()
+                .loai(request.getLoai())
+                .thuongHieu(request.getThuongHieu())
+                .demLot(request.getDemLot())
+                .moTa(request.getMoTa())
+                .ten(request.getTen())
+                .quaiDeo(request.getQuaiDeo())
+                .build();
+        SanPham sanPham = this.saveSanPham(sanPhamRequest);
+
+        // bước 2: lấy id của sản phẩm vừa lưu và các thuộc tính ở dto lưu vào bảng sản phẩm chi tiết
+        SanPhamChiTiet sanPhamChiTiet = request.dtoToEntity(new SanPhamChiTiet());
+        sanPhamChiTiet.setSanPham(sanPham);
+        SanPhamChiTiet chiTietSanPham = chiTietSanPhamReponsitory.save(sanPhamChiTiet);
+
+        // bước 3: sử dụng mutitheard để có thể lưu các bảng hình ảnh, màu sắc chi tiết, size chi tiết,khuyến mại chi tiết
+        this.mutitheard(chiTietSanPham, request);
+
+        return null;
+
+    }
+
+    public SanPham saveSanPham(AdminSanPhamRequest request) {
+        SanPham sanPham = request.dtoToEntity(new SanPham());
+        SanPham sanPhamSave = sanPhamReponsitory.save(sanPham);
+        // lưu ma theo dạng SP + id vừa tương ứng
+        sanPhamSave.setMa("SP" + sanPhamSave.getId());
+        return sanPhamReponsitory.save(sanPhamSave);
+    }
+
+    public void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request) {
+
+        // Tạo các luồng cho các công việc cần thực hiện đồng thời
+        Thread mauSacThread = new Thread(() -> saveMauSac(request.getIdMauSac(), request.getImgMauSac(), sanPhamChiTiet));
+        Thread sizeThread = new Thread(() -> saveSize(request.getIdSize(), sanPhamChiTiet, request.getSoLuongSize()));
+        Thread imageThread = new Thread(() -> saveImage(sanPhamChiTiet, request.getImagesProduct()));
+
+        // Bắt đầu chạy các luồng
+        mauSacThread.start();
+        sizeThread.start();
+        imageThread.start();
+
+        try {
+            // Đợi cho tất cả các luồng hoàn thành
+            mauSacThread.join();
+            sizeThread.join();
+            imageThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    //lưu mau sắc chi tiết
+    public Iterable<MauSacChiTiet> saveMauSac(List<String> idMauSac, List<String> imgMauSac, SanPhamChiTiet sanPhamChiTiet) {
+        List<MauSacChiTiet> mauSacChiTietList = new ArrayList<>();
+
+        // Đảm bảo rằng số lượng idMauSac và imgMauSac là giống nhau
+        if (idMauSac.size() != imgMauSac.size())
+            throw new IllegalArgumentException("Số lượng idMauSac và imgMauSac không khớp");
+
+        for (int i = 0; i < idMauSac.size(); i++) {
+            String mauSacId = idMauSac.get(i);
+            String imgMauSacValue = imgMauSac.get(i);
+
+            MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
+            mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSacId)).build());
+            mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+            mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+            mauSacChiTiet.setAnh(imgMauSacValue);
+            mauSacChiTietList.add(mauSacChiTiet);
+        }
+        return this.mauSacChiTietReponsitory.saveAll(mauSacChiTietList);
+
+    }
+
+
+    // lưu size chi tiet
+    public Iterable<SizeChiTiet> saveSize(List<String> idSize, SanPhamChiTiet sanPhamChiTiet, List<String> soLuongSize) {
+        List<SizeChiTiet> sizeChiTietList = new ArrayList<>();
+
+        // Đảm bảo rằng số lượng idSize và soLuongSize là giống nhau
+        if (idSize.size() != soLuongSize.size())
+            throw new IllegalArgumentException("Số lượng idSize và soLuongSize không khớp");
+
+
+        for (int i = 0; i < idSize.size(); i++) {
+            String sizeId = idSize.get(i);
+            String soLuongSizeValue = soLuongSize.get(i);
+
+            SizeChiTiet sizeChiTiet = new SizeChiTiet();
+            sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(sizeId)).build());
+            sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+            sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+            sizeChiTiet.setSoLuong(Integer.valueOf(soLuongSizeValue));
+
+            sizeChiTietList.add(sizeChiTiet);
+        }
+
+        return this.sizeChiTietReponsitory.saveAll(sizeChiTietList);
+
+    }
+
+
+    // lưu ảnh
+    public Iterable<Image> saveImage(SanPhamChiTiet sanPhamChiTiet, List<String> imgSanPham) {
+        List<Image> imageList = new ArrayList<>();
+        for (String img : imgSanPham) {
+            Image image = new Image();
+            image.setAnh(img);
+            image.setSanPhamChiTiet(sanPhamChiTiet);
+            image.setTrangThai(1);
+            image.setNgayTao(DatetimeUtil.getCurrentDate());
+            imageList.add(image);
+        }
+        List<Image> images = this.imageReponsitory.saveAll(imageList);
+        for (int i = 0; i < images.size(); i++) {
+            Image image = images.get(i);
+            image.setMa("IM" + images.get(i).getId());
+        }
+        return this.imageReponsitory.saveAll(imageList);
+    }
+
+
+    @Override
+    public HashMap<String, Object> update(AdminSanPhamChiTietRequest dto, Integer id) {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, Object> delete(AdminSanPhamChiTietRequest dto, Integer id) {
+        return null;
+    }
+
+    @Override
+    public void saveExcel(MultipartFile file) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
+
+    }
+
+    @Override
+    public List<SanPhamChiTiet> exportCustomerToExcel(HttpServletResponse response) throws IOException {
+        List<SanPhamChiTiet> sanPhamChiTietList = chiTietSanPhamReponsitory.findAll();
+        ExcelExportUtils exportUtils = new ExcelExportUtils(sanPhamChiTietList);
+        exportUtils.exportDataToExcel(response);
+        return sanPhamChiTietList;
+    }
+
+
+
+
+
+
+}

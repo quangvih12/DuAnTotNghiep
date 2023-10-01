@@ -12,9 +12,5 @@ import java.util.Optional;
 
 @Repository
 public interface ChiTietSanPhamReponsitory extends JpaRepository<SanPhamChiTiet, Integer> {
-    @Query("select  pt  from  SanPhamChiTiet  pt where pt.trangThai =:trangThai")
-    Page<SanPhamChiTiet> getbyTrangThai(Integer trangThai, Pageable pageable);
-
-    Optional<SanPhamChiTiet> findBySanPhamId(Integer id);
 
 }
