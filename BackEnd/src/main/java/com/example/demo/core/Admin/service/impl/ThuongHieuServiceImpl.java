@@ -38,6 +38,18 @@ public class ThuongHieuServiceImpl implements AdThuongHieuService {
     }
 
     @Override
+    public List<ThuongHieu> findAll() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return thuongHieuReponsitory.findAll(sort);
+    }
+
+    @Override
+    public List<ThuongHieu> getAllByTrangThai(Integer trangThai) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return thuongHieuReponsitory.findAllByTrangThai(trangThai,sort);
+    }
+
+    @Override
     public ThuongHieu getById(Integer id) {
         Optional<ThuongHieu> optional = this.thuongHieuReponsitory.findById(id);
         return optional.isPresent() ? optional.get() : null;
@@ -56,11 +68,11 @@ public class ThuongHieuServiceImpl implements AdThuongHieuService {
     @Override
     public HashMap<String, Object> add(AdminThuongHieuRequest dto) {
         ThuongHieu thuongHieu = dto.dtoToEntity(new ThuongHieu());
+        thuongHieu.setTrangThai(1);
         try {
             ThuongHieu thuongHieus = thuongHieuReponsitory.save(thuongHieu);
             thuongHieus.setMa("TH" + thuongHieus.getId());
-            thuongHieuReponsitory.save(thuongHieus);
-            return DataUltil.setData("success", "thêm thành công");
+            return DataUltil.setData("success", thuongHieuReponsitory.save(thuongHieus));
         } catch (Exception e) {
             return DataUltil.setData("error", "error");
         }
@@ -71,14 +83,10 @@ public class ThuongHieuServiceImpl implements AdThuongHieuService {
         Optional<ThuongHieu> optional = thuongHieuReponsitory.findById(id);
         if (optional.isPresent()) {
             ThuongHieu thuongHieu = optional.get();
-            thuongHieu.setMa(thuongHieu.getMa());
             thuongHieu.setTen(dto.getTen());
-            thuongHieu.setTrangThai(dto.getTrangThai());
-            thuongHieu.setNgayTao(thuongHieu.getNgayTao());
             thuongHieu.setNgaySua(DatetimeUtil.getCurrentDate());
             try {
-                thuongHieuReponsitory.save(thuongHieu);
-                return DataUltil.setData("success", "sửa thành công");
+                return DataUltil.setData("success", thuongHieuReponsitory.save(thuongHieu));
             } catch (Exception e) {
                 return DataUltil.setData("error", "error");
             }
@@ -88,14 +96,11 @@ public class ThuongHieuServiceImpl implements AdThuongHieuService {
     }
 
     @Override
-    public HashMap<String, Object> delete(AdminThuongHieuRequest dto, Integer id) {
+    public HashMap<String, Object> delete(Integer id) {
         Optional<ThuongHieu> optional = thuongHieuReponsitory.findById(id);
         if (optional.isPresent()) {
             ThuongHieu thuongHieu = optional.get();
-            thuongHieu.setMa(thuongHieu.getMa());
-            thuongHieu.setTen(thuongHieu.getTen());
             thuongHieu.setTrangThai(0);
-            thuongHieu.setNgayTao(thuongHieu.getNgayTao());
             thuongHieu.setNgaySua(DatetimeUtil.getCurrentDate());
             try {
                 thuongHieuReponsitory.save(thuongHieu);
