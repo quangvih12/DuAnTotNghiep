@@ -23,9 +23,9 @@ public interface AdSanPhamChiTietService {
                        //  , MultipartFile[] files, MultipartFile[] file
     );
 
-    HashMap<String, Object> update(AdminSanPhamChiTietRequest dto, Integer id);
+    SanPhamChiTiet update(AdminSanPhamChiTietRequest dto, Integer id);
 
-    HashMap<String, Object> delete(AdminSanPhamChiTietRequest dto, Integer id);
+    SanPhamChiTiet delete(AdminSanPhamChiTietRequest dto, Integer id);
 
     void saveExcel(MultipartFile file) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
 

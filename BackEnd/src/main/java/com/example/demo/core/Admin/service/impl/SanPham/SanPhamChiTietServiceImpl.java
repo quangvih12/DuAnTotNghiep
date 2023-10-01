@@ -1,26 +1,19 @@
 package com.example.demo.core.Admin.service.impl.SanPham;
 
-import com.example.demo.core.Admin.model.request.AdminCreatExcelSanPhamRequest;
 import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
 import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
+import com.example.demo.core.Admin.model.request.AdminSearchRequest;
+import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
 import com.example.demo.core.Admin.repository.AdImageReponsitory;
 import com.example.demo.core.Admin.repository.AdSizeChiTietReponsitory;
-import com.example.demo.core.Admin.service.impl.TrongLuongServiceImpl;
 import com.example.demo.entity.*;
-import com.example.demo.infrastructure.status.ChiTietSanPham;
 import com.example.demo.reponsitory.*;
 import com.example.demo.core.Admin.service.AdSanPhamChiTietService;
 import com.example.demo.util.DatetimeUtil;
 import com.example.demo.util.ExcelExportUtils;
-import com.example.demo.util.ImageToAzureUtil;
 import com.microsoft.azure.storage.StorageException;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFDrawing;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,11 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
@@ -52,7 +43,6 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
 
     @Autowired
     private SanPhamReponsitory sanPhamReponsitory;
-
 
 
     @Override
@@ -75,10 +65,44 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
         //   }
     }
 
+
+    public List<AdminSanPhamChiTietResponse> getList(AdminSearchRequest request) {
+        return chiTietSanPhamReponsitory.getAll(request);
+    }
+
+    public List<SanPhamChiTiet> getAlls() {
+        return chiTietSanPhamReponsitory.findAll();
+    }
+
+    public List<String> getProductImages(Integer idProduct) {
+        return imageReponsitory.findBySanPhamIds(idProduct);
+    }
+
+    public List<Image> getProductImages() {
+        return imageReponsitory.findAll();
+    }
+
+    public List<SizeChiTiet> getProductSize(Integer idProduct) {
+        return sizeChiTietReponsitory.findSizeChiTietBySanPhamChiTiet(idProduct);
+    }
+
+    public List<MauSacChiTiet> getProductMauSac(Integer idProduct) {
+        return mauSacChiTietReponsitory.findMauSacChiTietBySanPhamChiTiet(idProduct);
+    }
+
     @Override
     public SanPhamChiTiet getOne(Integer id) {
         Optional<SanPhamChiTiet> optional = this.chiTietSanPhamReponsitory.findById(id);
         return optional.isPresent() ? optional.get() : null;
+    }
+
+    public Boolean findBySanPhamTen(String ten) {
+        SanPhamChiTiet chiTiet = chiTietSanPhamReponsitory.findBySanPhamTen(ten);
+        if (chiTiet == null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -210,12 +234,12 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
 
 
     @Override
-    public HashMap<String, Object> update(AdminSanPhamChiTietRequest dto, Integer id) {
+    public SanPhamChiTiet update(AdminSanPhamChiTietRequest dto, Integer id) {
         return null;
     }
 
     @Override
-    public HashMap<String, Object> delete(AdminSanPhamChiTietRequest dto, Integer id) {
+    public SanPhamChiTiet delete(AdminSanPhamChiTietRequest dto, Integer id) {
         return null;
     }
 
@@ -231,10 +255,6 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
         exportUtils.exportDataToExcel(response);
         return sanPhamChiTietList;
     }
-
-
-
-
 
 
 }
