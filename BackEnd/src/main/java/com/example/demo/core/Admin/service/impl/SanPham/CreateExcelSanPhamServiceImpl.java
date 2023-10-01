@@ -454,12 +454,12 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
     }
 
     @Override
-    public HashMap<String, Object> update(AdminSanPhamChiTietRequest dto, Integer id) {
+    public SanPhamChiTiet update(AdminSanPhamChiTietRequest dto, Integer id) {
         return null;
     }
 
     @Override
-    public HashMap<String, Object> delete(AdminSanPhamChiTietRequest dto, Integer id) {
+    public SanPhamChiTiet delete(AdminSanPhamChiTietRequest dto, Integer id) {
         return null;
     }
 
