@@ -6,9 +6,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 
 public interface AdMauSacService {
+
     Page<MauSac> getAll(Integer page);
+
+    List<MauSac> findAll();
+
+    List<MauSac> getAllByTrangThai(Integer trangThai);
 
     MauSac getById(Integer id);
 
@@ -18,7 +24,7 @@ public interface AdMauSacService {
 
     HashMap<String, Object> update(AdminMauSacRequest dto, Integer id);
 
-    HashMap<String, Object> delete(AdminMauSacRequest dto, Integer id);
+    HashMap<String, Object> delete(Integer id);
 
     void saveExcel(MultipartFile file);
 }

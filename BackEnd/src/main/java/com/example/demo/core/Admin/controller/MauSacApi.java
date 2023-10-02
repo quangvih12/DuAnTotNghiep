@@ -17,14 +17,30 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/mausac")
+@RequestMapping("/api/mau-sac")
+@CrossOrigin(origins = {"*"})
 public class MauSacApi {
+
     @Autowired
     private MauSacServiceImpl mauSacService;
 
+//    @GetMapping()
+//    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages) {
+//        Page<MauSac> page = mauSacService.getAll(pages);
+//        HashMap<String, Object> map = DataUltil.setData("ok", page);
+//        return ResponseEntity.ok(map);
+//    }
+
     @GetMapping()
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages) {
-        Page<MauSac> page = mauSacService.getAll(pages);
+    public ResponseEntity<?> getAll() {
+        List<MauSac> page = mauSacService.findAll();
+        HashMap<String, Object> map = DataUltil.setData("ok", page);
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/trang-thai")
+    public ResponseEntity<?> getAllByTrangThai(@RequestParam("trangThai") Integer trangThai) {
+        List<MauSac> page = mauSacService.getAllByTrangThai(trangThai);
         HashMap<String, Object> map = DataUltil.setData("ok", page);
         return ResponseEntity.ok(map);
     }
@@ -59,8 +75,8 @@ public class MauSacApi {
 
     // xóa (đổi trạng thái về 0)
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody AdminMauSacRequest request) {
-        HashMap<String, Object> map = mauSacService.delete(request, id);
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+        HashMap<String, Object> map = mauSacService.delete(id);
         return ResponseEntity.ok(map);
     }
 

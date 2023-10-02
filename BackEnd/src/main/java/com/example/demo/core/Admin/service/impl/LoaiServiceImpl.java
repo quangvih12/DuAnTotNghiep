@@ -4,6 +4,7 @@ import com.example.demo.core.Admin.model.request.AdminLoaiRequest;
 import com.example.demo.core.Admin.repository.AdLoaiReponsitory;
 import com.example.demo.core.Admin.service.AdLoaiService;
 import com.example.demo.entity.Loai;
+import com.example.demo.reponsitory.LoaiReponsitory;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -35,6 +36,18 @@ public class LoaiServiceImpl implements AdLoaiService {
     }
 
     @Override
+    public List<Loai> findAll() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return loaiReponsitory.findAll(sort);
+    }
+
+    @Override
+    public List<Loai> getAllByTrangThai(Integer trangThai) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return loaiReponsitory.findAllByTrangThai(trangThai, sort);
+    }
+
+    @Override
     public Loai getById(Integer id) {
         Optional<Loai> optional = this.loaiReponsitory.findById(id);
         return optional.isPresent() ? optional.get() : null;
@@ -52,12 +65,13 @@ public class LoaiServiceImpl implements AdLoaiService {
 
     @Override
     public HashMap<String, Object> add(AdminLoaiRequest dto) {
+        dto.setTrangThai(1);
+        dto.setNgayTao(DatetimeUtil.getCurrentDate());
         Loai loai = dto.dtoToEntity(new Loai());
         try {
-            Loai loais = loaiReponsitory.save(loai);
-            loais.setMa("L" + loais.getId());
-            loaiReponsitory.save(loais);
-            return DataUltil.setData("success", "thêm thành công");
+            Loai loai1 = loaiReponsitory.save(loai);
+            loai1.setMa("L" + loai1.getId());
+            return DataUltil.setData("success", loaiReponsitory.save(loai1));
         } catch (Exception e) {
             return DataUltil.setData("error", "error");
         }
@@ -70,12 +84,10 @@ public class LoaiServiceImpl implements AdLoaiService {
             Loai loai = optional.get();
             loai.setMa(loai.getMa());
             loai.setTen(dto.getTen());
-            loai.setTrangThai(dto.getTrangThai());
             loai.setNgayTao(loai.getNgayTao());
             loai.setNgaySua(DatetimeUtil.getCurrentDate());
             try {
-                loaiReponsitory.save(loai);
-                return DataUltil.setData("success", "sửa thành công");
+                return DataUltil.setData("success", loaiReponsitory.save(loai));
             } catch (Exception e) {
                 return DataUltil.setData("error", "error");
             }
@@ -85,18 +97,13 @@ public class LoaiServiceImpl implements AdLoaiService {
     }
 
     @Override
-    public HashMap<String, Object> delete(AdminLoaiRequest dto, Integer id) {
+    public HashMap<String, Object> delete(Integer id) {
         Optional<Loai> optional = loaiReponsitory.findById(id);
         if (optional.isPresent()) {
             Loai loai = optional.get();
-            loai.setMa(loai.getMa());
-            loai.setTen(loai.getTen());
             loai.setTrangThai(0);
-            loai.setNgayTao(loai.getNgayTao());
-            loai.setNgaySua(DatetimeUtil.getCurrentDate());
             try {
-                loaiReponsitory.save(loai);
-                return DataUltil.setData("success", "xóa thành công");
+                return DataUltil.setData("success", loaiReponsitory.save(loai));
             } catch (Exception e) {
                 return DataUltil.setData("error", "error");
             }
