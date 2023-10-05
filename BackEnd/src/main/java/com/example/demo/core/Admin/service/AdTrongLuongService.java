@@ -6,10 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 
 public interface AdTrongLuongService {
 
-    Page<TrongLuong> getAll(Integer page);
+    List<TrongLuong> getAll();
 
     TrongLuong getById(Integer id);
 

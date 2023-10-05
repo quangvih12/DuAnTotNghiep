@@ -2,6 +2,7 @@ package com.example.demo.core.Admin.service.impl.SanPham;
 
 import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
 import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
+import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
 import com.example.demo.core.Admin.repository.AdImageReponsitory;
 import com.example.demo.core.Admin.repository.AdSizeChiTietReponsitory;
@@ -23,7 +24,6 @@ import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -56,7 +56,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
     }
 
     @Override
-    public SanPhamChiTiet add(AdminSanPhamChiTietRequest dto) {
+    public AdminSanPhamChiTietResponse add(AdminSanPhamChiTietRequest dto) {
         return null;
     }
 
@@ -247,7 +247,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
 
     @Override
     public SanPhamChiTiet delete(AdminSanPhamChiTietRequest dto, Integer id) {
-          SanPhamChiTiet sanPhamChiTiet = chiTietSanPhamReponsitory.findById(id).get();
+        SanPhamChiTiet sanPhamChiTiet = chiTietSanPhamReponsitory.findById(id).get();
         if (sanPhamChiTiet != null) {
             sanPhamChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
             sanPhamChiTiet.setGiaBan(BigDecimal.valueOf(dto.getGiaBan()));
@@ -271,4 +271,15 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
     public List<SanPhamChiTiet> exportCustomerToExcel(HttpServletResponse response) throws IOException {
         return null;
     }
+
+    public void deleteSize(Integer idSp, Integer idSize) {
+        SizeChiTiet size = sizeChiTietReponsitory.findByIdSanPhamAndIdSize(idSp, idSize);
+        sizeChiTietReponsitory.delete(size);
+    }
+
+    public void deleteMauSac(Integer idSp, Integer idMau) {
+        MauSacChiTiet mauSac = mauSacChiTietReponsitory.findMSBySPAndMS(idSp, idMau);
+        mauSacChiTietReponsitory.delete(mauSac);
+    }
+
 }

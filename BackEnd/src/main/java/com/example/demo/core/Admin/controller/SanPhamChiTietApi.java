@@ -60,7 +60,7 @@ public class SanPhamChiTietApi {
 
     @GetMapping("/{productId}/images")
     public ResponseEntity<?> getProductImages(@PathVariable Integer productId) {
-        List<String> imageUrls = sanPhamChiTietService.getProductImages(productId);
+        List<Image> imageUrls = sanPhamChiTietService.getProductImages(productId);
         return ResponseEntity.ok(imageUrls);
     }
 
@@ -84,14 +84,23 @@ public class SanPhamChiTietApi {
 
     @GetMapping("/getOne/{id}")
     public ResponseEntity<?> getOne(@PathVariable Integer id) {
-        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.getOne(id);
-        HashMap<String, Object> map = DataUltil.setData("ok", sanPhamChiTiet);
-        return ResponseEntity.ok(map);
+        AdminSanPhamChiTietResponse sanPhamChiTiet = sanPhamChiTietService.get(id);
+        return ResponseEntity.ok(sanPhamChiTiet);
     }
 
     @GetMapping("/check/{ten}")
     public ResponseEntity<?> check(@PathVariable String ten) {
         return ResponseEntity.ok(sanPhamChiTietService.findBySanPhamTen(ten));
+    }
+
+    @DeleteMapping("/deleteSize")
+    public void deleteSize(@RequestParam Integer idSP, @RequestParam Integer idSize) {
+        updateSanPhamServiceIpml.deleteSize(idSP, idSize);
+    }
+
+    @DeleteMapping("/deleteMauSac")
+    public void deleteMauSac(@RequestParam Integer idSP, @RequestParam Integer idMau) {
+        updateSanPhamServiceIpml.deleteMauSac(idSP, idMau);
     }
 
     @GetMapping("/get/{id}")
@@ -142,8 +151,8 @@ public class SanPhamChiTietApi {
     }
 
     @PutMapping("/{id}/delete")
-    public ResponseEntity<?> delete( @RequestBody AdminSanPhamChiTietRequest sanPhamChiTietRequest, @PathVariable Integer id) {
-            return ResponseEntity.ok(updateSanPhamServiceIpml.delete(sanPhamChiTietRequest, id));
+    public ResponseEntity<?> delete(@RequestBody AdminSanPhamChiTietRequest sanPhamChiTietRequest, @PathVariable Integer id) {
+        return ResponseEntity.ok(updateSanPhamServiceIpml.delete(sanPhamChiTietRequest, id));
     }
 
 }

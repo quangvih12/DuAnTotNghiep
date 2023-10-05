@@ -74,7 +74,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
         return chiTietSanPhamReponsitory.findAll();
     }
 
-    public List<String> getProductImages(Integer idProduct) {
+    public List<Image> getProductImages(Integer idProduct) {
         return imageReponsitory.findBySanPhamIds(idProduct);
     }
 
@@ -83,17 +83,22 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
     }
 
     public List<SizeChiTiet> getProductSize(Integer idProduct) {
-        return sizeChiTietReponsitory.findSizeChiTietBySanPhamChiTiet(idProduct);
+        return sizeChiTietReponsitory.findSizeChiTiet(idProduct);
     }
 
     public List<MauSacChiTiet> getProductMauSac(Integer idProduct) {
-        return mauSacChiTietReponsitory.findMauSacChiTietBySanPhamChiTiet(idProduct);
+        return mauSacChiTietReponsitory.findMauSacChiTiet(idProduct);
     }
 
     @Override
     public SanPhamChiTiet getOne(Integer id) {
         Optional<SanPhamChiTiet> optional = this.chiTietSanPhamReponsitory.findById(id);
         return optional.isPresent() ? optional.get() : null;
+    }
+
+    public AdminSanPhamChiTietResponse get(Integer id) {
+        AdminSanPhamChiTietResponse optional = this.chiTietSanPhamReponsitory.get(id);
+        return optional;
     }
 
     public Boolean findBySanPhamTen(String ten) {
@@ -106,7 +111,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
     }
 
     @Override
-    public SanPhamChiTiet add(AdminSanPhamChiTietRequest request) {
+    public AdminSanPhamChiTietResponse add(AdminSanPhamChiTietRequest request) {
 
         // bước 1: lấy các thuộc tính của bảng sản phẩm từ request và lưu và bảng sản phẩm
         AdminSanPhamRequest sanPhamRequest = AdminSanPhamRequest.builder()
@@ -116,6 +121,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
                 .moTa(request.getMoTa())
                 .ten(request.getTen())
                 .quaiDeo(request.getQuaiDeo())
+                .anh(request.getAnh())
                 .build();
         SanPham sanPham = this.saveSanPham(sanPhamRequest);
 
@@ -127,7 +133,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
         // bước 3: sử dụng mutitheard để có thể lưu các bảng hình ảnh, màu sắc chi tiết, size chi tiết,khuyến mại chi tiết
         this.mutitheard(chiTietSanPham, request);
 
-        return null;
+        return this.get(chiTietSanPham.getId());
 
     }
 

@@ -2,6 +2,7 @@ package com.example.demo.core.Admin.service.impl.SanPham;
 
 import com.example.demo.core.Admin.model.request.AdminCreatExcelSanPhamRequest;
 import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
+import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.core.Admin.repository.*;
 import com.example.demo.core.Admin.service.AdSanPhamChiTietService;
 import com.example.demo.entity.*;
@@ -449,7 +450,7 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
     }
 
     @Override
-    public SanPhamChiTiet add(AdminSanPhamChiTietRequest dto) {
+    public AdminSanPhamChiTietResponse add(AdminSanPhamChiTietRequest dto) {
         return null;
     }
 
