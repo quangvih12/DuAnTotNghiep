@@ -28,6 +28,8 @@ public class AdminSanPhamRequest implements DtoToEntity<SanPham> {
 
     private Integer loai;
 
+    private String anh;
+
     @Override
     public SanPham dtoToEntity(SanPham sanPham) {
         sanPham.setTen(this.getTen());
@@ -36,6 +38,7 @@ public class AdminSanPhamRequest implements DtoToEntity<SanPham> {
         sanPham.setMoTa(this.getMoTa());
         sanPham.setDemLot(this.getDemLot());
         sanPham.setQuaiDeo(this.getQuaiDeo());
+        sanPham.setAnh(this.getAnh());
         sanPham.setThuongHieu(ThuongHieu.builder().id(this.getThuongHieu()).build());
         sanPham.setLoai(Loai.builder().id(this.getLoai()).build());
         return sanPham;

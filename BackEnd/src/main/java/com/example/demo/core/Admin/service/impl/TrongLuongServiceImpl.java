@@ -29,10 +29,8 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
     private AdTrongLuongRepository repository;
 
     @Override
-    public Page<TrongLuong> getAll(Integer page) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(page, 5 , sort);
-        return repository.findAll(pageable);
+    public List<TrongLuong> getAll() {
+        return repository.findAll();
     }
 
     @Override
@@ -43,12 +41,10 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
 
     @Override
     public Page<TrongLuong> search(String keyword, Integer page) {
-        if (keyword == null) {
-            return this.getAll(page);
-        } else {
+
             Pageable pageable = PageRequest.of(page, 5);
             return repository.search("%" + keyword + "%", pageable);
-        }
+
     }
 
     @Override

@@ -13,6 +13,6 @@ public interface AdImageReponsitory extends ImageReponsitory {
     @Query("select im from  Image im where im.sanPhamChiTiet.id =:id")
     List<Image> findBySanPhamId(Integer id);
 
-    @Query("select im.anh from  Image im where im.sanPhamChiTiet.id =:id")
-    List<String> findBySanPhamIds(Integer id);
+    @Query("select im from  Image im where im.sanPhamChiTiet.id =:id")
+    List<Image> findBySanPhamIds(Integer id);
 }

@@ -1,6 +1,7 @@
 package com.example.demo.core.Admin.service;
 
 import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
+import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.microsoft.azure.storage.StorageException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,8 +20,8 @@ public interface AdSanPhamChiTietService {
 
     SanPhamChiTiet getOne(Integer id);
 
-    SanPhamChiTiet add(AdminSanPhamChiTietRequest dto
-                       //  , MultipartFile[] files, MultipartFile[] file
+    AdminSanPhamChiTietResponse add(AdminSanPhamChiTietRequest dto
+                                    //  , MultipartFile[] files, MultipartFile[] file
     );
 
     SanPhamChiTiet update(AdminSanPhamChiTietRequest dto, Integer id);

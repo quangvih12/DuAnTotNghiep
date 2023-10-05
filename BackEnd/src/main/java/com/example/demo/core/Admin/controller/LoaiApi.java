@@ -18,15 +18,30 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/loai")
+@CrossOrigin(origins = {"*"})
 public class LoaiApi {
 
     @Autowired
     private LoaiServiceImpl loaiService;
 
     // getAll loai
+//    @GetMapping()
+//    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages) {
+//        Page<Loai> page = loaiService.getAll(pages);
+//        HashMap<String, Object> map = DataUltil.setData("ok", page);
+//        return ResponseEntity.ok(map);
+//    }
+
     @GetMapping()
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages) {
-        Page<Loai> page = loaiService.getAll(pages);
+    public ResponseEntity<?> getAll() {
+        List<Loai> page = loaiService.findAll();
+        HashMap<String, Object> map = DataUltil.setData("ok", page);
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/trang-thai")
+    public ResponseEntity<?> getAllByTrangThai(@RequestParam("trangThai") Integer trangThai) {
+        List<Loai> page = loaiService.getAllByTrangThai(trangThai);
         HashMap<String, Object> map = DataUltil.setData("ok", page);
         return ResponseEntity.ok(map);
     }
@@ -68,8 +83,8 @@ public class LoaiApi {
 
     // xóa (đổi trạng thái về 0)
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody AdminLoaiRequest request) {
-        HashMap<String, Object> map = loaiService.delete(request, id);
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+        HashMap<String, Object> map = loaiService.delete(id);
         return ResponseEntity.ok(map);
     }
 

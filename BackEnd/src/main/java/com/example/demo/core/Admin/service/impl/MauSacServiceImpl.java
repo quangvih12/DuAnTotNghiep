@@ -34,6 +34,18 @@ public class MauSacServiceImpl implements AdMauSacService {
     }
 
     @Override
+    public List<MauSac> findAll() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return mauSacReponsitory.findAll(sort);
+    }
+
+    @Override
+    public List<MauSac> getAllByTrangThai(Integer trangThai) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return mauSacReponsitory.findAllByTrangThai(trangThai, sort);
+    }
+
+    @Override
     public MauSac getById(Integer id) {
         Optional<MauSac> optional = this.mauSacReponsitory.findById(id);
         return optional.isPresent() ? optional.get() : null;
@@ -46,12 +58,13 @@ public class MauSacServiceImpl implements AdMauSacService {
 
     @Override
     public HashMap<String, Object> add(AdminMauSacRequest dto) {
-        MauSac mausac = dto.dtoToEntity(new MauSac());
+        dto.setTrangThai("1");
+        dto.setNgayTao(DatetimeUtil.getCurrentDate());
+        MauSac mauSac = dto.dtoToEntity(new MauSac());
         try {
-            MauSac mausacs = mauSacReponsitory.save(mausac);
-            mausacs.setMa("MS" + mausacs.getId());
-            mauSacReponsitory.save(mausacs);
-            return DataUltil.setData("success", "thêm thành công");
+            MauSac mauSacs = mauSacReponsitory.save(mauSac);
+            mauSacs.setMa("MS" + mauSacs.getId());
+            return DataUltil.setData("success", mauSacReponsitory.save(mauSacs));
         } catch (Exception e) {
             return DataUltil.setData("error", "error");
         }
@@ -64,12 +77,11 @@ public class MauSacServiceImpl implements AdMauSacService {
             MauSac mauSac = optional.get();
             mauSac.setMa(mauSac.getMa());
             mauSac.setTen(dto.getTen());
-            mauSac.setTrangThai(Integer.parseInt(dto.getTrangThai()));
+            mauSac.setMoTa(dto.getMoTa());
             mauSac.setNgayTao(mauSac.getNgayTao());
             mauSac.setNgaySua(DatetimeUtil.getCurrentDate());
             try {
-                mauSacReponsitory.save(mauSac);
-                return DataUltil.setData("success", "sửa thành công");
+                return DataUltil.setData("success", mauSacReponsitory.save(mauSac));
             } catch (Exception e) {
                 return DataUltil.setData("error", "error");
             }
@@ -79,18 +91,13 @@ public class MauSacServiceImpl implements AdMauSacService {
     }
 
     @Override
-    public HashMap<String, Object> delete(AdminMauSacRequest dto, Integer id) {
+    public HashMap<String, Object> delete(Integer id) {
         Optional<MauSac> optional = mauSacReponsitory.findById(id);
         if (optional.isPresent()) {
             MauSac mauSac = optional.get();
-            mauSac.setMa(mauSac.getMa());
-            mauSac.setTen(mauSac.getTen());
             mauSac.setTrangThai(0);
-            mauSac.setNgayTao(mauSac.getNgayTao());
-            mauSac.setNgaySua(DatetimeUtil.getCurrentDate());
             try {
-                mauSacReponsitory.save(mauSac);
-                return DataUltil.setData("success", "xóa thành công");
+                return DataUltil.setData("success", mauSacReponsitory.save(mauSac));
             } catch (Exception e) {
                 return DataUltil.setData("error", "error");
             }

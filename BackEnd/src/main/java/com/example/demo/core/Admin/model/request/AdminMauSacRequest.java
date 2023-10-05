@@ -25,6 +25,8 @@ public class AdminMauSacRequest implements DtoToEntity<MauSac> {
 
     private String ngayTao;
 
+    private String moTa;
+
     @NotBlank(message = "không bỏ trống trạng thái")
     private String trangThai;
 
@@ -32,6 +34,7 @@ public class AdminMauSacRequest implements DtoToEntity<MauSac> {
     public MauSac dtoToEntity(MauSac mauSac) {
         mauSac.setMa(this.ma);
         mauSac.setTen(this.ten);
+        mauSac.setMoTa(this.moTa);
         mauSac.setNgayTao(DatetimeUtil.getCurrentDate());
         mauSac.setTrangThai(Integer.parseInt(this.trangThai));
         return mauSac;
