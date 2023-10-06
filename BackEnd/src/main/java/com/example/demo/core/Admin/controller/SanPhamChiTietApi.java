@@ -103,6 +103,11 @@ public class SanPhamChiTietApi {
         updateSanPhamServiceIpml.deleteMauSac(idSP, idMau);
     }
 
+    @DeleteMapping("/deleteImg")
+    public void deleteImg(@RequestParam Integer idSP, @RequestParam String img) {
+        updateSanPhamServiceIpml.deleteImg(idSP, img);
+    }
+
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getOneVL(@PathVariable String id) {
         SanPham vatLieu = createExcelSanPhamService.getSp(id);
@@ -151,8 +156,8 @@ public class SanPhamChiTietApi {
     }
 
     @PutMapping("/{id}/delete")
-    public ResponseEntity<?> delete(@RequestBody AdminSanPhamChiTietRequest sanPhamChiTietRequest, @PathVariable Integer id) {
-        return ResponseEntity.ok(updateSanPhamServiceIpml.delete(sanPhamChiTietRequest, id));
+    public ResponseEntity<?> delete( @PathVariable Integer id) {
+        return ResponseEntity.ok(updateSanPhamServiceIpml.delete( id));
     }
 
 }

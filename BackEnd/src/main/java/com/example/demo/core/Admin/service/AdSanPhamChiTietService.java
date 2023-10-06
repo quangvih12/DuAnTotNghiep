@@ -26,7 +26,7 @@ public interface AdSanPhamChiTietService {
 
     SanPhamChiTiet update(AdminSanPhamChiTietRequest dto, Integer id);
 
-    SanPhamChiTiet delete(AdminSanPhamChiTietRequest dto, Integer id);
+    SanPhamChiTiet delete( Integer id);
 
     void saveExcel(MultipartFile file) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
 

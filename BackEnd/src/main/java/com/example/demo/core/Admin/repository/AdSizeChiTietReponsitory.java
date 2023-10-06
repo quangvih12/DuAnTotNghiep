@@ -22,4 +22,7 @@ public interface AdSizeChiTietReponsitory extends SizeChiTietReponsitory {
     @Query("select pt from SizeChiTiet  pt where  pt.sanPhamChiTiet.id=:idSP and pt.size.id=:idSize")
     SizeChiTiet findByIdSanPhamAndIdSize(Integer idSP,Integer idSize);
 
+    @Query("select pt from SizeChiTiet  pt where  pt.sanPhamChiTiet.id=:id and pt.size.id=:idSize")
+    SizeChiTiet findSizeChiTietBySanPhamChiTietAndSize(Integer id,Integer idSize);
+
 }

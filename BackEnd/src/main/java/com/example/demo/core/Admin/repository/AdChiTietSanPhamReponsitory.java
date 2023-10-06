@@ -29,42 +29,38 @@ public interface AdChiTietSanPhamReponsitory extends ChiTietSanPhamReponsitory {
     @Query(value = "select  pt  from  SanPhamChiTiet  pt where pt.sanPham.ten like :ten")
     SanPhamChiTiet findBySanPhamTen(String ten);
 
-    @Query(value = "SELECT ROW_NUMBER() OVER(ORDER BY spct.id DESC) AS stt,\n" +
-            "                                spct.id,sp.ma,sp.ten,spct.gia_ban as giaBan,spct.gia_nhap as giaNhap,\n" +
-            "                                spct.so_luong_ton as soLuongTon,spct.trang_thai as trangThai,\n" +
-            "                                sp.quai_deo as quaiDeo,sp.anh as anh,sp.dem_lot as demLot,\n" +
-            "                                sp.mo_ta as moTa,l.ten AS loai,\n" +
-            "                                th.ten as thuongHieu,\n" +
-            "                                vl.ten as vatLieu,tl.value as trongLuong\n" +
-            "       FROM datn.san_pham_chi_tiet spct join datn.san_pham sp on spct.id_san_pham = sp.id\n" +
-            "                                  join datn.loai l  on sp.id_loai = l.id\n" +
-            "                                  join datn.thuong_hieu th on sp.id_thuong_hieu = th.id\n" +
-            "                                  join datn.trong_luong tl on spct.id_trong_luong = tl.id\n" +
-            "                                  join datn.vat_lieu vl on spct.id_vat_lieu = vl.id\n" +
-            "      WHERE ( ( :#{#request.search} IS NULL\n" +
-            "                      OR :#{#request.search} LIKE '' \n" +
-            "                      OR sp.ma LIKE %:#{#request.search}% )\n" +
-            "                      OR ( :#{#request.search} IS NULL\n" +
-            "                      OR :#{#request.search} LIKE '' \n" +
-            "                      OR sp.ten LIKE %:#{#request.search}% ) )\n" +
-            "                      AND spct.trang_thai = 1 or spct.trang_thai = 3",nativeQuery = true)
-    List<AdminSanPhamChiTietResponse> getAll(@Param("request")AdminSearchRequest request);
+    @Query(value = """ 
+                          SELECT ROW_NUMBER() OVER(ORDER BY spct.id DESC) AS stt,
+                                                         spct.id,sp.ma,sp.ten,spct.gia_ban as giaBan,spct.gia_nhap as giaNhap,
+                                                         spct.so_luong_ton as soLuongTon,spct.trang_thai as trangThai,
+                                                         sp.quai_deo as quaiDeo,sp.dem_lot as demLot,
+                                                         sp.mo_ta as moTa,l.ten AS loai,sp.anh as anh,
+                                                         th.ten as thuongHieu,
+                                                         vl.ten as vatLieu,tl.value as trongLuong
+                                                  FROM datn.san_pham_chi_tiet spct join datn.san_pham sp on spct.id_san_pham = sp.id
+                         								  join datn.loai l  on sp.id_loai = l.id
+                         								  join datn.thuong_hieu th on sp.id_thuong_hieu = th.id
+                         								  join datn.trong_luong tl on spct.id_trong_luong = tl.id
+                                                           join datn.vat_lieu vl on spct.id_vat_lieu = vl.id
+                         						WHERE (spct.trang_thai = 1 or spct.trang_thai = 3)
+            """, nativeQuery = true)
+    List<AdminSanPhamChiTietResponse> getAll(@Param("request") AdminSearchRequest request);
 
     @Query(value = """ 
-              SELECT ROW_NUMBER() OVER(ORDER BY spct.id DESC) AS stt,
-                                             spct.id,sp.ma,sp.ten,spct.gia_ban as giaBan,spct.gia_nhap as giaNhap,
-                                             spct.so_luong_ton as soLuongTon,spct.trang_thai as trangThai,
-                                             sp.quai_deo as quaiDeo,sp.dem_lot as demLot,
-                                             sp.mo_ta as moTa,l.ten AS loai,sp.anh as anh,
-                                             th.ten as thuongHieu,
-                                             vl.ten as vatLieu,tl.value as trongLuong
-                                      FROM datn.san_pham_chi_tiet spct join datn.san_pham sp on spct.id_san_pham = sp.id
-             								  join datn.loai l  on sp.id_loai = l.id
-             								  join datn.thuong_hieu th on sp.id_thuong_hieu = th.id
-             								  join datn.trong_luong tl on spct.id_trong_luong = tl.id
-                                               join datn.vat_lieu vl on spct.id_vat_lieu = vl.id\s
-             						WHERE spct.id =:id
-""",nativeQuery = true)
-   AdminSanPhamChiTietResponse get(@Param("id")Integer id);
+                          SELECT ROW_NUMBER() OVER(ORDER BY spct.id DESC) AS stt,
+                                                         spct.id,sp.ma,sp.ten,spct.gia_ban as giaBan,spct.gia_nhap as giaNhap,
+                                                         spct.so_luong_ton as soLuongTon,spct.trang_thai as trangThai,
+                                                         sp.quai_deo as quaiDeo,sp.dem_lot as demLot,
+                                                         sp.mo_ta as moTa,l.ten AS loai,sp.anh as anh,
+                                                         th.ten as thuongHieu,
+                                                         vl.ten as vatLieu,tl.value as trongLuong
+                                                  FROM datn.san_pham_chi_tiet spct join datn.san_pham sp on spct.id_san_pham = sp.id
+                         								  join datn.loai l  on sp.id_loai = l.id
+                         								  join datn.thuong_hieu th on sp.id_thuong_hieu = th.id
+                         								  join datn.trong_luong tl on spct.id_trong_luong = tl.id
+                                                           join datn.vat_lieu vl on spct.id_vat_lieu = vl.id
+                         						WHERE spct.id =:id
+            """, nativeQuery = true)
+    AdminSanPhamChiTietResponse get(@Param("id") Integer id);
 
 }
