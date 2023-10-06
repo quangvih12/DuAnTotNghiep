@@ -25,6 +25,7 @@ import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -62,8 +63,13 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
 
     @Override
     public SanPhamChiTiet update(AdminSanPhamChiTietRequest dto, Integer id) {
-        SanPhamChiTiet sanPhamChiTiet = chiTietSanPhamReponsitory.findById(id).get();
-        if (sanPhamChiTiet != null) {
+        // Lấy sản phẩm chi tiết từ kho dự trữ
+        Optional<SanPhamChiTiet> optionalSanPhamChiTiet = chiTietSanPhamReponsitory.findById(id);
+
+        if (optionalSanPhamChiTiet.isPresent()) {
+            SanPhamChiTiet sanPhamChiTiet = optionalSanPhamChiTiet.get();
+
+            // Cập nhật thông tin sản phẩm
             SanPham sanPham = this.updateSanPham(sanPhamChiTiet, dto);
             sanPhamChiTiet.setSanPham(sanPham);
             sanPhamChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
@@ -73,8 +79,11 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
             sanPhamChiTiet.setSoLuongTon(Integer.valueOf(dto.getSoLuongTon()));
             sanPhamChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(dto.getVatLieu())).build());
             sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(dto.getTrongLuong()).build());
-            mutitheard(sanPhamChiTiet, dto);
-            return chiTietSanPhamReponsitory.save(sanPhamChiTiet);
+
+            // Lưu sản phẩm chi tiết đã cập nhật
+            SanPhamChiTiet save = chiTietSanPhamReponsitory.save(sanPhamChiTiet);
+            this.mutitheard(save, dto);
+            return save;
         }
 
         return null;
@@ -103,112 +112,102 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
     }
 
     public List<Image> updateImage(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) {
-        List<Image> img = this.imageReponsitory.findBySanPhamId(sanPhamChiTiet.getId());
+        List<String> imgP = dto.getImagesProduct();
+        List<Image> updatedImages = new ArrayList<>();
 
-        if (!img.isEmpty()) {
-            for (Image imgs : img) {
-                for (String i : dto.getImgMauSac()) {
-                    imgs.setAnh(i);
-                    imgs.setNgaySua(DatetimeUtil.getCurrentDate());
-                }
+        for (String imgAnh : imgP) {
+            Image img = this.imageReponsitory.findBySanPhamIdAndAnh(sanPhamChiTiet.getId(), imgAnh);
+
+            // Kiểm tra xem có ảnh tồn tại hay không
+            if (img != null) {
+                // Cập nhật thông tin ảnh nếu cần
+                img.setAnh(imgAnh);
+                // Lưu lại ảnh đã cập nhật
+                updatedImages.add(img);
+            } else {
+                // Tạo ảnh mới nếu ảnh không tồn tại
+                Image newImg = new Image();
+                newImg.setSanPhamChiTiet(sanPhamChiTiet);
+                newImg.setAnh(imgAnh);
+                // Lưu lại ảnh mới
+                Image savedImage = imageReponsitory.save(newImg);
+                updatedImages.add(savedImage);
             }
-            return this.imageReponsitory.saveAll(img);
-        } else {
-            List<Image> imageList = new ArrayList<>();
-            for (String imgs : dto.getImgMauSac()) {
-                Image image = new Image();
-                image.setAnh(imgs);
-                image.setSanPhamChiTiet(sanPhamChiTiet);
-                image.setTrangThai(1);
-                image.setNgayTao(DatetimeUtil.getCurrentDate());
-                imageList.add(image);
-            }
-            List<Image> images = this.imageReponsitory.saveAll(imageList);
-            for (int i = 0; i < images.size(); i++) {
-                Image image = images.get(i);
-                image.setMa("IM" + images.get(i).getId());
-            }
-            return this.imageReponsitory.saveAll(imageList);
         }
+
+        return updatedImages;
     }
 
 
     public List<SizeChiTiet> updateSizeChiTiet(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) {
-        // Tìm tất cả các SizeChiTiet của sản phẩm được đưa vào
-        List<SizeChiTiet> sizeList = sizeChiTietReponsitory.findSizeChiTietBySanPhamChiTiet(sanPhamChiTiet.getId());
+        List<String> idSize = dto.getIdSize();
+        List<String> soLuongSize = dto.getSoLuongSize();
+        List<SizeChiTiet> updatedSizeChiTietList = new ArrayList<>();
 
-        if (sizeList.isEmpty()) {
+        // Đảm bảo rằng số lượng idSize và soLuongSize là giống nhau
+        if (idSize.size() != soLuongSize.size()) {
+            throw new IllegalArgumentException("Số lượng idSize và soLuongSize không khớp");
+        }
 
-            List<SizeChiTiet> sizeChiTietList = new ArrayList<>();
+        for (int i = 0; i < idSize.size(); i++) {
+            String sizeId = idSize.get(i);
+            String soLuongSizeValue = soLuongSize.get(i);
 
-            // Đảm bảo rằng số lượng idSize và soLuongSize là giống nhau
-            if (dto.getIdSize().size() != dto.getSoLuongSize().size())
-                throw new IllegalArgumentException("Số lượng idSize và soLuongSize không khớp");
+            // Tìm kiếm SizeChiTiet dựa trên sanPhamChiTiet và idSize
+            SizeChiTiet sizeChiTiet = sizeChiTietReponsitory.findSizeChiTietBySanPhamChiTietAndSize(sanPhamChiTiet.getId(), Integer.valueOf(sizeId));
 
-            for (int i = 0; i < dto.getIdSize().size(); i++) {
-                String sizeId = dto.getIdSize().get(i);
-                String soLuongSizeValue = dto.getSoLuongSize().get(i);
-
-                SizeChiTiet sizeChiTiet = new SizeChiTiet();
+            if (sizeChiTiet == null) {
+                // Nếu không tìm thấy, tạo mới SizeChiTiet
+                sizeChiTiet = new SizeChiTiet();
                 sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(sizeId)).build());
                 sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
                 sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-                sizeChiTiet.setSoLuong(Integer.valueOf(soLuongSizeValue));
-
-                sizeChiTietList.add(sizeChiTiet);
             }
 
-            return this.sizeChiTietReponsitory.saveAll(sizeChiTietList);
-        } else {
-            for (SizeChiTiet sizeChiTiet : sizeList) {
-                for (int i = 0; i < dto.getIdSize().size(); i++) {
-                    String sizeId = dto.getIdSize().get(i);
-                    String soLuongSizeValue = dto.getSoLuongSize().get(i);
-                    sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(sizeId)).build());
-                    sizeChiTiet.setSoLuong(Integer.valueOf(soLuongSizeValue));
-                    sizeChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
-                }
-            }
-            return sizeChiTietReponsitory.saveAll(sizeList);
+            // Cập nhật thông tin của SizeChiTiet
+            sizeChiTiet.setSoLuong(Integer.valueOf(soLuongSizeValue));
+            sizeChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
+
+            // Thêm SizeChiTiet đã cập nhật vào danh sách
+            updatedSizeChiTietList.add(sizeChiTiet);
         }
+
+        // Lưu danh sách SizeChiTiet đã cập nhật
+        return sizeChiTietReponsitory.saveAll(updatedSizeChiTietList);
     }
 
+
     public List<MauSacChiTiet> updateMauSacChiTiet(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) {
-        // Tìm tất cả các SizeChiTiet của sản phẩm được đưa vào
-        List<MauSacChiTiet> mauSacList = mauSacChiTietReponsitory.findMauSacChiTietBySanPhamChiTiet(sanPhamChiTiet.getId());
+        List<String> idMau = dto.getIdMauSac();
+        List<String> anhMau = dto.getImgMauSac();
+        List<MauSacChiTiet> updatedMauSacChiTietList = new ArrayList<>();
 
-        if (mauSacList.isEmpty()) {
+        // Lặp qua danh sách idMau và imgMauSac
+        for (int i = 0; i < idMau.size(); i++) {
+            String mauSacId = idMau.get(i);
+            String imgMauSacValue = anhMau.get(i);
 
-            List<MauSacChiTiet> mauSacChiTietList = new ArrayList<>();
+            // Tìm MauSacChiTiet dựa trên sanPhamChiTiet và mauSacId
+            MauSacChiTiet mauSacChiTiet = mauSacChiTietReponsitory.findMauSacChiTietBySanPhamChiTietAndMauSac(sanPhamChiTiet.getId(), Integer.valueOf(mauSacId));
 
-            // Đảm bảo rằng số lượng idMauSac và imgMauSac là giống nhau
-            if (dto.getIdMauSac().size() != dto.getImgMauSac().size())
-                throw new IllegalArgumentException("Số lượng idMauSac và imgMauSac không khớp");
-
-            for (int i = 0; i < dto.getIdMauSac().size(); i++) {
-                String mauSacId = dto.getIdMauSac().get(i);
-                String imgMauSacValue = dto.getIdMauSac().get(i);
-
-                MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
+            if (mauSacChiTiet == null) {
+                // Nếu không tìm thấy, tạo mới MauSacChiTiet
+                mauSacChiTiet = new MauSacChiTiet();
                 mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSacId)).build());
                 mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
                 mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-                mauSacChiTiet.setAnh(imgMauSacValue);
-                mauSacChiTietList.add(mauSacChiTiet);
             }
-            return this.mauSacChiTietReponsitory.saveAll(mauSacChiTietList);
-        } else {
-            for (MauSacChiTiet mauSacChiTiet : mauSacList) {
-                for (int i = 0; i < dto.getIdMauSac().size(); i++) {
-                    String mauSacId = dto.getIdMauSac().get(i);
-                    String imgMauSacValue = dto.getIdMauSac().get(i);
-                    mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSacId)).build());
-                    mauSacChiTiet.setAnh(imgMauSacValue);
-                    mauSacChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
-                }
-            }
-            return this.mauSacChiTietReponsitory.saveAll(mauSacList);
+
+            // Cập nhật thông tin của MauSacChiTiet
+            mauSacChiTiet.setAnh(imgMauSacValue);
+            mauSacChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
+
+            // Thêm MauSacChiTiet đã cập nhật hoặc tạo mới vào danh sách
+            updatedMauSacChiTietList.add(mauSacChiTiet);
         }
+
+        // Lưu danh sách MauSacChiTiet đã cập nhật hoặc tạo mới và trả về
+        return mauSacChiTietReponsitory.saveAll(updatedMauSacChiTietList);
     }
 
 
@@ -246,17 +245,11 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
 
 
     @Override
-    public SanPhamChiTiet delete(AdminSanPhamChiTietRequest dto, Integer id) {
+    public SanPhamChiTiet delete(Integer id) {
         SanPhamChiTiet sanPhamChiTiet = chiTietSanPhamReponsitory.findById(id).get();
         if (sanPhamChiTiet != null) {
             sanPhamChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
-            sanPhamChiTiet.setGiaBan(BigDecimal.valueOf(dto.getGiaBan()));
-            sanPhamChiTiet.setGiaNhap(BigDecimal.valueOf(dto.getGiaNhap()));
             sanPhamChiTiet.setTrangThai(ChiTietSanPhamStatus.XOA);
-            sanPhamChiTiet.setSoLuongTon(Integer.valueOf(dto.getSoLuongTon()));
-            sanPhamChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(dto.getVatLieu())).build());
-            sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(dto.getTrongLuong()).build());
-            mutitheard(sanPhamChiTiet, dto);
             return chiTietSanPhamReponsitory.save(sanPhamChiTiet);
         }
         return null;
@@ -280,6 +273,11 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
     public void deleteMauSac(Integer idSp, Integer idMau) {
         MauSacChiTiet mauSac = mauSacChiTietReponsitory.findMSBySPAndMS(idSp, idMau);
         mauSacChiTietReponsitory.delete(mauSac);
+    }
+
+    public void deleteImg(Integer idSp, String img) {
+        Image image = imageReponsitory.findBySanPhamIdAndAnh(idSp, img);
+        imageReponsitory.delete(image);
     }
 
 }

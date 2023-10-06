@@ -460,7 +460,7 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
     }
 
     @Override
-    public SanPhamChiTiet delete(AdminSanPhamChiTietRequest dto, Integer id) {
+    public SanPhamChiTiet delete(Integer id) {
         return null;
     }
 

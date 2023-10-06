@@ -20,4 +20,7 @@ public interface MauSacChiTietReponsitory extends JpaRepository<MauSacChiTiet, I
 
     @Query("select pt from MauSacChiTiet  pt where  pt.sanPhamChiTiet.id=:idSP and pt.mauSac.id=:idMauSac")
     MauSacChiTiet findMSBySPAndMS(Integer idSP, Integer idMauSac);
+
+    @Query("select pt from MauSacChiTiet  pt where  pt.sanPhamChiTiet.id=:id and pt.mauSac.id=:idMau")
+    MauSacChiTiet findMauSacChiTietBySanPhamChiTietAndMauSac(Integer id,Integer idMau);
 }

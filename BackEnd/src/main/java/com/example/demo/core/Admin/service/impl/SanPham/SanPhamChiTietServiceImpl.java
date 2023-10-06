@@ -112,7 +112,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
 
     @Override
     public AdminSanPhamChiTietResponse add(AdminSanPhamChiTietRequest request) {
-
+        System.out.println(request);
         // bước 1: lấy các thuộc tính của bảng sản phẩm từ request và lưu và bảng sản phẩm
         AdminSanPhamRequest sanPhamRequest = AdminSanPhamRequest.builder()
                 .loai(request.getLoai())
@@ -245,7 +245,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
     }
 
     @Override
-    public SanPhamChiTiet delete(AdminSanPhamChiTietRequest dto, Integer id) {
+    public SanPhamChiTiet delete( Integer id) {
         return null;
     }
 

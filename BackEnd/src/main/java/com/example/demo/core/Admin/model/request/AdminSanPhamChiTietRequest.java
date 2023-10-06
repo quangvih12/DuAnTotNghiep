@@ -19,6 +19,8 @@ import java.util.List;
 @Builder
 public class AdminSanPhamChiTietRequest implements DtoToEntity<SanPhamChiTiet> {
 
+    private Integer id;
+
     @NotBlank(message = "không bỏ trống tên")
     private String ten;
 
