@@ -19,4 +19,7 @@ public interface AdLoaiReponsitory extends LoaiReponsitory {
     List<Loai> findAllByTrangThai(Integer trangThai, Sort sort);
     Optional<Loai> findByTen(String ten);
 
+    @Query("select  pot from  Loai  pot where pot.ten like :ten")
+    Loai findByTens(String ten);
+
 }

@@ -3,6 +3,7 @@ package com.example.demo.core.Admin.controller;
 import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
 import com.example.demo.core.Admin.model.request.AdminSearchRequest;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
+import com.example.demo.core.Admin.service.AdExcelAddSanPhamService;
 import com.example.demo.core.Admin.service.impl.SanPham.CreateExcelSanPhamServiceImpl;
 import com.example.demo.core.Admin.service.impl.SanPham.UpdateSanPhamServiceIpml;
 import com.example.demo.entity.*;
@@ -37,6 +38,9 @@ public class SanPhamChiTietApi {
 
     @Autowired
     private UpdateSanPhamServiceIpml updateSanPhamServiceIpml;
+
+    @Autowired
+    private AdExcelAddSanPhamService adExcelAddSanPhamService;
 
     // getAll san pham chi tiet
     @GetMapping()
@@ -116,11 +120,9 @@ public class SanPhamChiTietApi {
     }
 
     // thêm bằng file excel
-    @PostMapping("/upload")
-    public ResponseEntity<?> uploadCustomersData(@RequestParam("file") MultipartFile file) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
-        this.createExcelSanPhamService.saveExcel(file);
-        HashMap<String, Object> map = DataUltil.setData("success", " thêm sản phẩm thành công");
-        return ResponseEntity.ok(map);
+    @PostMapping("/view-data")
+    public ResponseEntity<?> viewDataImportExcel(@RequestParam("file") MultipartFile file) throws IOException {
+        return ResponseEntity.ok(adExcelAddSanPhamService.previewDataImportExcel(file));
     }
 
     // xuat excel
