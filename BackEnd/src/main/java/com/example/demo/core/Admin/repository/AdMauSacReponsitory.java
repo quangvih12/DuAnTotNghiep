@@ -1,6 +1,7 @@
 package com.example.demo.core.Admin.repository;
 
 import com.example.demo.entity.MauSac;
+import com.example.demo.entity.SanPham;
 import com.example.demo.reponsitory.MauSacChiTietReponsitory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,5 +16,10 @@ import java.util.List;
 public interface AdMauSacReponsitory extends MauSacChiTietReponsitory {
     @Query("select pot from  MauSac pot where pot.ten like :keyword or pot.ma like :keyword")
     Page<MauSac> search(String keyword, Pageable pageable);
+
     List<MauSac> findAllByTrangThai(Integer trangThai, Sort sort);
+
+    @Query("select  pot from  MauSac  pot " +
+            "where pot.ten like :keyword ")
+    MauSac findByTenMauSacExcel(String keyword);
 }
