@@ -24,17 +24,17 @@ public class TrongLuongApi {
     @Autowired
     private AdTrongLuongService service;
 
-    @GetMapping()
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(service.findAll());
-    }
-
 //    @GetMapping()
 //    public ResponseEntity<?> getAll() {
-//        List<TrongLuong> page = service.findAll();
-//        HashMap<String, Object> map = DataUltil.setData("ok", page);
-//        return ResponseEntity.ok(map);
+//        return ResponseEntity.ok(service.findAll());
 //    }
+
+    @GetMapping()
+    public ResponseEntity<?> getAll() {
+        List<TrongLuong> page = service.findAll();
+        HashMap<String, Object> map = DataUltil.setData("ok", page);
+        return ResponseEntity.ok(map);
+    }
 
     @GetMapping("/trang-thai")
     public ResponseEntity<?> getAllByTrangThai(@RequestParam("trangThai") Integer trangThai) {

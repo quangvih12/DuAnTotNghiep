@@ -37,7 +37,7 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
 
     @Override
     public List<TrongLuong> findAll() {
-     //   Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return repository.findAll();
     }
 
