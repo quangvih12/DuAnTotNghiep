@@ -25,10 +25,10 @@ import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.HashMap;
 import java.util.List;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = {"*"})
+
 public class SanPhamChiTietApi {
     @Autowired
     private SanPhamChiTietServiceImpl sanPhamChiTietService;
@@ -160,6 +160,20 @@ public class SanPhamChiTietApi {
     @PutMapping("/{id}/delete")
     public ResponseEntity<?> delete( @PathVariable Integer id) {
         return ResponseEntity.ok(updateSanPhamServiceIpml.delete( id));
+    }
+
+    // áp dụng khuyến mại cho sản phẩm được chọn
+    @PutMapping("/applyKM/{productId}")
+    public ResponseEntity<?> updateKM(@PathVariable("productId") Integer productId, @RequestParam("idkm") Integer idkm){
+        HashMap<String, Object> map = sanPhamChiTietService.updateProductDetail(productId, idkm);
+        return ResponseEntity.ok(map);
+    }
+
+
+    @GetMapping("/getAllCTSPByKhuyenMai")
+    public List<SanPhamChiTiet> getAllCTSPByKhuyenMai(){
+
+        return sanPhamChiTietService.getAllSPCTByKhuyenMai();
     }
 
 }
