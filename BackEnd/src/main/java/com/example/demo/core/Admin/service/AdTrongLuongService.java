@@ -10,7 +10,11 @@ import java.util.List;
 
 public interface AdTrongLuongService {
 
-    List<TrongLuong> getAll();
+    Page<TrongLuong> getAll(Integer page);
+
+    List<TrongLuong> findAll();
+
+    List<TrongLuong> getAllByTrangThai(Integer trangThai);
 
     TrongLuong getById(Integer id);
 
@@ -20,7 +24,7 @@ public interface AdTrongLuongService {
 
     HashMap<String,Object> update(AdminTrongLuongRequest trongLuongRequest, Integer id);
 
-    HashMap<String,Object> delete(AdminTrongLuongRequest trongLuongRequest, Integer id);
+    HashMap<String,Object> delete(Integer id);
 
     void saveExcel(MultipartFile file);
 }
