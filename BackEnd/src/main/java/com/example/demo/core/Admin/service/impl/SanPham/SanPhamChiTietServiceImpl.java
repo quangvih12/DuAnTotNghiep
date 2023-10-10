@@ -20,13 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.*;
@@ -269,70 +265,6 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
         exportUtils.exportDataToExcel(response);
         return sanPhamChiTietList;
     }
-    // lấy danh sách ctsp có idkm = null hoặc trạng thái khuyến mại không phải là đang diễn ra hoặc chưa bắt đầu
-    @Override
-    public List<SanPhamChiTiet> getAllSPCTByKhuyenMai() {
-       return chiTietSanPhamReponsitory.getAllCTSPByKhuyenMai();
 
-    }
-
-    @Override
-    public HashMap<String, Object> updateProductDetail(Integer productId, Integer idkm) {
-        // Lấy ctsp theo id
-        Optional<SanPhamChiTiet> optionalProductDetail = chiTietSanPhamReponsitory.findById(productId);
-
-        if (optionalProductDetail.isPresent()) {
-            SanPhamChiTiet spct = optionalProductDetail.get();
-            KhuyenMai km = khuyenMaiReponsitory.getOneById(idkm);
-            // Cập nhật idkm cho ctsp
-            spct.setKhuyenMai(km);
-
-            // Áp dụng giảm giá theo giá phần trăm
-            if(km.getTrangThai() == 0){
-                BigDecimal giaBan = spct.getGiaBan();
-
-                BigDecimal phanTram  = new BigDecimal(km.getGiaTriGiam()).divide(new BigDecimal(100));
-
-                BigDecimal giamGia = giaBan.multiply(phanTram);
-                BigDecimal giaBanSauGiam = giaBan.subtract(giamGia);
-
-//                BigDecimal phanTramDangThapPhan = new BigDecimal(km.getGiaTriGiam()).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
-//
-//                // Tính giá sau khi giảm
-//                BigDecimal giaSauKhiGiam = giaBan.multiply(phanTramDangThapPhan).setScale(2, RoundingMode.HALF_UP);
-
-                spct.setGiaSauGiam(giaBanSauGiam);
-            }
-
-            try {
-                chiTietSanPhamReponsitory.save(spct);
-                return DataUltil.setData("success", chiTietSanPhamReponsitory.save(spct));
-
-            } catch (Exception e) {
-                return DataUltil.setData("error", "error");
-            }
-        } else {
-            throw new RuntimeException("Không tìm thấy chi tiết sản phẩm với ID: " + productId);
-        }
-
-    }
-
-    @Scheduled(fixedRate = 20000)
-    public void updateGiaCTSP(){
-        //Lấy danh sách CTSP theo trạng thái khuyến mại là  bắt đầu
-        List<SanPhamChiTiet> listSPCT = chiTietSanPhamReponsitory.getCTSPByTrangThaiKhuyenMai(0);
-
-        // Set lại giá sau giảm khi trạng thái chuyển từ chưa bắt đầu => đang diễn ra
-        for(SanPhamChiTiet spct : listSPCT){
-            KhuyenMai km = khuyenMaiReponsitory.getOneById(spct.getKhuyenMai().getId());
-            BigDecimal giaBan = spct.getGiaBan();
-            BigDecimal phanTram = new BigDecimal(km.getGiaTriGiam()/100);
-            BigDecimal giamGia = giaBan.multiply(phanTram);
-            BigDecimal giaBanSauGiam = giaBan.subtract(giamGia);
-            spct.setGiaSauGiam(giaBanSauGiam);
-
-            chiTietSanPhamReponsitory.save(spct);
-        }
-    }
 
 }

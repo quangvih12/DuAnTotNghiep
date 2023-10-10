@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vat-lieu")
+@RequestMapping("/api/admin/vat-lieu")
 @CrossOrigin(origins = {"*"})
 public class VatLieuApi {
 
@@ -44,8 +44,8 @@ public class VatLieuApi {
     @GetMapping()
     public ResponseEntity<?> getAll() {
         List<VatLieu> page = service.findAll();
-        HashMap<String, Object> map = DataUltil.setData("ok", page);
-        return ResponseEntity.ok(map);
+     //   HashMap<String, Object> map = DataUltil.setData("ok", page);
+        return ResponseEntity.ok(page);
     }
 
     @GetMapping("/trang-thai")

@@ -268,16 +268,6 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
         return null;
     }
 
-    @Override
-    public List<SanPhamChiTiet> getAllSPCTByKhuyenMai() {
-        return null;
-    }
-
-    @Override
-    public HashMap<String, Object> updateProductDetail(Integer productId, Integer idkm) {
-        return null;
-    }
-
     public void deleteSize(Integer idSp, Integer idSize) {
         SizeChiTiet size = sizeChiTietReponsitory.findByIdSanPhamAndIdSize(idSp, idSize);
         sizeChiTietReponsitory.delete(size);
