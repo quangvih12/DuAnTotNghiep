@@ -31,4 +31,8 @@ public interface AdSanPhamChiTietService {
     void saveExcel(MultipartFile file) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
 
     List<SanPhamChiTiet> exportCustomerToExcel(HttpServletResponse response) throws IOException;
+
+    List<SanPhamChiTiet> getAllSPCTByKhuyenMai();
+
+    HashMap<String, Object>  updateProductDetail(Integer productId, Integer idkm);
 }

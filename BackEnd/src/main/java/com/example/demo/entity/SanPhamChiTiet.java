@@ -56,6 +56,9 @@ public class SanPhamChiTiet {
     @Column(name = "gia_nhap", precision = 20, scale = 0)
     private BigDecimal giaNhap;
 
+    @Column(name = "gia_sau_giam", precision = 20, scale = 0)
+    private BigDecimal giaSauGiam;
+
     @ManyToOne
     @JoinColumn(name = "id_san_pham")
     private SanPham sanPham;
@@ -67,6 +70,10 @@ public class SanPhamChiTiet {
     @ManyToOne
     @JoinColumn(name = "id_trong_luong")
     private TrongLuong trongLuong;
+
+    @ManyToOne
+    @JoinColumn(name = "id_khuyen_mai")
+    private KhuyenMai khuyenMai;
 
     @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)

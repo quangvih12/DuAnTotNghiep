@@ -25,10 +25,10 @@ import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.HashMap;
 import java.util.List;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = {"*"})
+
 public class SanPhamChiTietApi {
     @Autowired
     private SanPhamChiTietServiceImpl sanPhamChiTietService;
