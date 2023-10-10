@@ -455,7 +455,7 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
     }
 
     @Override
-    public SanPhamChiTiet update(AdminSanPhamChiTietRequest dto, Integer id) {
+    public AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id) {
         return null;
     }
 

@@ -24,7 +24,7 @@ public interface AdSanPhamChiTietService {
                                     //  , MultipartFile[] files, MultipartFile[] file
     );
 
-    SanPhamChiTiet update(AdminSanPhamChiTietRequest dto, Integer id);
+    AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id);
 
     SanPhamChiTiet delete( Integer id);
 
