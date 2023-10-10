@@ -342,41 +342,15 @@ CREATE TABLE `khuyen_mai` (
 
 LOCK TABLES `khuyen_mai` WRITE;
 /*!40000 ALTER TABLE `khuyen_mai` DISABLE KEYS */;
-INSERT INTO `khuyen_mai` VALUES (1,NULL,5,NULL,NULL,'KM1','giảm 5% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-11-10','2023-10-24',100,'giảm 5%','2023-11-15','2023-11-23',1),(2,NULL,15,NULL,NULL,'KM2','giảm 15% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-10-10','2023-09-24',80,'giảm 15%','2023-10-15','2023-10-23',1),(3,NULL,20,NULL,NULL,'KM2','giảm 20% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-07-10','2023-06-24',60,'giảm 20%','2023-07-15','2023-07-23',0),(4,NULL,25,NULL,NULL,'KM4','giảm 25% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-09-10','2023-08-24',400,'giảm 25%','2023-09-15','2023-09-23',1);
+INSERT INTO `khuyen_mai` VALUES (1,NULL,5,NULL,NULL,'KM1','giảm 5% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-11-10','2023-10-24',100,'giảm 5%','2023-11-15','2023-11-23',1),
+(2,NULL,15,NULL,NULL,'KM2','giảm 15% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-10-10','2023-09-24',80,'giảm 15%','2023-10-15','2023-10-23',1),
+(3,NULL,20,NULL,NULL,'KM2','giảm 20% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-07-10','2023-06-24',60,'giảm 20%','2023-07-15','2023-07-23',0),
+(4,NULL,25,NULL,NULL,'KM4','giảm 25% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-09-10','2023-08-24',400,'giảm 25%','2023-09-15','2023-09-23',1);
 /*!40000 ALTER TABLE `khuyen_mai` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `khuyen_mai_ctsp`
---
 
-DROP TABLE IF EXISTS `khuyen_mai_ctsp`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `khuyen_mai_ctsp` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `ngay_sua` varchar(255) DEFAULT NULL,
-  `ngay_tao` varchar(255) DEFAULT NULL,
-  `so_tien_con_lai` decimal(20,0) DEFAULT NULL,
-  `trang_thai` int DEFAULT NULL,
-  `id_khuyen_mai` int DEFAULT NULL,
-  `id_ctsp` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKe781xl7r1mbttpsw0k5tydfky` (`id_khuyen_mai`),
-  KEY `FKknc3jbrh4y8bl4umf81oce3v` (`id_ctsp`),
-  CONSTRAINT `FKe781xl7r1mbttpsw0k5tydfky` FOREIGN KEY (`id_khuyen_mai`) REFERENCES `khuyen_mai` (`id`),
-  CONSTRAINT `FKknc3jbrh4y8bl4umf81oce3v` FOREIGN KEY (`id_ctsp`) REFERENCES `san_pham_chi_tiet` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `khuyen_mai_ctsp`
---
-
-LOCK TABLES `khuyen_mai_ctsp` WRITE;
-/*!40000 ALTER TABLE `khuyen_mai_ctsp` DISABLE KEYS */;
-/*!40000 ALTER TABLE `khuyen_mai_ctsp` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `loai`
@@ -574,13 +548,17 @@ CREATE TABLE `san_pham_chi_tiet` (
   `ngay_tao` varchar(255) DEFAULT NULL,
   `so_luong_ton` int DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
+ `gia_sau_giam` decimal(20,0) DEFAULT NULL,
   `id_san_pham` int DEFAULT NULL,
   `id_trong_luong` int DEFAULT NULL,
   `id_vat_lieu` int DEFAULT NULL,
+  `id_khuyen_mai` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKmby561odp360b0sfqx4mmarja` (`id_san_pham`),
   KEY `FKdrjkavdharm2dd7tsh3wywlr1` (`id_trong_luong`),
   KEY `FK4sre5v1q6gi2fhpeogsgd71bc` (`id_vat_lieu`),
+  KEY `FKe781xl7r1mbttpsw0k5tydfky` (`id_khuyen_mai`),
+  CONSTRAINT `FKe781xl7r1mbttpsw0k5tydfky` FOREIGN KEY (`id_khuyen_mai`) REFERENCES `khuyen_mai` (`id`),
   CONSTRAINT `FK4sre5v1q6gi2fhpeogsgd71bc` FOREIGN KEY (`id_vat_lieu`) REFERENCES `vat_lieu` (`id`),
   CONSTRAINT `FKdrjkavdharm2dd7tsh3wywlr1` FOREIGN KEY (`id_trong_luong`) REFERENCES `trong_luong` (`id`),
   CONSTRAINT `FKmby561odp360b0sfqx4mmarja` FOREIGN KEY (`id_san_pham`) REFERENCES `san_pham` (`id`)
@@ -593,7 +571,12 @@ CREATE TABLE `san_pham_chi_tiet` (
 
 LOCK TABLES `san_pham_chi_tiet` WRITE;
 /*!40000 ALTER TABLE `san_pham_chi_tiet` DISABLE KEYS */;
-INSERT INTO `san_pham_chi_tiet` VALUES (1,780000,700000,'2023-05-05','2023-04-13',50,1,1,1,1),(2,730000,600000,'2023-05-05','2023-04-13',100,1,2,1,1),(3,6400000,500000,'2023-05-05','2023-04-13',25,1,3,1,1),(4,540000,400000,'2023-05-05','2023-04-13',30,1,4,2,1),(5,750000,600000,'2023-05-05','2023-04-13',120,1,5,1,1);
+INSERT INTO `san_pham_chi_tiet` VALUES 
+(1,780000,700000,'2023-05-05','2023-04-13',50,1,null,1,1,1,null),
+(2,730000,600000,'2023-05-05','2023-04-13',100,1,null,2,1,1,null),
+(3,6400000,500000,'2023-05-05','2023-04-13',25,1,null,3,1,1,null),
+(4,540000,400000,'2023-05-05','2023-04-13',30,1,null,4,2,1,null),
+(5,750000,600000,'2023-05-05','2023-04-13',120,1,null,5,1,1,null);
 /*!40000 ALTER TABLE `san_pham_chi_tiet` ENABLE KEYS */;
 UNLOCK TABLES;
 

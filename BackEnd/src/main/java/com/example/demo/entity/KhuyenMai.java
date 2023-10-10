@@ -1,28 +1,12 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -44,11 +28,13 @@ public class KhuyenMai {
     @Column(name = "ma")
     private String ma;
 
+    @UpdateTimestamp
     @Column(name = "ngay_sua")
-    private String ngaySua;
+    private LocalDateTime ngaySua;
 
+    @CreationTimestamp
     @Column(name = "ngay_tao")
-    private String ngayTao;
+    private LocalDateTime ngayTao;
 
     @Column(name = "mo_ta", length = 10000)
     private String moTa;
@@ -57,10 +43,10 @@ public class KhuyenMai {
     private Integer trangThai;
 
     @Column(name = "thoi_gian_bat_dau")
-    private String thoiGianBatDau;
+    private LocalDateTime thoiGianBatDau;
 
     @Column(name = "thoi_gian_ket_thuc")
-    private String thoiGianKetThuc;
+    private LocalDateTime thoiGianKetThuc;
 
     @Column(name = "so_luong")
     private Integer soLuong;
@@ -71,8 +57,8 @@ public class KhuyenMai {
     @Enumerated(EnumType.STRING)
     private KieuGiamGia kieuGiamGia;
 
-    @Column(precision = 20, scale = 0)
-    private BigDecimal giaTriGiam;
+    @Column(name = "gia_tri_giam",precision = 20, scale = 0)
+    private Integer giaTriGiam;
 
     @Column(precision = 20, scale = 0)
     private BigDecimal giamToiDa;

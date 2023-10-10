@@ -70,6 +70,16 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
     }
 
     @Override
+    public List<SanPhamChiTiet> getAllSPCTByKhuyenMai() {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, Object> updateProductDetail(Integer productId, Integer idkm) {
+        return null;
+    }
+
+    @Override
     public void saveExcel(MultipartFile file) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         if (this.isValidExcelFile(file)) {
             List<AdminCreatExcelSanPhamRequest> creatExcelSanPhamRequests = this.getCustomersDataFromExcel(file.getInputStream());

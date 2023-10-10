@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -262,6 +263,16 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
 
     @Override
     public List<SanPhamChiTiet> exportCustomerToExcel(HttpServletResponse response) throws IOException {
+        return null;
+    }
+
+    @Override
+    public List<SanPhamChiTiet> getAllSPCTByKhuyenMai() {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, Object> updateProductDetail(Integer productId, Integer idkm) {
         return null;
     }
 

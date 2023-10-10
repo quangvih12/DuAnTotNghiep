@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -26,16 +27,18 @@ public class Voucher {
 
     private String ten;
 
-    private String thoiGianBatDau;
+    private LocalDateTime thoiGianBatDau;
 
-    private String thoiGianKetThuc;
+    private LocalDateTime thoiGianKetThuc;
 
     @Column(length = 10000)
     private String moTa;
 
-    @Column(name = "so_luong")
-    private Integer soLuong;
-
     @Column(precision = 20, scale = 0)
     private BigDecimal giamToiDa;
+
+    @Column(name = "trang_thai")
+    private Integer trangThai;
+
+    private Integer soLuong;
 }
