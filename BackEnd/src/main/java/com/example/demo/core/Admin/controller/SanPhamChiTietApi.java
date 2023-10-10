@@ -162,4 +162,18 @@ public class SanPhamChiTietApi {
         return ResponseEntity.ok(updateSanPhamServiceIpml.delete( id));
     }
 
+    // áp dụng khuyến mại cho sản phẩm được chọn
+    @PutMapping("/applyKM/{productId}")
+    public ResponseEntity<?> updateKM(@PathVariable("productId") Integer productId, @RequestParam("idkm") Integer idkm){
+        HashMap<String, Object> map = sanPhamChiTietService.updateProductDetail(productId, idkm);
+        return ResponseEntity.ok(map);
+    }
+
+
+    @GetMapping("/getAllCTSPByKhuyenMai")
+    public List<SanPhamChiTiet> getAllCTSPByKhuyenMai(){
+
+        return sanPhamChiTietService.getAllSPCTByKhuyenMai();
+    }
+
 }
