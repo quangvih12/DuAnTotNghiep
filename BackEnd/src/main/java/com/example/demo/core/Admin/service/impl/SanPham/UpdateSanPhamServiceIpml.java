@@ -62,7 +62,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
     }
 
     @Override
-    public SanPhamChiTiet update(AdminSanPhamChiTietRequest dto, Integer id) {
+    public AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id) {
         // Lấy sản phẩm chi tiết từ kho dự trữ
         Optional<SanPhamChiTiet> optionalSanPhamChiTiet = chiTietSanPhamReponsitory.findById(id);
 
@@ -83,7 +83,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
             // Lưu sản phẩm chi tiết đã cập nhật
             SanPhamChiTiet save = chiTietSanPhamReponsitory.save(sanPhamChiTiet);
             this.mutitheard(save, dto);
-            return save;
+            return  this.chiTietSanPhamReponsitory.get(save.getId());
         }
 
         return null;
@@ -220,6 +220,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
             sanPham.setThuongHieu(ThuongHieu.builder().id(dto.getThuongHieu()).build());
             sanPham.setDemLot(dto.getDemLot());
             sanPham.setMoTa(dto.getMoTa());
+            sanPham.setAnh(dto.getAnh());
             sanPham.setQuaiDeo(dto.getQuaiDeo());
             return sanPhamReponsitory.save(sanPham);
         } else {
@@ -229,6 +230,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
                     .demLot(dto.getDemLot())
                     .moTa(dto.getMoTa())
                     .ten(dto.getTen())
+                    .anh(dto.getAnh())
                     .quaiDeo(dto.getQuaiDeo())
                     .build();
             return this.saveSanPham(sanPhamRequest);
@@ -276,8 +278,20 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
     }
 
     public void deleteImg(Integer idSp, String img) {
-        Image image = imageReponsitory.findBySanPhamIdAndAnh(idSp, img);
-        imageReponsitory.delete(image);
+        int lastIndexOfSlash = img.lastIndexOf("\\");
+
+        if (lastIndexOfSlash != -1) {
+            String fileName = img.substring(lastIndexOfSlash + 1);
+            System.out.println(fileName);
+            Image image = imageReponsitory.findBySanPhamIdAndAnh(idSp,"%"+fileName+"%");
+            System.out.println(image.getId());
+            imageReponsitory.delete(image);
+        } else {
+            System.out.println("Không tìm thấy dấu gạch chéo trong URL.");
+        }
+
+
+       //
     }
 
 }

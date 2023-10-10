@@ -256,13 +256,19 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
             });
         }
 
-        String soLuongSize = String.valueOf(ExcelUtils.getCellLong(row.getCell(9)));
-        List<String> listSoLuongSize = new ArrayList<>(Arrays.asList(soLuongSize.split(",")));
+        String soLuongSize = String.valueOf(ExcelUtils.getCellString(row.getCell(9)));
         if (DataUltil.isNullObject(soLuongSize)) {
             userDTO.setImportMessageSoLuongSize("Số lượng size không được để trống tại vị trí: " + stt);
             userDTO.setError(true);
             errorCount++;
         } else {
+            String[] soLuongSizeArray = soLuongSize.split(",");
+            List<String> listSoLuongSize = new ArrayList<>();
+
+            for (String size : soLuongSizeArray) {
+                String trimmedSize = size.trim(); // Loại bỏ khoảng trắng trước và sau phần tử
+                listSoLuongSize.add(trimmedSize);
+            }
             userDTO.setSoLuongSize(listSoLuongSize);
             userDTO.setImportMessageSoLuongSize("SUCCESS");
             userDTO.setError(false);
@@ -298,7 +304,6 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         List<String> listAnh = new ArrayList<>(Arrays.asList(anh1, anh2, anh3));
         List<String> imgList = azureImgProduct(listAnh);
         userDTO.setImagesProduct(imgList);
-
         String quaiDeo = ExcelUtils.getCellString(row.getCell(17));
         if (DataUltil.isNullObject(quaiDeo)) {
             userDTO.setImportMessageQuaiDeo("Quai đeo không được để trống tại ví trí: " + stt);
@@ -527,44 +532,47 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
 
     public List<SizeChiTiet> saveAllSizeChiTiet(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets) {
         List<SizeChiTiet> sizeChiTiets = new ArrayList<>();
+
         adminExcelAddSanPhamBO.getResponseList().forEach(request -> {
             int index = adminExcelAddSanPhamBO.getResponseList().indexOf(request);
             SanPhamChiTiet sanPhamChiTiet = savedSanPhamChiTiets.get(index);
 
-            request.getIdSize().forEach(size -> {
+            List<String> soLuongList = request.getSoLuongSize();
+            for (int sizeIndex = 0; sizeIndex < soLuongList.size(); sizeIndex++) {
+                String soLuong = soLuongList.get(sizeIndex);
+               int idsize =  Integer.valueOf(request.getIdSize().get(sizeIndex));
                 SanPhamChiTiet existingChiTiet = chiTietSanPhamReponsitory.findBySanPhamTen(request.getTenSanPham());
-                List<SizeChiTiet> sizeChiTietList = sizeChiTietReponsitory.findBySanPhamChiTietIdAndSizeId(existingChiTiet.getId(), Integer.valueOf(size));
+                List<SizeChiTiet> sizeChiTietList = sizeChiTietReponsitory.findBySanPhamChiTietIdAndSizeId(existingChiTiet.getId(), Integer.valueOf(request.getIdSize().get(sizeIndex)));
+
                 if (!sizeChiTietList.isEmpty()) {
-                    // Cập nhật thông tin size chi tiết
-                    sizeChiTietList.stream().map(sizeChiTiet -> {
-                        sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(size)).build());
+                    // Cập nhật thông tin size chi tiết cho từng size
+                    sizeChiTietList.forEach(sizeChiTiet -> {
+                        sizeChiTiet.setSize(Size.builder().id(idsize).build());
                         sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
                         sizeChiTiet.setTrangThai(1);
-                        //    sizeChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
-
-                        request.getSoLuongSize().forEach(i -> {
-                            sizeChiTiet.setSoLuong(Integer.valueOf(i));
-                        });
+                        sizeChiTiet.setSoLuong(Integer.valueOf(soLuong));
                         sizeChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
-                        return sizeChiTiet;
-                    }).forEach(sizeChiTiets::add);
+
+                        sizeChiTiets.add(sizeChiTiet);
+                    });
                 } else {
-                    // Thiết lập thông tin size  chi tiết mới
+                    // Thiết lập thông tin size chi tiết mới cho từng size
                     SizeChiTiet sizeChiTiet = new SizeChiTiet();
-                    sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(size)).build());
+                    sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(request.getIdSize().get(sizeIndex))).build());
                     sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
                     sizeChiTiet.setTrangThai(1);
+                    sizeChiTiet.setSoLuong(Integer.valueOf(soLuong));
                     sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-                    //    sizeChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
-                    request.getSoLuongSize().forEach(i -> {
-                        sizeChiTiet.setSoLuong(Integer.valueOf(i));
-                    });
+
                     sizeChiTiets.add(sizeChiTiet);
                 }
-            });
+            }
         });
+
         return this.sizeChiTietReponsitory.saveAll(sizeChiTiets);
     }
+
+
 
     public void saveAllImage(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets) {
         List<Image> imageList = new ArrayList<>();
