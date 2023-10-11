@@ -10,6 +10,7 @@ import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.reponsitory.KhuyenMaiReponsitory;
 import com.example.demo.util.DataUltil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-//@EnableScheduling
+@EnableScheduling
 public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
 
     @Autowired
@@ -99,36 +100,6 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
         }
     }
 
-    // cập nhật lại số lượng km khi áp dụng khuyến mại
-    @Override
-    public HashMap<String, Object> updateSLKhuyenMai(Integer id, Integer soLuong) throws Exception {
-        Optional<KhuyenMai> optional = khuyenMaiRepo.findById(id);
-
-        if (optional.isPresent()) {
-            try {
-                KhuyenMai khuyenMai = optional.get();
-                // nếu số lượng sản phẩm được chọn > số lượg khuyến mại
-                if(khuyenMai.getSoLuong() < soLuong){
-                    return DataUltil.setData("error", "Số lượng khuyến mại không đủ. Vui lòng chọn ít hơn hoặc bằng "+khuyenMai.getSoLuong()+ " sản phẩm");
-                }
-
-                // nếu số lượng km = 0 => cập nhật lại trạng thái km
-                if((khuyenMai.getSoLuong()-soLuong) == 0){
-                    khuyenMai.setTrangThai(3);
-
-                }
-                khuyenMai.setSoLuong(khuyenMai.getSoLuong()-soLuong);
-                khuyenMaiRepo.save(khuyenMai);
-                return DataUltil.setData("success", khuyenMaiRepo.save(khuyenMai));
-
-            } catch (Exception e) {
-                return DataUltil.setData("error", "error");
-            }
-
-        } else {
-            return DataUltil.setData("error", "không tìm thấy khuyến mại để sửa");
-        }
-    }
 
     @Override
     public KhuyenMai getKhuyenMaiById(Integer id) {
@@ -165,6 +136,10 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
                 spct.setGiaSauGiam(giaBanSauGiam);
             }
 
+            if(km.getTrangThai() == 1){
+                spct.setGiaSauGiam(null);
+            }
+
             try {
                 chiTietSanPhamReponsitory.save(spct);
                 return DataUltil.setData("success", chiTietSanPhamReponsitory.save(spct));
@@ -192,6 +167,19 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
             BigDecimal giamGia = giaBan.multiply(phanTram);
             BigDecimal giaBanSauGiam = giaBan.subtract(giamGia);
             spct.setGiaSauGiam(giaBanSauGiam);
+
+            chiTietSanPhamReponsitory.save(spct);
+        }
+    }
+
+    @Scheduled(fixedRate = 20000)
+    public void updateGiaCTSPHetHan(){
+        //Lấy danh sách CTSP theo trạng thái khuyến mại là  hết hạn
+        List<SanPhamChiTiet> listCTSPKM = khuyenMaiRepo.getCTSPByTrangThaiKhuyenMai(1);
+        // Set lại giá sau giảm khi trạng thái chuyển từ chưa bắt đầu => đang diễn ra
+        for(SanPhamChiTiet spct : listCTSPKM){
+            KhuyenMai km = khuyenMaiRepo.getOneById(spct.getKhuyenMai().getId());
+            spct.setGiaSauGiam(null);
 
             chiTietSanPhamReponsitory.save(spct);
         }
