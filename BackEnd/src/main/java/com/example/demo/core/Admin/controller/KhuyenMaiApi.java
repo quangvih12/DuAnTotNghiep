@@ -19,7 +19,7 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/khuyenMai/")
+@RequestMapping("/api/khuyenMai")
 public class KhuyenMaiApi {
 
     @Autowired
@@ -63,5 +63,18 @@ public class KhuyenMaiApi {
         return ResponseEntity.ok(map);
     }
 
+
+    @GetMapping("/getAllCTSPByKhuyenMai")
+    public List<SanPhamChiTiet> getAllCTSPByKhuyenMai(){
+
+        return khuyenMaiService.getAllSPCTByKhuyenMai();
+    }
+
+    // áp dụng khuyến mại cho sản phẩm được chọn
+    @PutMapping("/applyKM/{productId}")
+    public ResponseEntity<?> updateKM(@PathVariable("productId") Integer productId, @RequestParam("idkm") Integer idkm){
+        HashMap<String, Object> map = khuyenMaiService.updateProductDetail(productId, idkm);
+        return ResponseEntity.ok(map);
+    }
 
 }
