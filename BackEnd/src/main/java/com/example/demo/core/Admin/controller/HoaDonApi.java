@@ -1,5 +1,6 @@
 package com.example.demo.core.Admin.controller;
 
+import com.example.demo.core.Admin.service.InterfaceHoaDon.AdDetailHoaDonChiTietService;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdHoaDonChoXacNhanService;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdminTatCaHoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class HoaDonApi {
     @Autowired
     private AdHoaDonChoXacNhanService adHoaDonChoXacNhanService;
 
+    @Autowired
+    private AdDetailHoaDonChiTietService adDetailHoaDonChiTietService;
+
     @GetMapping()
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(adminTatCaHoaDonService.getAll());
@@ -25,6 +29,11 @@ public class HoaDonApi {
     @GetMapping("/hoaDonTrangThai/{trangThai}")
     public ResponseEntity<?> getHoaDonHuy(@PathVariable Integer trangThai) {
         return ResponseEntity.ok(adminTatCaHoaDonService.getHoaDonTrangThai(trangThai));
+    }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> detailHoaDonCT(@PathVariable Integer id) {
+        return ResponseEntity.ok(adDetailHoaDonChiTietService.getHoaDonChiTietByIdHD(id));
     }
 
     @GetMapping("/hoaDonHuy")
@@ -60,5 +69,20 @@ public class HoaDonApi {
     @GetMapping("/hoaDonDangChuanBiHang")
     public ResponseEntity<?> getHoaDonDangChuanBiHang() {
         return ResponseEntity.ok(adminTatCaHoaDonService.getHoaDonDangChuanBiHang());
+    }
+
+    @PutMapping("/huyXacNhan/{id}")
+    public ResponseEntity<?> huyHoaDon(@PathVariable Integer id){
+        return ResponseEntity.ok(adHoaDonChoXacNhanService.huyHoaDonChoXacNhan(id));
+    }
+
+    @PutMapping("/XacNhan/{id}")
+    public ResponseEntity<?> xacNhanHoaDon(@PathVariable Integer id){
+        return ResponseEntity.ok(adHoaDonChoXacNhanService.xacNhanHoaDon(id));
+    }
+
+    @PutMapping("/XacNhanGiaoHang/{id}")
+    public ResponseEntity<?> XacNhanGiaoHang(@PathVariable Integer id){
+        return ResponseEntity.ok(adminTatCaHoaDonService.giaoHoaDonChoVanChuyen(id));
     }
 }

@@ -9,7 +9,7 @@ public interface AdHoaDonChoXacNhanService {
 
     List<AdminHoaDonResponse> getHoaDonChoXacNhan();
 
-    HoaDon huyHoaDonChoXacNhan(Integer idHD);
+    AdminHoaDonResponse huyHoaDonChoXacNhan(Integer idHD);
 
-    HoaDon xacNhanHoaDon(Integer idHD);
+    AdminHoaDonResponse xacNhanHoaDon(Integer idHD);
 }

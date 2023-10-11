@@ -23,4 +23,6 @@ public interface AdminTatCaHoaDonService {
 
     List<AdminHoaDonResponse> getHoaDonDangChuanBiHang();
 
+    AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD);
+
 }
