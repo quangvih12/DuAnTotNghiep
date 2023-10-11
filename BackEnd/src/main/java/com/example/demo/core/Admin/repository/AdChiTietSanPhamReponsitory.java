@@ -64,13 +64,7 @@ public interface AdChiTietSanPhamReponsitory extends ChiTietSanPhamReponsitory {
     AdminSanPhamChiTietResponse get(@Param("id") Integer id);
 
 
-    // lấy danh sách ctsp có idkm = null hoặc trạng thái khuyến mại không phải là đang diễn ra hoặc chưa bắt đầu
-    @Query("SELECT c FROM SanPhamChiTiet c LEFT JOIN c.khuyenMai km WHERE (c.khuyenMai IS NULL) OR (c.khuyenMai IS NOT NULL AND km.trangThai not in (0,2))")
-    List<SanPhamChiTiet> getAllCTSPByKhuyenMai();
 
-    // lấy danh sách SPCT theo trạng thái khuyến mại
-    @Query("select  pt  from  SanPhamChiTiet  pt where pt.khuyenMai.trangThai =:trangThai")
-    List<SanPhamChiTiet> getCTSPByTrangThaiKhuyenMai(Integer trangThai);
 
 
 }

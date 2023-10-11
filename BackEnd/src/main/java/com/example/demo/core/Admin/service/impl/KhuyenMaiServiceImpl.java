@@ -2,15 +2,18 @@ package com.example.demo.core.Admin.service.impl;
 
 import com.example.demo.core.Admin.model.request.AdminKhuyenMaiRequest;
 import com.example.demo.core.Admin.model.response.AdminKhuyenMaiResponse;
+import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
 import com.example.demo.core.Admin.repository.AdKhuyenMaiReponsitory;
 import com.example.demo.core.Admin.service.AdKhuyenMaiService;
 import com.example.demo.entity.KhuyenMai;
+import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.reponsitory.KhuyenMaiReponsitory;
 import com.example.demo.util.DataUltil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +25,9 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
 
     @Autowired
     AdKhuyenMaiReponsitory khuyenMaiRepo;
+
+    @Autowired
+    AdChiTietSanPhamReponsitory chiTietSanPhamReponsitory;
 
     @Override
     public List<AdminKhuyenMaiResponse> getAllKhuyenMai() {
@@ -128,6 +134,69 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
     public KhuyenMai getKhuyenMaiById(Integer id) {
        return khuyenMaiRepo.getOneById(id);
     }
+
+    // lấy danh sách ctsp có idkm = null hoặc trạng thái khuyến mại không phải là đang diễn ra hoặc chưa bắt đầu
+    @Override
+    public List<SanPhamChiTiet> getAllSPCTByKhuyenMai() {
+        return khuyenMaiRepo.getAllCTSPByKhuyenMai();
+
+    }
+
+    @Override
+    public HashMap<String, Object> updateProductDetail(Integer productId, Integer idkm) {
+        // Lấy ctsp theo id
+        Optional<SanPhamChiTiet> optionalProductDetail = chiTietSanPhamReponsitory.findById(productId);
+
+        if (optionalProductDetail.isPresent()) {
+            SanPhamChiTiet spct = optionalProductDetail.get();
+            KhuyenMai km = khuyenMaiRepo.getOneById(idkm);
+            // Cập nhật idkm cho ctsp
+            spct.setKhuyenMai(km);
+
+            // Áp dụng giảm giá theo giá phần trăm
+            if(km.getTrangThai() == 0){
+                BigDecimal giaBan = spct.getGiaBan();
+
+                BigDecimal phanTram  = new BigDecimal(km.getGiaTriGiam()).divide(new BigDecimal(100));
+
+                BigDecimal giamGia = giaBan.multiply(phanTram);
+                BigDecimal giaBanSauGiam = giaBan.subtract(giamGia);
+
+                spct.setGiaSauGiam(giaBanSauGiam);
+            }
+
+            try {
+                chiTietSanPhamReponsitory.save(spct);
+                return DataUltil.setData("success", chiTietSanPhamReponsitory.save(spct));
+
+            } catch (Exception e) {
+                return DataUltil.setData("error", "error");
+            }
+        } else {
+            throw new RuntimeException("Không tìm thấy chi tiết sản phẩm với ID: " + productId);
+        }
+
+    }
+
+    @Scheduled(fixedRate = 20000)
+    public void updateGiaCTSP(){
+        //Lấy danh sách CTSP theo trạng thái khuyến mại là  bắt đầu
+        List<SanPhamChiTiet> listSPCT = khuyenMaiRepo.getCTSPByTrangThaiKhuyenMai(0);
+
+        // Set lại giá sau giảm khi trạng thái chuyển từ chưa bắt đầu => đang diễn ra
+        for(SanPhamChiTiet spct : listSPCT){
+            KhuyenMai km = khuyenMaiRepo.getOneById(spct.getKhuyenMai().getId());
+            BigDecimal giaBan = spct.getGiaBan();
+            BigDecimal phanTram  = new BigDecimal(km.getGiaTriGiam()).divide(new BigDecimal(100));
+
+            BigDecimal giamGia = giaBan.multiply(phanTram);
+            BigDecimal giaBanSauGiam = giaBan.subtract(giamGia);
+            spct.setGiaSauGiam(giaBanSauGiam);
+
+            chiTietSanPhamReponsitory.save(spct);
+        }
+    }
+
 
     @Scheduled(cron = "0 0 0 * * *") // Lịch chạy hàng ngày vào lúc 00:00:00
     public void updateNgayHetHan() {
