@@ -38,7 +38,7 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
     @Override
     public List<TrongLuong> findAll() {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return repository.findAll();
+        return repository.findAll(sort);
     }
 
     @Override
@@ -71,6 +71,7 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
         try {
             TrongLuong trongLuong1 = repository.save(trongLuong);
             trongLuong1.setMa("TL" + trongLuong1.getId());
+            trongLuong1.setTrangThai(1);
             return DataUltil.setData("success", repository.save(trongLuong1));
         } catch (Exception e) {
             return DataUltil.setData("error", "error");
@@ -84,13 +85,11 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
             TrongLuong tl = optional.get();
             tl.setMa(tl.getMa());
             tl.setDonVi(request.getDonVi());
-            tl.setTrangThai(request.getTrangThai());
             tl.setNgayTao(request.getNgayTao());
             tl.setNgaySua(DatetimeUtil.getCurrentDate());
             tl.setValue(request.getValue());
             try {
-                repository.save(tl);
-                return DataUltil.setData("success", "sửa thành công");
+                return DataUltil.setData("success", repository.save(tl));
             } catch (Exception e) {
                 return DataUltil.setData("error", "error");
             }

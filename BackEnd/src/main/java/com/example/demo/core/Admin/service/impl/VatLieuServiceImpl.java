@@ -70,6 +70,7 @@ public class VatLieuServiceImpl implements AdVatLieuServcie {
         try {
             VatLieu vatLieu1 = repository.save(vatLieu);
             vatLieu1.setMa("VL" + vatLieu1.getId());
+            vatLieu1.setTrangThai(1);
             return DataUltil.setData("success", repository.save(vatLieu1));
         } catch (Exception e) {
             return DataUltil.setData("error", "error");
