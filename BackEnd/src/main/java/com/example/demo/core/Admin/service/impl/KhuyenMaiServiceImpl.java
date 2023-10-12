@@ -176,10 +176,11 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
     public void updateGiaCTSPHetHan(){
         //Lấy danh sách CTSP theo trạng thái khuyến mại là  hết hạn
         List<SanPhamChiTiet> listCTSPKM = khuyenMaiRepo.getCTSPByTrangThaiKhuyenMai(1);
-        // Set lại giá sau giảm khi trạng thái chuyển từ chưa bắt đầu => đang diễn ra
+        // Set lại giá sau giảm khi trạng thái chuyển từ chưa bắt đầu => đang diễn ra và idKM = null
         for(SanPhamChiTiet spct : listCTSPKM){
             KhuyenMai km = khuyenMaiRepo.getOneById(spct.getKhuyenMai().getId());
             spct.setGiaSauGiam(null);
+            spct.setKhuyenMai(null);
 
             chiTietSanPhamReponsitory.save(spct);
         }
