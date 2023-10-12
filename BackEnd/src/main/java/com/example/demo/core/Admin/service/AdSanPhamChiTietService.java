@@ -22,9 +22,9 @@ public interface AdSanPhamChiTietService {
 
     AdminSanPhamChiTietResponse add(AdminSanPhamChiTietRequest dto
                                     //  , MultipartFile[] files, MultipartFile[] file
-    );
+    ) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
 
-    AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id);
+    AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
 
     SanPhamChiTiet delete( Integer id);
 
