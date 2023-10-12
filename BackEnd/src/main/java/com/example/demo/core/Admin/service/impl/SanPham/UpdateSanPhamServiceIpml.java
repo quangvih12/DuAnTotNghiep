@@ -12,6 +12,7 @@ import com.example.demo.infrastructure.status.ChiTietSanPhamStatus;
 import com.example.demo.reponsitory.MauSacChiTietReponsitory;
 import com.example.demo.reponsitory.SanPhamReponsitory;
 import com.example.demo.util.DatetimeUtil;
+import com.example.demo.util.ImageToAzureUtil;
 import com.microsoft.azure.storage.StorageException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -47,6 +52,9 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
     @Autowired
     private SanPhamReponsitory sanPhamReponsitory;
 
+    @Autowired
+    ImageToAzureUtil getImageToAzureUtil;
+
     @Override
     public Page<SanPhamChiTiet> getAll(Integer page, String upAndDown, Integer trangThai) {
         return null;
@@ -63,7 +71,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
     }
 
     @Override
-    public AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id) {
+    public AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
         // Lấy sản phẩm chi tiết từ kho dự trữ
         Optional<SanPhamChiTiet> optionalSanPhamChiTiet = chiTietSanPhamReponsitory.findById(id);
 
@@ -84,7 +92,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
             // Lưu sản phẩm chi tiết đã cập nhật
             SanPhamChiTiet save = chiTietSanPhamReponsitory.save(sanPhamChiTiet);
             this.mutitheard(save, dto);
-            return  this.chiTietSanPhamReponsitory.get(save.getId());
+            return this.chiTietSanPhamReponsitory.get(save.getId());
         }
 
         return null;
@@ -93,9 +101,33 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
     public void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request) {
 
         // Tạo các luồng cho các công việc cần thực hiện đồng thời
-        Thread mauSacThread = new Thread(() -> updateMauSacChiTiet(sanPhamChiTiet, request));
+        Thread mauSacThread = new Thread(() -> {
+            try {
+                updateMauSacChiTiet(sanPhamChiTiet, request);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (StorageException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        });
         Thread sizeThread = new Thread(() -> updateSizeChiTiet(sanPhamChiTiet, request));
-        Thread imageThread = new Thread(() -> updateImage(sanPhamChiTiet, request));
+        Thread imageThread = new Thread(() -> {
+            try {
+                updateImage(sanPhamChiTiet, request);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (StorageException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        });
 
         // Bắt đầu chạy các luồng
         mauSacThread.start();
@@ -112,27 +144,39 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
         }
     }
 
-    public List<Image> updateImage(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) {
+    public List<Image> updateImage(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         List<String> imgP = dto.getImagesProduct();
         List<Image> updatedImages = new ArrayList<>();
 
         for (String imgAnh : imgP) {
-            Image img = this.imageReponsitory.findBySanPhamIdAndAnh(sanPhamChiTiet.getId(), imgAnh);
+            int lastIndexOfSlash = imgAnh.lastIndexOf("\\");
 
-            // Kiểm tra xem có ảnh tồn tại hay không
-            if (img != null) {
-                // Cập nhật thông tin ảnh nếu cần
-                img.setAnh(imgAnh);
-                // Lưu lại ảnh đã cập nhật
-                updatedImages.add(img);
+            if (lastIndexOfSlash != -1) {
+                String fileName = imgAnh.substring(lastIndexOfSlash + 1);
+                Image img = this.imageReponsitory.findBySanPhamIdAndAnh(sanPhamChiTiet.getId(), "%" + fileName + "%");
+                // Kiểm tra xem có ảnh tồn tại hay không
+                if (img != null) {
+                    // Cập nhật thông tin ảnh nếu cần
+                    if (img.getAnh().equals(dto.getAnh())) {
+                        img.setAnh(dto.getAnh());
+                    }else{
+                        String linkAnh = getImageToAzureUtil.uploadImageToAzure(dto.getAnh());
+                        img.setAnh(linkAnh);
+                    }
+                    // Lưu lại ảnh đã cập nhật
+                    updatedImages.add(img);
+                } else {
+                    // Tạo ảnh mới nếu ảnh không tồn tại
+                    Image newImg = new Image();
+                    newImg.setSanPhamChiTiet(sanPhamChiTiet);
+                    String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgAnh);
+                    newImg.setAnh(linkAnh);
+                    // Lưu lại ảnh mới
+                    Image savedImage = imageReponsitory.save(newImg);
+                    updatedImages.add(savedImage);
+                }
             } else {
-                // Tạo ảnh mới nếu ảnh không tồn tại
-                Image newImg = new Image();
-                newImg.setSanPhamChiTiet(sanPhamChiTiet);
-                newImg.setAnh(imgAnh);
-                // Lưu lại ảnh mới
-                Image savedImage = imageReponsitory.save(newImg);
-                updatedImages.add(savedImage);
+                System.out.println("Không tìm thấy dấu gạch chéo trong URL.");
             }
         }
 
@@ -178,7 +222,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
     }
 
 
-    public List<MauSacChiTiet> updateMauSacChiTiet(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) {
+    public List<MauSacChiTiet> updateMauSacChiTiet(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         List<String> idMau = dto.getIdMauSac();
         List<String> anhMau = dto.getImgMauSac();
         List<MauSacChiTiet> updatedMauSacChiTietList = new ArrayList<>();
@@ -200,7 +244,9 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
             }
 
             // Cập nhật thông tin của MauSacChiTiet
-            mauSacChiTiet.setAnh(imgMauSacValue);
+
+            String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
+            mauSacChiTiet.setAnh(linkAnh);
             mauSacChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
 
             // Thêm MauSacChiTiet đã cập nhật hoặc tạo mới vào danh sách
@@ -212,8 +258,9 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
     }
 
 
-    public SanPham updateSanPham(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) {
+    public SanPham updateSanPham(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         SanPham sanPham = sanPhamReponsitory.findById(sanPhamChiTiet.getSanPham().getId()).get();
+
         if (sanPham != null) {
             sanPham.setNgaySua(DatetimeUtil.getCurrentDate());
             sanPham.setTen(dto.getTen());
@@ -221,17 +268,23 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
             sanPham.setThuongHieu(ThuongHieu.builder().id(dto.getThuongHieu()).build());
             sanPham.setDemLot(dto.getDemLot());
             sanPham.setMoTa(dto.getMoTa());
-            sanPham.setAnh(dto.getAnh());
+            if (sanPham.getAnh().equals(dto.getAnh())) {
+                sanPham.setAnh(dto.getAnh());
+            }else{
+                String linkAnh = getImageToAzureUtil.uploadImageToAzure(dto.getAnh());
+                sanPham.setAnh(linkAnh);
+            }
             sanPham.setQuaiDeo(dto.getQuaiDeo());
             return sanPhamReponsitory.save(sanPham);
         } else {
+            String linkAnh = getImageToAzureUtil.uploadImageToAzure(dto.getAnh());
             AdminSanPhamRequest sanPhamRequest = AdminSanPhamRequest.builder()
                     .loai(dto.getLoai())
                     .thuongHieu(dto.getThuongHieu())
                     .demLot(dto.getDemLot())
                     .moTa(dto.getMoTa())
                     .ten(dto.getTen())
-                    .anh(dto.getAnh())
+                    .anh(linkAnh)
                     .quaiDeo(dto.getQuaiDeo())
                     .build();
             return this.saveSanPham(sanPhamRequest);
@@ -283,16 +336,37 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
 
         if (lastIndexOfSlash != -1) {
             String fileName = img.substring(lastIndexOfSlash + 1);
-            System.out.println(fileName);
-            Image image = imageReponsitory.findBySanPhamIdAndAnh(idSp,"%"+fileName+"%");
-            System.out.println(image.getId());
+            Image image = imageReponsitory.findBySanPhamIdAndAnh(idSp, "%" + fileName + "%");
+           // System.out.println(image.getId());
             imageReponsitory.delete(image);
         } else {
             System.out.println("Không tìm thấy dấu gạch chéo trong URL.");
         }
 
 
-       //
+        //
+    }
+
+    public List<String> azureImgProduct(List<String> url) {
+        ExecutorService executor = Executors.newFixedThreadPool(20); // Số lượng luồng tối đa là 10
+        List<CompletableFuture<String>> futures = url.stream()
+                .map(s -> CompletableFuture.supplyAsync(() -> {
+                    String azureImageUrl = null;
+                    try {
+                        azureImageUrl = getImageToAzureUtil.uploadImageToAzure(s);
+                    } catch (URISyntaxException | StorageException | IOException | InvalidKeyException e) {
+                        e.printStackTrace();
+                    }
+                    return azureImageUrl;
+                }, executor))
+                .collect(Collectors.toList());
+
+        List<String> imgList = futures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
+
+        executor.shutdown();
+        return imgList;
     }
 
 }
