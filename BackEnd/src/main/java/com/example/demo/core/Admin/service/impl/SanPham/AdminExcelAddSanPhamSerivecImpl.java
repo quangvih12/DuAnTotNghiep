@@ -330,7 +330,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         userDTO.setMoTa(moTa);
 
         String tenLoai = ExcelUtils.getCellString(row.getCell(20));
-        System.out.println(tenLoai);
+        //  System.out.println(tenLoai);
         if (DataUltil.isNullObject(tenLoai)) {
             userDTO.setImportMessageLoai("Tên loại không được để trống tại vị trí: " + stt);
             userDTO.setError(true);
@@ -540,7 +540,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
             List<String> soLuongList = request.getSoLuongSize();
             for (int sizeIndex = 0; sizeIndex < soLuongList.size(); sizeIndex++) {
                 String soLuong = soLuongList.get(sizeIndex);
-               int idsize =  Integer.valueOf(request.getIdSize().get(sizeIndex));
+                int idsize = Integer.valueOf(request.getIdSize().get(sizeIndex));
                 SanPhamChiTiet existingChiTiet = chiTietSanPhamReponsitory.findBySanPhamTen(request.getTenSanPham());
                 List<SizeChiTiet> sizeChiTietList = sizeChiTietReponsitory.findBySanPhamChiTietIdAndSizeId(existingChiTiet.getId(), Integer.valueOf(request.getIdSize().get(sizeIndex)));
 
@@ -573,7 +573,6 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
     }
 
 
-
     public void saveAllImage(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets) {
         List<Image> imageList = new ArrayList<>();
 
@@ -582,36 +581,46 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
             SanPhamChiTiet sanPhamChiTiet = savedSanPhamChiTiets.get(index);
             SanPhamChiTiet existingChiTiet = chiTietSanPhamReponsitory.findBySanPhamTen(request.getTenSanPham());
             List<Image> list = imageReponsitory.findBySanPhamId(existingChiTiet.getId());
-            request.getImagesProduct().forEach(images -> {
-                if (!list.isEmpty()) {
-                    // Cập nhật thông tin image
-                    list.stream().map(image -> {
-                        image.setSanPhamChiTiet(sanPhamChiTiet);
-                        image.setTrangThai(1);
-                        image.setNgaySua(DatetimeUtil.getCurrentDate());
-                        image.setAnh(images);
-                        imageList.add(image);
-                        return image;
-                    }).forEach(imageList::add);
 
-                } else {
-                    // Thiết lập thông tin image mới
+            if (!list.isEmpty()) {
+                // Cập nhật thông tin image
+                list.forEach(image -> {
+                    image.setSanPhamChiTiet(sanPhamChiTiet);
+                    image.setTrangThai(1);
+                    image.setNgaySua(DatetimeUtil.getCurrentDate());
+                });
+
+                // Xóa toàn bộ ảnh và thêm các ảnh mới
+                imageReponsitory.deleteAll(list);
+
+                request.getImagesProduct().forEach(images -> {
                     Image image = new Image();
                     image.setSanPhamChiTiet(sanPhamChiTiet);
                     image.setTrangThai(1);
                     image.setNgayTao(DatetimeUtil.getCurrentDate());
                     image.setAnh(images);
                     imageList.add(image);
-                }
-
-            });
+                });
+            } else {
+                // Thiết lập thông tin image mới
+                request.getImagesProduct().forEach(images -> {
+                    Image image = new Image();
+                    image.setSanPhamChiTiet(sanPhamChiTiet);
+                    image.setTrangThai(1);
+                    image.setNgayTao(DatetimeUtil.getCurrentDate());
+                    image.setAnh(images);
+                    imageList.add(image);
+                });
+            }
         });
-        List<Image> list = this.imageReponsitory.saveAll(imageList);
-        list.forEach(image -> {
+
+        List<Image> savedImages = imageReponsitory.saveAll(imageList);
+        savedImages.forEach(image -> {
             image.setMa("IM" + image.getId());
         });
-        this.imageReponsitory.saveAll(list);
+        imageReponsitory.saveAll(savedImages);
     }
+
 
     public List<String> azureImgProduct(List<String> url) {
         ExecutorService executor = Executors.newFixedThreadPool(20); // Số lượng luồng tối đa là 10
