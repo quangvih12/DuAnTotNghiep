@@ -57,13 +57,6 @@ public class KhuyenMaiApi {
         return ResponseEntity.ok(map);
     }
 
-    @PutMapping("/updateSLKhuyenMai/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestParam("sl") Integer sl) throws Exception {
-        HashMap<String, Object> map = khuyenMaiService.updateSLKhuyenMai(id,sl);
-        return ResponseEntity.ok(map);
-    }
-
-
     @GetMapping("/getAllCTSPByKhuyenMai")
     public List<SanPhamChiTiet> getAllCTSPByKhuyenMai(){
 
