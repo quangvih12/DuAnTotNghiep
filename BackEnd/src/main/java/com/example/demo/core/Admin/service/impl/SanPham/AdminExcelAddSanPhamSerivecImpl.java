@@ -3,7 +3,7 @@ package com.example.demo.core.Admin.service.impl.SanPham;
 import com.example.demo.core.Admin.model.response.AdminExcelAddSanPhamBO;
 import com.example.demo.core.Admin.model.response.AdminExcelAddSanPhamResponse;
 import com.example.demo.core.Admin.repository.*;
-import com.example.demo.core.Admin.service.AdExcelAddSanPhamService;
+import com.example.demo.core.Admin.service.AdSanPhamService.AdExcelAddSanPhamService;
 import com.example.demo.entity.*;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -79,6 +78,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
     public static Integer countError = 0;
     public static Integer countErrors;
 
+    @Override
     public AdminExcelAddSanPhamBO previewDataImportExcel(MultipartFile file) throws IOException {
         InputStream inputStream = file.getInputStream();
         Workbook workbook = new XSSFWorkbook(inputStream);
@@ -106,7 +106,8 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         return adminExcelAddSanPhamBO;
     }
 
-    private AdminExcelAddSanPhamResponse processRow(Row row) {
+    @Override
+    public AdminExcelAddSanPhamResponse processRow(Row row) {
         AdminExcelAddSanPhamResponse userDTO = new AdminExcelAddSanPhamResponse();
         int errorCount = 0;
 
@@ -374,7 +375,8 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         return userDTO;
     }
 
-    private AdminExcelAddSanPhamBO savaData(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO) {
+    @Override
+    public AdminExcelAddSanPhamBO savaData(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO) {
 
         try {
             for (AdminExcelAddSanPhamResponse o : adminExcelAddSanPhamBO.getResponseList()) {
@@ -396,6 +398,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         return adminExcelAddSanPhamBO;
     }
 
+    @Override
     // Lưu danh sách sản phẩm chi tiết vào cơ sở dữ liệu
     public List<SanPhamChiTiet> saveAll(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO) {
         List<SanPhamChiTiet> sanPhamChiTiets = new ArrayList<>();
@@ -457,6 +460,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         return chiTietSanPhamReponsitory.saveAll(sanPhamChiTiets);
     }
 
+    @Override
     public void mutitheard(List<SanPhamChiTiet> saveSanPhamChiTiet, AdminExcelAddSanPhamBO adminExcelAddSanPhamBO) {
 
         // Tạo các luồng cho các công việc cần thực hiện đồng thời
@@ -479,6 +483,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         }
     }
 
+    @Override
     public List<MauSacChiTiet> saveAllMauSacChiTiet(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets) {
         List<MauSacChiTiet> mauSacChiTiets = new ArrayList<>();
 
@@ -529,7 +534,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         return this.mauSacChiTietReponsitory.saveAll(mauSacChiTiets);
     }
 
-
+    @Override
     public List<SizeChiTiet> saveAllSizeChiTiet(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets) {
         List<SizeChiTiet> sizeChiTiets = new ArrayList<>();
 
@@ -572,7 +577,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         return this.sizeChiTietReponsitory.saveAll(sizeChiTiets);
     }
 
-
+    @Override
     public void saveAllImage(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets) {
         List<Image> imageList = new ArrayList<>();
 
@@ -621,7 +626,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         imageReponsitory.saveAll(savedImages);
     }
 
-
+    @Override
     public List<String> azureImgProduct(List<String> url) {
         ExecutorService executor = Executors.newFixedThreadPool(20); // Số lượng luồng tối đa là 10
         List<CompletableFuture<String>> futures = url.stream()
