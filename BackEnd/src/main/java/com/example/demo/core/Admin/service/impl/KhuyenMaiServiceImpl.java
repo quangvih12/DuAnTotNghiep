@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@EnableScheduling
+//@EnableScheduling
 public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
 
     @Autowired

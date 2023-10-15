@@ -14,6 +14,7 @@ import com.example.demo.core.Admin.service.AdSanPhamChiTietService;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import com.example.demo.util.ExcelExportUtils;
+import com.example.demo.util.ImageToAzureUtil;
 import com.microsoft.azure.storage.StorageException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,8 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
     @Autowired
     private AdKhuyenMaiReponsitory khuyenMaiReponsitory;
 
+    @Autowired
+    ImageToAzureUtil getImageToAzureUtil;
 
     @Override
     public Page<SanPhamChiTiet> getAll(Integer page, String upAndDown, Integer trangThai) {
@@ -115,9 +118,10 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
     }
 
     @Override
-    public AdminSanPhamChiTietResponse add(AdminSanPhamChiTietRequest request) {
-        System.out.println(request);
+    public AdminSanPhamChiTietResponse add(AdminSanPhamChiTietRequest request) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
+       // System.out.println(request);
         // bước 1: lấy các thuộc tính của bảng sản phẩm từ request và lưu và bảng sản phẩm
+        String linkAnh = getImageToAzureUtil.uploadImageToAzure(request.getAnh());
         AdminSanPhamRequest sanPhamRequest = AdminSanPhamRequest.builder()
                 .loai(request.getLoai())
                 .thuongHieu(request.getThuongHieu())
@@ -125,7 +129,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
                 .moTa(request.getMoTa())
                 .ten(request.getTen())
                 .quaiDeo(request.getQuaiDeo())
-                .anh(request.getAnh())
+                .anh(linkAnh)
                 .build();
         SanPham sanPham = this.saveSanPham(sanPhamRequest);
 
@@ -152,9 +156,33 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
     public void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request) {
 
         // Tạo các luồng cho các công việc cần thực hiện đồng thời
-        Thread mauSacThread = new Thread(() -> saveMauSac(request.getIdMauSac(), request.getImgMauSac(), sanPhamChiTiet));
+        Thread mauSacThread = new Thread(() -> {
+            try {
+                saveMauSac(request.getIdMauSac(), request.getImgMauSac(), sanPhamChiTiet);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (StorageException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        });
         Thread sizeThread = new Thread(() -> saveSize(request.getIdSize(), sanPhamChiTiet, request.getSoLuongSize()));
-        Thread imageThread = new Thread(() -> saveImage(sanPhamChiTiet, request.getImagesProduct()));
+        Thread imageThread = new Thread(() -> {
+            try {
+                saveImage(sanPhamChiTiet, request.getImagesProduct());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (StorageException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        });
 
         // Bắt đầu chạy các luồng
         mauSacThread.start();
@@ -173,7 +201,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
 
 
     //lưu mau sắc chi tiết
-    public Iterable<MauSacChiTiet> saveMauSac(List<String> idMauSac, List<String> imgMauSac, SanPhamChiTiet sanPhamChiTiet) {
+    public Iterable<MauSacChiTiet> saveMauSac(List<String> idMauSac, List<String> imgMauSac, SanPhamChiTiet sanPhamChiTiet) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         List<MauSacChiTiet> mauSacChiTietList = new ArrayList<>();
 
         // Đảm bảo rằng số lượng idMauSac và imgMauSac là giống nhau
@@ -188,7 +216,8 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
             mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSacId)).build());
             mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
             mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-            mauSacChiTiet.setAnh(imgMauSacValue);
+            String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
+            mauSacChiTiet.setAnh(linkAnh);
             mauSacChiTietList.add(mauSacChiTiet);
         }
         return this.mauSacChiTietReponsitory.saveAll(mauSacChiTietList);
@@ -224,11 +253,12 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
 
 
     // lưu ảnh
-    public Iterable<Image> saveImage(SanPhamChiTiet sanPhamChiTiet, List<String> imgSanPham) {
+    public Iterable<Image> saveImage(SanPhamChiTiet sanPhamChiTiet, List<String> imgSanPham) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         List<Image> imageList = new ArrayList<>();
         for (String img : imgSanPham) {
             Image image = new Image();
-            image.setAnh(img);
+            String linkAnh = getImageToAzureUtil.uploadImageToAzure(img);
+            image.setAnh(linkAnh);
             image.setSanPhamChiTiet(sanPhamChiTiet);
             image.setTrangThai(1);
             image.setNgayTao(DatetimeUtil.getCurrentDate());
