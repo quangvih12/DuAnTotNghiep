@@ -137,7 +137,7 @@ public class SanPhamChiTietApi {
 
     @PostMapping()
     public ResponseEntity<?> adds(@Valid @RequestBody AdminSanPhamChiTietRequest sanPhamChiTietRequest
-            , BindingResult result) {
+            , BindingResult result) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return ResponseEntity.ok(DataUltil.setData("error", list));
@@ -148,7 +148,7 @@ public class SanPhamChiTietApi {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody AdminSanPhamChiTietRequest sanPhamChiTietRequest, @PathVariable Integer id
-            , BindingResult result) {
+            , BindingResult result) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return ResponseEntity.ok(DataUltil.setData("error", list));

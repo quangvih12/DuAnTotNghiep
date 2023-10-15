@@ -18,9 +18,6 @@ public interface AdKhuyenMaiService {
 
     HashMap<String,Object> delete(AdminKhuyenMaiRequest khuyenMaiRequest, Integer id);
 
-
-    HashMap<String,Object> updateSLKhuyenMai( Integer id,Integer soLuong) throws Exception;
-
     KhuyenMai getKhuyenMaiById(Integer id);
 
     List<SanPhamChiTiet> getAllSPCTByKhuyenMai();
