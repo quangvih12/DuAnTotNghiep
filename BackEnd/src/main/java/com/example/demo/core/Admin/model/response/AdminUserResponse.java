@@ -27,8 +27,8 @@ public interface AdminUserResponse {
     @Value("#{target.pass}")
     String getPass();
 
-    @Value("#{target.roles}")
-    String getRoles();
+    @Value("#{target.role}")
+    String getRole();
 
     @Value("#{target.sdt}")
     String getSdt();

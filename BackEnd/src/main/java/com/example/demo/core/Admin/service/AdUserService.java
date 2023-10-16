@@ -1,15 +1,16 @@
 package com.example.demo.core.Admin.service;
 
+
+import com.example.demo.core.Admin.model.request.AdminUserRequest;
 import com.example.demo.core.Admin.model.response.AdminHoaDonResponse;
 import com.example.demo.core.Admin.model.response.AdminUserResponse;
 import com.example.demo.entity.DiaChi;
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 
 import java.util.List;
 
 public interface AdUserService {
-
-    List<AdminUserResponse> getAll(String Role);
 
     List<AdminUserResponse> getKhachHang();
 
@@ -19,14 +20,18 @@ public interface AdUserService {
 
     List<DiaChi> getUserByDiaChi(Integer idUser);
 
-    User add(User user);
+    AdminUserResponse add(AdminUserRequest user);
 
-    User delete(Integer id);
+    AdminUserResponse delete(Integer id);
 
-    User update(User user, Integer id);
+    AdminUserResponse update(AdminUserRequest user, Integer id);
 
-    User VoHieuHoaUser(Integer id);
+    AdminUserResponse VoHieuHoaUser(Integer id);
 
     AdminHoaDonResponse getHoaDonByIdUser(Integer id);
+
+    List<AdminUserResponse> getAllUserByRole(String role);
+
+    List<AdminUserResponse> getAllUser();
 
 }
