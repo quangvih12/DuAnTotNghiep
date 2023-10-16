@@ -72,6 +72,7 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
         try {
             TrongLuong trongLuong1 = repository.save(trongLuong);
             trongLuong1.setMa("TL" + trongLuong1.getId());
+            trongLuong1.setTrangThai(1);
             return DataUltil.setData("success", repository.save(trongLuong1));
         } catch (Exception e) {
             return DataUltil.setData("error", "error");
@@ -90,6 +91,14 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
             trongLuong.setNgaySua(DatetimeUtil.getCurrentDate());
             try {
                 return DataUltil.setData("success", repository.save(trongLuong));
+            TrongLuong tl = optional.get();
+            tl.setMa(tl.getMa());
+            tl.setDonVi(request.getDonVi());
+            tl.setNgayTao(request.getNgayTao());
+            tl.setNgaySua(DatetimeUtil.getCurrentDate());
+            tl.setValue(request.getValue());
+            try {
+                return DataUltil.setData("success", repository.save(tl));
             } catch (Exception e) {
                 return DataUltil.setData("error", "error");
             }

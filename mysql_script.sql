@@ -118,6 +118,9 @@ DROP TABLE IF EXISTS `dia_chi`;
 CREATE TABLE `dia_chi` (
   `id` int NOT NULL AUTO_INCREMENT,
   `dia_chi` varchar(10000) DEFAULT NULL,
+  `tinh_thanh` int DEFAULT NULL,
+  `quan_huyen` int DEFAULT NULL,
+  `phuong_xa` varchar(255) DEFAULT NULL,
   `loai_dia_chi` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
@@ -135,7 +138,9 @@ CREATE TABLE `dia_chi` (
 
 LOCK TABLES `dia_chi` WRITE;
 /*!40000 ALTER TABLE `dia_chi` DISABLE KEYS */;
-INSERT INTO `dia_chi` VALUES (1,'Số 1, Hàng Than','Công ty','2023-09-10','2023-04-03',1,2),(2,'Số 3, Mỹ Đình','Công ty','2023-10-10','2023-08-23',1,2),(3,'Thọ Hải, Thọ Xuân','Nhà riêng','2023-07-10','2023-05-13',1,3);
+INSERT INTO `dia_chi` VALUES  (1,'Số 1, Hàng Than',269,2264,'90816','Công ty','2023-09-10','2023-04-03',1,2),
+                              (2,'Số 3, Mỹ Đình',268,2194,'220714','Công ty','2023-10-10','2023-08-23',1,2),
+                              (3,'Thọ Hải, Thọ Xuân',249,1768,'190211','Nhà riêng','2023-07-10','2023-05-13',1,3);
 /*!40000 ALTER TABLE `dia_chi` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -149,8 +154,8 @@ DROP TABLE IF EXISTS `gio_hang`;
 CREATE TABLE `gio_hang` (
   `id` int NOT NULL AUTO_INCREMENT,
   `ma` varchar(255) DEFAULT NULL,
-  `ngay_sua` varchar(255) DEFAULT NULL,
-  `ngay_tao` varchar(255) DEFAULT NULL,
+  `ngay_sua` datetime DEFAULT NULL,
+  `ngay_tao` datetime DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   `id_user` int DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -213,11 +218,11 @@ CREATE TABLE `hoa_don` (
   `id` int NOT NULL AUTO_INCREMENT,
   `hinh_thuc_giao_hang` int DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
-  `ngay_nhan` varchar(255) DEFAULT NULL,
-  `ngay_ship` varchar(255) DEFAULT NULL,
-  `ngay_sua` varchar(255) DEFAULT NULL,
-  `ngay_tao` varchar(255) DEFAULT NULL,
-  `ngay_thanh_toan` varchar(255) DEFAULT NULL,
+  `ngay_nhan` datetime DEFAULT NULL,
+  `ngay_ship` datetime DEFAULT NULL,
+  `ngay_sua` datetime DEFAULT NULL,
+  `ngay_tao` datetime DEFAULT NULL,
+  `ngay_thanh_toan` datetime DEFAULT NULL,
   `ten_nguoi_nhan` varchar(255) DEFAULT NULL,
   `tien_sau_khi_giam_gia` decimal(20,0) DEFAULT NULL,
   `tien_ship` decimal(20,0) DEFAULT NULL,
@@ -325,12 +330,12 @@ CREATE TABLE `khuyen_mai` (
   `kieu_giam_gia` varchar(255) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
   `mo_ta` varchar(10000) DEFAULT NULL,
-  `ngay_sua` varchar(255) DEFAULT NULL,
-  `ngay_tao` varchar(255) DEFAULT NULL,
+  `ngay_sua` datetime DEFAULT NULL,
+  `ngay_tao` datetime DEFAULT NULL,
   `so_luong` int DEFAULT NULL,
   `ten` varchar(255) DEFAULT NULL,
-  `thoi_gian_bat_dau` varchar(255) DEFAULT NULL,
-  `thoi_gian_ket_thuc` varchar(255) DEFAULT NULL,
+  `thoi_gian_bat_dau` datetime DEFAULT NULL,
+  `thoi_gian_ket_thuc` datetime DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -839,8 +844,8 @@ CREATE TABLE `voucher` (
   `giam_toi_da` decimal(20,0) DEFAULT NULL,
   `mo_ta` varchar(10000) DEFAULT NULL,
   `ten` varchar(255) DEFAULT NULL,
-  `thoi_gian_bat_dau` varchar(255) DEFAULT NULL,
-  `thoi_gian_ket_thuc` varchar(255) DEFAULT NULL,
+  `thoi_gian_bat_dau` datetime DEFAULT NULL,
+  `thoi_gian_ket_thuc` datetime DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
    `so_luong` int DEFAULT NULL,
   PRIMARY KEY (`id`)

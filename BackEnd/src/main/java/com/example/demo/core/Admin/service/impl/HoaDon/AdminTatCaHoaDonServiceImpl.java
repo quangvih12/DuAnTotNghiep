@@ -5,6 +5,7 @@ import com.example.demo.core.Admin.repository.AdHoaDonReponsitory;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdminTatCaHoaDonService;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.infrastructure.status.HoaDonStatus;
+import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +57,16 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
         return hoaDonReponsitory.getHoaDonTrangThai(HoaDonStatus.DANG_CHUAN_BI_HANG);
     }
 
+    public AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD) {
+        HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
+        if (hoaDon != null) {
+            hoaDon.setNgaySua(DatetimeUtil.getCurrentDate());
+            hoaDon.setTrangThai(HoaDonStatus.GIAO_CHO_DON_VI_VAN_CHUYEN);
+            HoaDon hd = hoaDonReponsitory.save(hoaDon);
+            return hoaDonReponsitory.getByIds(hd.getId());
+        } else {
+            return null;
+        }
+    }
 
 }

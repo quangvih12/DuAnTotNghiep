@@ -6,26 +6,22 @@ import com.example.demo.core.Admin.model.request.AdminSearchRequest;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
 import com.example.demo.core.Admin.repository.AdImageReponsitory;
-import com.example.demo.core.Admin.repository.AdKhuyenMaiReponsitory;
 import com.example.demo.core.Admin.repository.AdSizeChiTietReponsitory;
+import com.example.demo.core.Admin.service.AdSanPhamService.AdSanPhamChiTietService;
 import com.example.demo.entity.*;
-import com.example.demo.reponsitory.*;
-import com.example.demo.core.Admin.service.AdSanPhamChiTietService;
-import com.example.demo.util.DataUltil;
+import com.example.demo.reponsitory.MauSacChiTietReponsitory;
+import com.example.demo.reponsitory.SanPhamReponsitory;
 import com.example.demo.util.DatetimeUtil;
-import com.example.demo.util.ExcelExportUtils;
+import com.example.demo.util.ImageToAzureUtil;
 import com.microsoft.azure.storage.StorageException;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
@@ -46,67 +42,47 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
     private SanPhamReponsitory sanPhamReponsitory;
 
     @Autowired
-    private AdKhuyenMaiReponsitory khuyenMaiReponsitory;
-
+    ImageToAzureUtil getImageToAzureUtil;
 
     @Override
-    public Page<SanPhamChiTiet> getAll(Integer page, String upAndDown, Integer trangThai) {
-//        if (upAndDown == null && trangThai == null) {
-//            Sort sort = Sort.by(Sort.Direction.DESC, "id");
-//            Pageable pageable = PageRequest.of(page, 5, sort);
-//            return chiTietSanPhamReponsitory.findAll(pageable);
-//        } else if (trangThai != null && upAndDown == null) {
-//            Pageable pageable = PageRequest.of(page, 5);
-//            return chiTietSanPhamReponsitory.getbyTrangThai(trangThai, pageable);
-//        } else if (trangThai == null && upAndDown != null) {
-//            Sort sort = (upAndDown == null || upAndDown.equals("asc")) ? Sort.by(Sort.Direction.ASC, "giaBan") : Sort.by(Sort.Direction.DESC, "giaBan");
-//            Pageable pageable = PageRequest.of(page, 5, sort);
-//            return chiTietSanPhamReponsitory.findAll(pageable);
-//        } else {
-//            Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(page, 5);
-        return chiTietSanPhamReponsitory.findAll(pageable);
-        //   }
-    }
-
-
     public List<AdminSanPhamChiTietResponse> getList(AdminSearchRequest request) {
         return chiTietSanPhamReponsitory.getAll(request);
     }
 
-    public List<SanPhamChiTiet> getAlls() {
-        return chiTietSanPhamReponsitory.findAll();
+
+    public List<AdminSanPhamChiTietResponse> loc(String comboBoxValue) {
+        return chiTietSanPhamReponsitory.loc(comboBoxValue);
     }
 
+    @Override
     public List<Image> getProductImages(Integer idProduct) {
         return imageReponsitory.findBySanPhamIds(idProduct);
     }
 
+    @Override
     public List<Image> getProductImages() {
         return imageReponsitory.findAll();
     }
 
+    @Override
     public List<SizeChiTiet> getProductSize(Integer idProduct) {
         return sizeChiTietReponsitory.findSizeChiTiet(idProduct);
     }
 
+    @Override
     public List<MauSacChiTiet> getProductMauSac(Integer idProduct) {
         return mauSacChiTietReponsitory.findMauSacChiTiet(idProduct);
     }
 
     @Override
-    public SanPhamChiTiet getOne(Integer id) {
-        Optional<SanPhamChiTiet> optional = this.chiTietSanPhamReponsitory.findById(id);
-        return optional.isPresent() ? optional.get() : null;
-    }
-
     public AdminSanPhamChiTietResponse get(Integer id) {
         AdminSanPhamChiTietResponse optional = this.chiTietSanPhamReponsitory.get(id);
         return optional;
     }
 
+    @Override
     public Boolean findBySanPhamTen(String ten) {
-        SanPhamChiTiet chiTiet = chiTietSanPhamReponsitory.findBySanPhamTen(ten);
+        SanPhamChiTiet chiTiet = chiTietSanPhamReponsitory.findBySanPhamTenAndTrangThai(ten);
         if (chiTiet == null) {
             return true;
         } else {
@@ -115,9 +91,10 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
     }
 
     @Override
-    public AdminSanPhamChiTietResponse add(AdminSanPhamChiTietRequest request) {
-        System.out.println(request);
+    public AdminSanPhamChiTietResponse add(AdminSanPhamChiTietRequest request) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
+        // System.out.println(request);
         // bước 1: lấy các thuộc tính của bảng sản phẩm từ request và lưu và bảng sản phẩm
+        String linkAnh = getImageToAzureUtil.uploadImageToAzure(request.getAnh());
         AdminSanPhamRequest sanPhamRequest = AdminSanPhamRequest.builder()
                 .loai(request.getLoai())
                 .thuongHieu(request.getThuongHieu())
@@ -125,7 +102,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
                 .moTa(request.getMoTa())
                 .ten(request.getTen())
                 .quaiDeo(request.getQuaiDeo())
-                .anh(request.getAnh())
+                .anh(linkAnh)
                 .build();
         SanPham sanPham = this.saveSanPham(sanPhamRequest);
 
@@ -141,6 +118,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
 
     }
 
+    @Override
     public SanPham saveSanPham(AdminSanPhamRequest request) {
         SanPham sanPham = request.dtoToEntity(new SanPham());
         SanPham sanPhamSave = sanPhamReponsitory.save(sanPham);
@@ -149,12 +127,37 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
         return sanPhamReponsitory.save(sanPhamSave);
     }
 
+    @Override
     public void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request) {
 
         // Tạo các luồng cho các công việc cần thực hiện đồng thời
-        Thread mauSacThread = new Thread(() -> saveMauSac(request.getIdMauSac(), request.getImgMauSac(), sanPhamChiTiet));
+        Thread mauSacThread = new Thread(() -> {
+            try {
+                saveMauSac(request.getIdMauSac(), request.getImgMauSac(), sanPhamChiTiet);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (StorageException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        });
         Thread sizeThread = new Thread(() -> saveSize(request.getIdSize(), sanPhamChiTiet, request.getSoLuongSize()));
-        Thread imageThread = new Thread(() -> saveImage(sanPhamChiTiet, request.getImagesProduct()));
+        Thread imageThread = new Thread(() -> {
+            try {
+                saveImage(sanPhamChiTiet, request.getImagesProduct());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (StorageException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        });
 
         // Bắt đầu chạy các luồng
         mauSacThread.start();
@@ -171,9 +174,9 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
         }
     }
 
-
+    @Override
     //lưu mau sắc chi tiết
-    public Iterable<MauSacChiTiet> saveMauSac(List<String> idMauSac, List<String> imgMauSac, SanPhamChiTiet sanPhamChiTiet) {
+    public Iterable<MauSacChiTiet> saveMauSac(List<String> idMauSac, List<String> imgMauSac, SanPhamChiTiet sanPhamChiTiet) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         List<MauSacChiTiet> mauSacChiTietList = new ArrayList<>();
 
         // Đảm bảo rằng số lượng idMauSac và imgMauSac là giống nhau
@@ -188,14 +191,15 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
             mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSacId)).build());
             mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
             mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-            mauSacChiTiet.setAnh(imgMauSacValue);
+            String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
+            mauSacChiTiet.setAnh(linkAnh);
             mauSacChiTietList.add(mauSacChiTiet);
         }
         return this.mauSacChiTietReponsitory.saveAll(mauSacChiTietList);
 
     }
 
-
+    @Override
     // lưu size chi tiet
     public Iterable<SizeChiTiet> saveSize(List<String> idSize, SanPhamChiTiet sanPhamChiTiet, List<String> soLuongSize) {
         List<SizeChiTiet> sizeChiTietList = new ArrayList<>();
@@ -222,13 +226,14 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
 
     }
 
-
+    @Override
     // lưu ảnh
-    public Iterable<Image> saveImage(SanPhamChiTiet sanPhamChiTiet, List<String> imgSanPham) {
+    public Iterable<Image> saveImage(SanPhamChiTiet sanPhamChiTiet, List<String> imgSanPham) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         List<Image> imageList = new ArrayList<>();
         for (String img : imgSanPham) {
             Image image = new Image();
-            image.setAnh(img);
+            String linkAnh = getImageToAzureUtil.uploadImageToAzure(img);
+            image.setAnh(linkAnh);
             image.setSanPhamChiTiet(sanPhamChiTiet);
             image.setTrangThai(1);
             image.setNgayTao(DatetimeUtil.getCurrentDate());
@@ -240,30 +245,6 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
             image.setMa("IM" + images.get(i).getId());
         }
         return this.imageReponsitory.saveAll(imageList);
-    }
-
-
-    @Override
-    public AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id) {
-        return null;
-    }
-
-    @Override
-    public SanPhamChiTiet delete( Integer id) {
-        return null;
-    }
-
-    @Override
-    public void saveExcel(MultipartFile file) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
-
-    }
-
-    @Override
-    public List<SanPhamChiTiet> exportCustomerToExcel(HttpServletResponse response) throws IOException {
-        List<SanPhamChiTiet> sanPhamChiTietList = chiTietSanPhamReponsitory.findAll();
-        ExcelExportUtils exportUtils = new ExcelExportUtils(sanPhamChiTietList);
-        exportUtils.exportDataToExcel(response);
-        return sanPhamChiTietList;
     }
 
 

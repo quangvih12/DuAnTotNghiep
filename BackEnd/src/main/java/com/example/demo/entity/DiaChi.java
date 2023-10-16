@@ -40,6 +40,15 @@ public class DiaChi {
     @Column(name = "dia_chi", length = 10000)
     private String diaChi;
 
+    @Column(name = "tinh_thanh")
+    private Integer tinhThanh;
+
+    @Column(name = "quan_huyen")
+    private Integer quanHuyen;
+
+    @Column(name = "phuong_xa")
+    private String phuongXa;
+
     @Column(name = "loai_dia_chi")
     private String loaiDiaChi;
 

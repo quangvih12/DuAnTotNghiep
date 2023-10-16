@@ -24,25 +24,27 @@ public class AdminHoaDonChoXacNhanServiceImpl implements AdHoaDonChoXacNhanServi
 
 
     @Override
-    public HoaDon huyHoaDonChoXacNhan(Integer idHD) {
-           HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
-           if(hoaDon != null){
-                hoaDon.setNgaySua(DatetimeUtil.getCurrentDate());
-                hoaDon.setTrangThai(HoaDonStatus.DA_HUY);
-                return  hoaDonReponsitory.save(hoaDon);
-           }else{
-               return null;
-           }
+    public AdminHoaDonResponse huyHoaDonChoXacNhan(Integer idHD) {
+        HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
+        if (hoaDon != null) {
+            hoaDon.setNgaySua(DatetimeUtil.getCurrentDate());
+            hoaDon.setTrangThai(HoaDonStatus.DA_HUY);
+            HoaDon hd = hoaDonReponsitory.save(hoaDon);
+            return hoaDonReponsitory.getByIds(hd.getId());
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public HoaDon xacNhanHoaDon(Integer idHD) {
+    public AdminHoaDonResponse xacNhanHoaDon(Integer idHD) {
         HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
-        if(hoaDon != null){
+        if (hoaDon != null) {
             hoaDon.setNgaySua(DatetimeUtil.getCurrentDate());
             hoaDon.setTrangThai(HoaDonStatus.DANG_CHUAN_BI_HANG);
-            return  hoaDonReponsitory.save(hoaDon);
-        }else{
+            HoaDon hd = hoaDonReponsitory.save(hoaDon);
+            return hoaDonReponsitory.getByIds(hd.getId());
+        } else {
             return null;
         }
     }

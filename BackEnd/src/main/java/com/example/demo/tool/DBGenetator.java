@@ -3,18 +3,13 @@ package com.example.demo.tool;
 import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
 import com.example.demo.core.Admin.repository.AdHoaDonChiTietReponsitory;
 import com.example.demo.core.Admin.repository.AdHoaDonReponsitory;
-import com.example.demo.core.Admin.repository.AdUserReponsitory;
+import com.example.demo.core.Admin.repository.AdUserRepository;
 import com.example.demo.entity.*;
 import com.example.demo.infrastructure.status.HoaDonStatus;
-import com.example.demo.reponsitory.ChiTietSanPhamReponsitory;
-import com.example.demo.reponsitory.HoaDonChiTietReponsitory;
-import com.example.demo.reponsitory.HoaDonReponsitory;
-import com.example.demo.reponsitory.UserReponsitory;
 import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
@@ -36,7 +31,7 @@ public class DBGenetator implements CommandLineRunner {
     private AdHoaDonChiTietReponsitory hoaDonChiTietReponsitory;
 
     @Autowired
-    private AdUserReponsitory userReponsitory;
+    private AdUserRepository userReponsitory;
 
     @Override
     public void run(String... args) throws Exception {
