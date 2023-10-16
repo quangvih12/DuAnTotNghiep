@@ -17,8 +17,6 @@ public interface AdSizeService {
 
     List<Size> getAllByTrangThai(Integer trangThai);
 
-    List<SizeChiTiet> findByIdCTSP(Integer id);
-
     Size getById(Integer id);
 
     Page<Size> search(String keyword, Integer page);

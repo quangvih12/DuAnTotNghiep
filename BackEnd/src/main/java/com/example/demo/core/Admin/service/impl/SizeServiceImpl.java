@@ -52,11 +52,6 @@ public class SizeServiceImpl implements AdSizeService {
     }
 
     @Override
-    public List<SizeChiTiet> findByIdCTSP(Integer id) {
-        return reponsitory.findSizeChiTiet(id);
-    }
-
-    @Override
     public Size getById(Integer id) {
         Optional<Size> optional = this.sizeReponsitory.findById(id);
         return optional.isPresent() ? optional.get() : null;

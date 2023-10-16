@@ -48,11 +48,6 @@ public class MauSacServiceImpl implements AdMauSacService {
     }
 
     @Override
-    public List<MauSacChiTiet> findByIdCTSP(Integer id) {
-        return mauSacReponsitory.findMauSacChiTiet(id);
-    }
-
-    @Override
     public MauSac getById(Integer id) {
         Optional<MauSac> optional = this.mauSacReponsitory.findById(id);
         return optional.isPresent() ? optional.get() : null;

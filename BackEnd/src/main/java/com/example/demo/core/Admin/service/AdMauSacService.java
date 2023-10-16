@@ -17,8 +17,6 @@ public interface AdMauSacService {
 
     List<MauSac> getAllByTrangThai(Integer trangThai);
 
-    List<MauSacChiTiet> findByIdCTSP(Integer id);
-
     MauSac getById(Integer id);
 
     Page<MauSac> search(String keyword, Integer page);
