@@ -32,7 +32,7 @@ import java.util.List;
 @Builder
 @ToString
 @Entity
-@Table(name = "[user]")
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,8 +107,5 @@ public class User {
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Comment> commentList = new ArrayList<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
-    private List<Token> tokenList = new ArrayList<>();
+
 }
