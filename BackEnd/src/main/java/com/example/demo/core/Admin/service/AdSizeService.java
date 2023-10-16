@@ -1,7 +1,9 @@
 package com.example.demo.core.Admin.service;
 
 import com.example.demo.core.Admin.model.request.AdminSizeRequest;
+import com.example.demo.entity.MauSacChiTiet;
 import com.example.demo.entity.Size;
+import com.example.demo.entity.SizeChiTiet;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,6 +16,8 @@ public interface AdSizeService {
     List<Size> findAll();
 
     List<Size> getAllByTrangThai(Integer trangThai);
+
+    List<SizeChiTiet> findByIdCTSP(Integer id);
 
     Size getById(Integer id);
 

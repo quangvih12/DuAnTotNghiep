@@ -45,6 +45,11 @@ public class MauSacApi {
         return ResponseEntity.ok(map);
     }
 
+    @GetMapping("/find-by-id-ctsp/{id}")
+    public ResponseEntity<?> findByIdCTSP(@PathVariable Integer id){
+        return ResponseEntity.ok(mauSacService.findByIdCTSP(id));
+    }
+
     // check validate
     @PostMapping("/validation")
     public ResponseEntity<?> validation(@RequestBody @Valid AdminMauSacRequest request, BindingResult result) {
