@@ -6,7 +6,7 @@ import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
 import com.example.demo.core.Admin.repository.AdImageReponsitory;
 import com.example.demo.core.Admin.repository.AdSizeChiTietReponsitory;
-import com.example.demo.core.Admin.service.AdSanPhamChiTietService;
+import com.example.demo.core.Admin.service.AdSanPhamService.AdUpdateSanPhamService;
 import com.example.demo.entity.*;
 import com.example.demo.infrastructure.status.ChiTietSanPhamStatus;
 import com.example.demo.reponsitory.MauSacChiTietReponsitory;
@@ -14,28 +14,20 @@ import com.example.demo.reponsitory.SanPhamReponsitory;
 import com.example.demo.util.DatetimeUtil;
 import com.example.demo.util.ImageToAzureUtil;
 import com.microsoft.azure.storage.StorageException;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 
 @Service
-public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
+public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
 
     @Autowired
     private AdChiTietSanPhamReponsitory chiTietSanPhamReponsitory;
@@ -55,20 +47,6 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
     @Autowired
     ImageToAzureUtil getImageToAzureUtil;
 
-    @Override
-    public Page<SanPhamChiTiet> getAll(Integer page, String upAndDown, Integer trangThai) {
-        return null;
-    }
-
-    @Override
-    public SanPhamChiTiet getOne(Integer id) {
-        return null;
-    }
-
-    @Override
-    public AdminSanPhamChiTietResponse add(AdminSanPhamChiTietRequest dto) {
-        return null;
-    }
 
     @Override
     public AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
@@ -98,6 +76,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
         return null;
     }
 
+    @Override
     public void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request) {
 
         // Tạo các luồng cho các công việc cần thực hiện đồng thời
@@ -144,6 +123,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
         }
     }
 
+    @Override
     public List<Image> updateImage(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         List<String> imgP = dto.getImagesProduct();
         List<Image> updatedImages = new ArrayList<>();
@@ -159,7 +139,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
                     // Cập nhật thông tin ảnh nếu cần
                     if (img.getAnh().equals(dto.getAnh())) {
                         img.setAnh(dto.getAnh());
-                    }else{
+                    } else {
                         String linkAnh = getImageToAzureUtil.uploadImageToAzure(dto.getAnh());
                         img.setAnh(linkAnh);
                     }
@@ -176,14 +156,14 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
                     updatedImages.add(savedImage);
                 }
             } else {
-                System.out.println("Không tìm thấy dấu gạch chéo trong URL.");
+                //        System.out.println("Không tìm thấy dấu gạch chéo trong URL.");
             }
         }
 
         return updatedImages;
     }
 
-
+    @Override
     public List<SizeChiTiet> updateSizeChiTiet(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) {
         List<String> idSize = dto.getIdSize();
         List<String> soLuongSize = dto.getSoLuongSize();
@@ -221,43 +201,40 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
         return sizeChiTietReponsitory.saveAll(updatedSizeChiTietList);
     }
 
-
+    @Override
     public List<MauSacChiTiet> updateMauSacChiTiet(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         List<String> idMau = dto.getIdMauSac();
         List<String> anhMau = dto.getImgMauSac();
         List<MauSacChiTiet> updatedMauSacChiTietList = new ArrayList<>();
 
-        // Lặp qua danh sách idMau và imgMauSac
+        // Lặp qua danh sách imgMauSacValue
         for (int i = 0; i < idMau.size(); i++) {
             String mauSacId = idMau.get(i);
             String imgMauSacValue = anhMau.get(i);
 
-            // Tìm MauSacChiTiet dựa trên sanPhamChiTiet và mauSacId
-            MauSacChiTiet mauSacChiTiet = mauSacChiTietReponsitory.findMauSacChiTietBySanPhamChiTietAndMauSac(sanPhamChiTiet.getId(), Integer.valueOf(mauSacId));
+            if (imgMauSacValue.matches("https://imagedatn.blob.core.windows.net/imagecontainer/D:" + ".*")) {
 
-            if (mauSacChiTiet == null) {
-                // Nếu không tìm thấy, tạo mới MauSacChiTiet
-                mauSacChiTiet = new MauSacChiTiet();
-                mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSacId)).build());
-                mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+            } else {
+                MauSacChiTiet mauSacChiTiet = mauSacChiTietReponsitory.findMauSacChiTietBySanPhamChiTietAndMauSac(sanPhamChiTiet.getId(), Integer.valueOf(mauSacId));
+
+                if (mauSacChiTiet == null) {
+                    mauSacChiTiet = new MauSacChiTiet();
+                    mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSacId)).build());
+                    mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                    mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                }
+
+                String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
+                mauSacChiTiet.setAnh(linkAnh);
+                mauSacChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
+
+                updatedMauSacChiTietList.add(mauSacChiTiet);
             }
-
-            // Cập nhật thông tin của MauSacChiTiet
-
-            String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
-            mauSacChiTiet.setAnh(linkAnh);
-            mauSacChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
-
-            // Thêm MauSacChiTiet đã cập nhật hoặc tạo mới vào danh sách
-            updatedMauSacChiTietList.add(mauSacChiTiet);
         }
-
-        // Lưu danh sách MauSacChiTiet đã cập nhật hoặc tạo mới và trả về
         return mauSacChiTietReponsitory.saveAll(updatedMauSacChiTietList);
     }
 
-
+    @Override
     public SanPham updateSanPham(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         SanPham sanPham = sanPhamReponsitory.findById(sanPhamChiTiet.getSanPham().getId()).get();
 
@@ -270,7 +247,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
             sanPham.setMoTa(dto.getMoTa());
             if (sanPham.getAnh().equals(dto.getAnh())) {
                 sanPham.setAnh(dto.getAnh());
-            }else{
+            } else {
                 String linkAnh = getImageToAzureUtil.uploadImageToAzure(dto.getAnh());
                 sanPham.setAnh(linkAnh);
             }
@@ -291,6 +268,7 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
         }
     }
 
+    @Override
     public SanPham saveSanPham(AdminSanPhamRequest request) {
         SanPham sanPham = request.dtoToEntity(new SanPham());
         SanPham sanPhamSave = sanPhamReponsitory.save(sanPham);
@@ -312,61 +290,33 @@ public class UpdateSanPhamServiceIpml implements AdSanPhamChiTietService {
     }
 
     @Override
-    public void saveExcel(MultipartFile file) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
-
-    }
-
-    @Override
-    public List<SanPhamChiTiet> exportCustomerToExcel(HttpServletResponse response) throws IOException {
-        return null;
-    }
-
     public void deleteSize(Integer idSp, Integer idSize) {
         SizeChiTiet size = sizeChiTietReponsitory.findByIdSanPhamAndIdSize(idSp, idSize);
         sizeChiTietReponsitory.delete(size);
     }
 
+    @Override
     public void deleteMauSac(Integer idSp, Integer idMau) {
         MauSacChiTiet mauSac = mauSacChiTietReponsitory.findMSBySPAndMS(idSp, idMau);
         mauSacChiTietReponsitory.delete(mauSac);
     }
 
+    @Override
     public void deleteImg(Integer idSp, String img) {
         int lastIndexOfSlash = img.lastIndexOf("\\");
 
         if (lastIndexOfSlash != -1) {
             String fileName = img.substring(lastIndexOfSlash + 1);
             Image image = imageReponsitory.findBySanPhamIdAndAnh(idSp, "%" + fileName + "%");
-           // System.out.println(image.getId());
+            // System.out.println(image.getId());
             imageReponsitory.delete(image);
         } else {
-            System.out.println("Không tìm thấy dấu gạch chéo trong URL.");
+            //     System.out.println("Không tìm thấy dấu gạch chéo trong URL.");
         }
 
 
         //
     }
 
-    public List<String> azureImgProduct(List<String> url) {
-        ExecutorService executor = Executors.newFixedThreadPool(20); // Số lượng luồng tối đa là 10
-        List<CompletableFuture<String>> futures = url.stream()
-                .map(s -> CompletableFuture.supplyAsync(() -> {
-                    String azureImageUrl = null;
-                    try {
-                        azureImageUrl = getImageToAzureUtil.uploadImageToAzure(s);
-                    } catch (URISyntaxException | StorageException | IOException | InvalidKeyException e) {
-                        e.printStackTrace();
-                    }
-                    return azureImageUrl;
-                }, executor))
-                .collect(Collectors.toList());
-
-        List<String> imgList = futures.stream()
-                .map(CompletableFuture::join)
-                .collect(Collectors.toList());
-
-        executor.shutdown();
-        return imgList;
-    }
 
 }

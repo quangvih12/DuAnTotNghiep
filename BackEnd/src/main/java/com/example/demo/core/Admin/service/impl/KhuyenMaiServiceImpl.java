@@ -7,7 +7,6 @@ import com.example.demo.core.Admin.repository.AdKhuyenMaiReponsitory;
 import com.example.demo.core.Admin.service.AdKhuyenMaiService;
 import com.example.demo.entity.KhuyenMai;
 import com.example.demo.entity.SanPhamChiTiet;
-import com.example.demo.reponsitory.KhuyenMaiReponsitory;
 import com.example.demo.util.DataUltil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -40,15 +39,15 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
         KhuyenMai khuyenMai = dto.dtoToEntity(new KhuyenMai());
         LocalDateTime thoiGianHienTai = LocalDateTime.now();
         try {
-            if(khuyenMai.getThoiGianKetThuc().isBefore(thoiGianHienTai)){
+            if (khuyenMai.getThoiGianKetThuc().isBefore(thoiGianHienTai)) {
                 khuyenMai.setTrangThai(1);
-            }else if(khuyenMai.getThoiGianBatDau().isAfter(thoiGianHienTai)){
+            } else if (khuyenMai.getThoiGianBatDau().isAfter(thoiGianHienTai)) {
                 khuyenMai.setTrangThai(3);
-            }else{
+            } else {
                 khuyenMai.setTrangThai(0);
             }
             KhuyenMai khuyenmais = khuyenMaiRepo.save(khuyenMai);
-            return DataUltil.setData("success",  khuyenmais);
+            return DataUltil.setData("success", khuyenmais);
         } catch (Exception e) {
             return DataUltil.setData("error", "error");
         }
@@ -103,7 +102,7 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
 
     @Override
     public KhuyenMai getKhuyenMaiById(Integer id) {
-       return khuyenMaiRepo.getOneById(id);
+        return khuyenMaiRepo.getOneById(id);
     }
 
     // lấy danh sách ctsp có idkm = null hoặc trạng thái khuyến mại không phải là đang diễn ra hoặc chưa bắt đầu
@@ -125,10 +124,10 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
             spct.setKhuyenMai(km);
 
             // Áp dụng giảm giá theo giá phần trăm
-            if(km.getTrangThai() == 0){
+            if (km.getTrangThai() == 0) {
                 BigDecimal giaBan = spct.getGiaBan();
 
-                BigDecimal phanTram  = new BigDecimal(km.getGiaTriGiam()).divide(new BigDecimal(100));
+                BigDecimal phanTram = new BigDecimal(km.getGiaTriGiam()).divide(new BigDecimal(100));
 
                 BigDecimal giamGia = giaBan.multiply(phanTram);
                 BigDecimal giaBanSauGiam = giaBan.subtract(giamGia);
@@ -136,7 +135,7 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
                 spct.setGiaSauGiam(giaBanSauGiam);
             }
 
-            if(km.getTrangThai() == 1){
+            if (km.getTrangThai() == 1) {
                 spct.setGiaSauGiam(null);
             }
 
@@ -154,15 +153,15 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
     }
 
     @Scheduled(fixedRate = 20000)
-    public void updateGiaCTSP(){
+    public void updateGiaCTSP() {
         //Lấy danh sách CTSP theo trạng thái khuyến mại là  bắt đầu
         List<SanPhamChiTiet> listSPCT = khuyenMaiRepo.getCTSPByTrangThaiKhuyenMai(0);
 
         // Set lại giá sau giảm khi trạng thái chuyển từ chưa bắt đầu => đang diễn ra
-        for(SanPhamChiTiet spct : listSPCT){
+        for (SanPhamChiTiet spct : listSPCT) {
             KhuyenMai km = khuyenMaiRepo.getOneById(spct.getKhuyenMai().getId());
             BigDecimal giaBan = spct.getGiaBan();
-            BigDecimal phanTram  = new BigDecimal(km.getGiaTriGiam()).divide(new BigDecimal(100));
+            BigDecimal phanTram = new BigDecimal(km.getGiaTriGiam()).divide(new BigDecimal(100));
 
             BigDecimal giamGia = giaBan.multiply(phanTram);
             BigDecimal giaBanSauGiam = giaBan.subtract(giamGia);
@@ -173,7 +172,7 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
     }
 
     @Scheduled(fixedRate = 20000)
-    public void updateGiaCTSPHetHan(){
+    public void updateGiaCTSPHetHan() {
         //Lấy danh sách CTSP theo trạng thái khuyến mại là  hết hạn
         List<SanPhamChiTiet> listCTSPKM = khuyenMaiRepo.getCTSPByTrangThaiKhuyenMai(1);
         // Set lại giá sau giảm khi trạng thái chuyển từ chưa bắt đầu => đang diễn ra và idKM = null
@@ -181,7 +180,6 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
             KhuyenMai km = khuyenMaiRepo.getOneById(spct.getKhuyenMai().getId());
             spct.setGiaSauGiam(null);
             spct.setKhuyenMai(null);
-
             chiTietSanPhamReponsitory.save(spct);
         }
     }
@@ -198,7 +196,7 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
 
     @Scheduled(cron = "0 0 0 * * *") // Lịch chạy hàng ngày vào lúc 00:00:00
     public void updateNgayChuaBatDau() {
-        List<KhuyenMai> khuyenMais =  khuyenMaiRepo.findKhuyenMaiByChuaBatDau();
+        List<KhuyenMai> khuyenMais = khuyenMaiRepo.findKhuyenMaiByChuaBatDau();
         for (KhuyenMai khuyenMai : khuyenMais) {
             khuyenMai.setTrangThai(2);
             khuyenMaiRepo.save(khuyenMai);
@@ -206,9 +204,10 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
 
 
     }
+
     @Scheduled(cron = "0 0 0 * * *") // Lịch chạy hàng ngày vào lúc 00:00:00
     public void updateNgayConHan() {
-        List<KhuyenMai> khuyenMais =  khuyenMaiRepo.findKhuyenMaiByConHan();
+        List<KhuyenMai> khuyenMais = khuyenMaiRepo.findKhuyenMaiByConHan();
         for (KhuyenMai khuyenMai : khuyenMais) {
             khuyenMai.setTrangThai(0);
             khuyenMaiRepo.save(khuyenMai);

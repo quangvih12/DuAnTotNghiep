@@ -1,54 +1,47 @@
 package com.example.demo.core.Admin.model.response;
 
-import com.example.demo.entity.Role;
-import com.example.demo.entity.User;
-import com.example.demo.infrastructure.adapter.DtoToEntity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-public class AdminUserResponse  {
+public interface AdminUserResponse {
 
-    private Integer id;
+    Integer getStt();
 
-    @NotBlank(message = "không bỏ trống tên")
-    private String email;
+    @Value("#{target.id}")
+    Integer getId();
 
-    private Integer gioiTinh;
+    @Value("#{target.anh}")
+    String getAnh();
 
-    private String ma;
+    @Value("#{target.email}")
+    String getEmail();
 
-    private String password;
+    @Value("#{target.ngaySinh}")
+    String getNgaySinh();
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @Value("#{target.gioiTinh}")
+    Integer getGioiTinh();
 
-    private String sdt;
+    @Value("#{target.ma}")
+    String getMa();
 
-    private String ten;
+    @Value("#{target.pass}")
+    String getPass();
 
-    private String userName;
+    @Value("#{target.role}")
+    String getRole();
 
+    @Value("#{target.sdt}")
+    String getSdt();
 
-    public AdminUserResponse (User e) {
-       this.id = e.getId();
-       this.email = e.getEmail();
-       this.gioiTinh = e.getGioiTinh();
-       this.ma = e.getMa();
-       this.password = e.getPassword();
-       this.role = e.getRole();
-       this.sdt = e.getSdt();
-       this.ten = e.getTen();
-       this.userName = e.getUserName();
+    @Value("#{target.ten}")
+    String getTen();
 
+    @Value("#{target.trangThai}")
+    Integer getTrangThai();
 
-    }
+    @Value("#{target.userName}")
+    String getUserName();
+
+    @Value("#{target.soLuongHoaDon}")
+    Integer getSoLuongHoaDon();
 }
