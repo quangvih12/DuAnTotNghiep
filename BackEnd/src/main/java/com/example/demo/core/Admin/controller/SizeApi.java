@@ -45,6 +45,11 @@ public class SizeApi {
         return ResponseEntity.ok(map);
     }
 
+    @GetMapping("/find-by-id-ctsp/{id}")
+    public ResponseEntity<?> findByIdCTSP(@PathVariable Integer id){
+        return ResponseEntity.ok(sizeService.findByIdCTSP(id));
+    }
+
     // check validate
     @PostMapping("/validation")
     public ResponseEntity<?> validation(@RequestBody @Valid AdminSizeRequest request, BindingResult result) {

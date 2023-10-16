@@ -2,6 +2,7 @@ package com.example.demo.core.Admin.service;
 
 import com.example.demo.core.Admin.model.request.AdminMauSacRequest;
 import com.example.demo.entity.MauSac;
+import com.example.demo.entity.MauSacChiTiet;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +16,8 @@ public interface AdMauSacService {
     List<MauSac> findAll();
 
     List<MauSac> getAllByTrangThai(Integer trangThai);
+
+    List<MauSacChiTiet> findByIdCTSP(Integer id);
 
     MauSac getById(Integer id);
 

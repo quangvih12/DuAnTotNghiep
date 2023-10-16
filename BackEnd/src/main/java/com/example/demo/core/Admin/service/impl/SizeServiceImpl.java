@@ -1,7 +1,9 @@
 package com.example.demo.core.Admin.service.impl;
 
 import com.example.demo.core.Admin.model.request.AdminSizeRequest;
+import com.example.demo.core.Admin.repository.AdSizeChiTietReponsitory;
 import com.example.demo.entity.Size;
+import com.example.demo.entity.SizeChiTiet;
 import com.example.demo.reponsitory.SizeReponsitory;
 import com.example.demo.core.Admin.service.AdSizeService;
 import com.example.demo.util.DataUltil;
@@ -27,6 +29,9 @@ public class SizeServiceImpl implements AdSizeService {
     @Autowired
     private SizeReponsitory sizeReponsitory;
 
+    @Autowired
+    private AdSizeChiTietReponsitory reponsitory;
+
     @Override
     public Page<Size> getAll(Integer page) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
@@ -44,6 +49,11 @@ public class SizeServiceImpl implements AdSizeService {
     public List<Size> getAllByTrangThai(Integer trangThai) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return sizeReponsitory.getAllByTrangThai(trangThai, sort);
+    }
+
+    @Override
+    public List<SizeChiTiet> findByIdCTSP(Integer id) {
+        return reponsitory.findSizeChiTiet(id);
     }
 
     @Override
