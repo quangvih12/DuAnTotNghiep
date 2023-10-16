@@ -45,7 +45,7 @@ public class VatLieuApi {
     public ResponseEntity<?> getAll() {
         List<VatLieu> page = service.findAll();
         HashMap<String, Object> map = DataUltil.setData("ok", page);
-        return ResponseEntity.ok(page);
+        return ResponseEntity.ok(map);
     }
 
     @GetMapping("/trang-thai")

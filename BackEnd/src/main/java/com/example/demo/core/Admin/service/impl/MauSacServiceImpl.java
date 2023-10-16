@@ -2,6 +2,8 @@ package com.example.demo.core.Admin.service.impl;
 
 import com.example.demo.core.Admin.model.request.AdminMauSacRequest;
 import com.example.demo.entity.MauSac;
+import com.example.demo.entity.MauSacChiTiet;
+import com.example.demo.reponsitory.MauSacChiTietReponsitory;
 import com.example.demo.reponsitory.MauSacReponsitory;
 import com.example.demo.core.Admin.service.AdMauSacService;
 import com.example.demo.util.DataUltil;

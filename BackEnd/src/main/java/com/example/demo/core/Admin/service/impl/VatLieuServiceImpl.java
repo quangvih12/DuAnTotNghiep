@@ -42,7 +42,7 @@ public class VatLieuServiceImpl implements AdVatLieuServcie {
     @Override
     public List<VatLieu> findAll() {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return repository.findAll();
+        return repository.findAll(sort);
     }
 
     @Override
