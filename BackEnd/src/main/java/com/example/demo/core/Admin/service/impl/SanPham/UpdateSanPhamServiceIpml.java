@@ -156,7 +156,7 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
                     updatedImages.add(savedImage);
                 }
             } else {
-                System.out.println("Không tìm thấy dấu gạch chéo trong URL.");
+                //        System.out.println("Không tìm thấy dấu gạch chéo trong URL.");
             }
         }
 
@@ -207,33 +207,30 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
         List<String> anhMau = dto.getImgMauSac();
         List<MauSacChiTiet> updatedMauSacChiTietList = new ArrayList<>();
 
-        // Lặp qua danh sách idMau và imgMauSac
+        // Lặp qua danh sách imgMauSacValue
         for (int i = 0; i < idMau.size(); i++) {
             String mauSacId = idMau.get(i);
             String imgMauSacValue = anhMau.get(i);
 
-            // Tìm MauSacChiTiet dựa trên sanPhamChiTiet và mauSacId
-            MauSacChiTiet mauSacChiTiet = mauSacChiTietReponsitory.findMauSacChiTietBySanPhamChiTietAndMauSac(sanPhamChiTiet.getId(), Integer.valueOf(mauSacId));
+            if (imgMauSacValue.matches("https://imagedatn.blob.core.windows.net/imagecontainer/D:" + ".*")) {
 
-            if (mauSacChiTiet == null) {
-                // Nếu không tìm thấy, tạo mới MauSacChiTiet
-                mauSacChiTiet = new MauSacChiTiet();
-                mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSacId)).build());
-                mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+            } else {
+                MauSacChiTiet mauSacChiTiet = mauSacChiTietReponsitory.findMauSacChiTietBySanPhamChiTietAndMauSac(sanPhamChiTiet.getId(), Integer.valueOf(mauSacId));
+
+                if (mauSacChiTiet == null) {
+                    mauSacChiTiet = new MauSacChiTiet();
+                    mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSacId)).build());
+                    mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                    mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                }
+
+                String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
+                mauSacChiTiet.setAnh(linkAnh);
+                mauSacChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
+
+                updatedMauSacChiTietList.add(mauSacChiTiet);
             }
-
-            // Cập nhật thông tin của MauSacChiTiet
-
-            String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
-            mauSacChiTiet.setAnh(linkAnh);
-            mauSacChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
-
-            // Thêm MauSacChiTiet đã cập nhật hoặc tạo mới vào danh sách
-            updatedMauSacChiTietList.add(mauSacChiTiet);
         }
-
-        // Lưu danh sách MauSacChiTiet đã cập nhật hoặc tạo mới và trả về
         return mauSacChiTietReponsitory.saveAll(updatedMauSacChiTietList);
     }
 
@@ -314,7 +311,7 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
             // System.out.println(image.getId());
             imageReponsitory.delete(image);
         } else {
-            System.out.println("Không tìm thấy dấu gạch chéo trong URL.");
+            //     System.out.println("Không tìm thấy dấu gạch chéo trong URL.");
         }
 
 

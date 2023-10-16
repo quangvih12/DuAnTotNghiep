@@ -12,6 +12,9 @@ public interface AdminSanPhamChiTietResponse {
     @Value("#{target.id}")
     Integer getId();
 
+    @Value("#{target.soLuongSanPham}")
+    Integer getSoLuongSanPham();
+
     @Value("#{target.ma}")
     String getMa();
 

@@ -31,28 +31,33 @@ public interface AdChiTietSanPhamReponsitory extends ChiTietSanPhamReponsitory {
     SanPhamChiTiet findBySanPhamTenAndTrangThai(String ten);
 
     @Query(value = """ 
-                           SELECT ROW_NUMBER() OVER(ORDER BY spct.id DESC) AS stt,
-                                                             spct.id,sp.ma,sp.ten,spct.gia_ban as giaBan,spct.gia_nhap as giaNhap,
-                                                             spct.so_luong_ton as soLuongTon,spct.trang_thai as trangThai,
-                                                             sp.quai_deo as quaiDeo,sp.dem_lot as demLot,
-                                                             sp.mo_ta as moTa,l.ten AS loai,sp.anh as anh,
-                                                             th.ten as thuongHieu, km.ten as tenKM,
-                                                             km.thoi_gian_bat_dau as thoiGianBatDau, km.thoi_gian_ket_thuc as thoiGianKetThuc,
-                                                             spct.gia_sau_giam as giaSauGiam, km.gia_tri_giam as giaTriGiam,
-                                                             vl.ten as vatLieu,tl.value as trongLuong
-                            FROM datn.san_pham_chi_tiet spct join datn.san_pham sp on spct.id_san_pham = sp.id
-                                                  			 join datn.loai l  on sp.id_loai = l.id
-                                                  			 join datn.thuong_hieu th on sp.id_thuong_hieu = th.id
-                                                  			 join datn.trong_luong tl on spct.id_trong_luong = tl.id
-                                                             join datn.vat_lieu vl on spct.id_vat_lieu = vl.id
-                                                             left join datn.khuyen_mai km on spct.id_khuyen_mai = km.id
-                            WHERE spct.trang_thai IN (1, 2, 3);
+                           SELECT (SELECT COUNT(*) FROM datn.san_pham_chi_tiet spct
+                                                   WHERE spct.trang_thai IN (1, 2, 3)) AS soLuongSanPham,
+                                   ROW_NUMBER() OVER(ORDER BY spct.id DESC) AS stt,
+                                   spct.id, sp.ma, sp.ten, spct.gia_ban AS giaBan, spct.gia_nhap AS giaNhap,
+                                   spct.so_luong_ton AS soLuongTon, spct.trang_thai AS trangThai,
+                                   sp.quai_deo AS quaiDeo, sp.dem_lot AS demLot,
+                                   sp.mo_ta AS moTa, l.ten AS loai, sp.anh AS anh,
+                                   th.ten AS thuongHieu, km.ten AS tenKM,
+                                   km.thoi_gian_bat_dau AS thoiGianBatDau, km.thoi_gian_ket_thuc AS thoiGianKetThuc,
+                                   spct.gia_sau_giam AS giaSauGiam, km.gia_tri_giam AS giaTriGiam,
+                                   vl.ten AS vatLieu, tl.value AS trongLuong
+                           FROM datn.san_pham_chi_tiet spct
+                                   JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+                                   JOIN datn.loai l ON sp.id_loai = l.id
+                                   JOIN datn.thuong_hieu th ON sp.id_thuong_hieu = th.id
+                                   JOIN datn.trong_luong tl ON spct.id_trong_luong = tl.id
+                                   JOIN datn.vat_lieu vl ON spct.id_vat_lieu = vl.id
+                                   LEFT JOIN datn.khuyen_mai km ON spct.id_khuyen_mai = km.id
+                           WHERE spct.trang_thai IN (1, 2, 3);
+                                                               
             """, nativeQuery = true)
     List<AdminSanPhamChiTietResponse> getAll(@Param("request") AdminSearchRequest request);
 
     @Query(value = """ 
-                          SELECT ROW_NUMBER() OVER(ORDER BY spct.id DESC) AS stt,
-                                                             spct.id,sp.ma,sp.ten,spct.gia_ban as giaBan,spct.gia_nhap as giaNhap,
+                          SELECT (SELECT COUNT(*) FROM datn.san_pham_chi_tiet spct
+                                                  WHERE spct.trang_thai IN (1, 2, 3)) AS soLuongSanPham,
+                                                             ROW_NUMBER() OVER(ORDER BY spct.id DESC) AS stt,                                                              spct.id,sp.ma,sp.ten,spct.gia_ban as giaBan,spct.gia_nhap as giaNhap,
                                                              spct.so_luong_ton as soLuongTon,spct.trang_thai as trangThai,
                                                              sp.quai_deo as quaiDeo,sp.dem_lot as demLot,
                                                              sp.mo_ta as moTa,l.ten AS loai,sp.anh as anh,
@@ -72,15 +77,19 @@ public interface AdChiTietSanPhamReponsitory extends ChiTietSanPhamReponsitory {
 
 
     @Query(value = """ 
-                            SELECT ROW_NUMBER() OVER(ORDER BY spct.id DESC) AS stt,
-                                                             spct.id,sp.ma,sp.ten,spct.gia_ban as giaBan,spct.gia_nhap as giaNhap,
+                            SELECT     ROW_NUMBER() OVER(ORDER BY spct.id DESC) AS stt,                                                              spct.id,sp.ma,sp.ten,spct.gia_ban as giaBan,spct.gia_nhap as giaNhap,
                                                              spct.so_luong_ton as soLuongTon,spct.trang_thai as trangThai,
                                                              sp.quai_deo as quaiDeo,sp.dem_lot as demLot,
                                                              sp.mo_ta as moTa,l.ten AS loai,sp.anh as anh,
                                                              th.ten as thuongHieu, km.ten as tenKM,
                                                              km.thoi_gian_bat_dau as thoiGianBatDau, km.thoi_gian_ket_thuc as thoiGianKetThuc,
                                                              spct.gia_sau_giam as giaSauGiam, km.gia_tri_giam as giaTriGiam,
-                                                             vl.ten as vatLieu,tl.value as trongLuong
+                                                             vl.ten as vatLieu,tl.value as trongLuong,
+                                                             ( SELECT COUNT(spct.id) FROM datn.san_pham_chi_tiet spct
+                                                                                   WHERE (:comboBoxValue = 'conHang' AND spct.trang_thai = 1)
+                                                                                       OR (:comboBoxValue = 'hetHang' AND spct.trang_thai = 2)
+                                                                                       OR (:comboBoxValue = 'tonKho' AND spct.trang_thai = 3)
+                                                                                       OR (:comboBoxValue = 'dangKhuyenMai' AND spct.id_khuyen_mai IS NOT NULL)) AS soLuongSanPham
                             FROM datn.san_pham_chi_tiet spct join datn.san_pham sp on spct.id_san_pham = sp.id
                                                   			 join datn.loai l  on sp.id_loai = l.id
                                                   			 join datn.thuong_hieu th on sp.id_thuong_hieu = th.id
@@ -92,7 +101,14 @@ public interface AdChiTietSanPhamReponsitory extends ChiTietSanPhamReponsitory {
                                    WHEN :comboBoxValue = 'hetHang' THEN spct.trang_thai = 2
                                    WHEN :comboBoxValue = 'tonKho' THEN spct.trang_thai = 3
                                    WHEN :comboBoxValue = 'dangKhuyenMai' THEN spct.id_khuyen_mai IS NOT NULL
-                                   END);
+                                   END)
+                            GROUP BY  spct.id , spct.so_luong_ton ,spct.trang_thai ,
+                                                             sp.quai_deo ,sp.dem_lot ,
+                                                             sp.mo_ta ,l.ten ,sp.anh ,
+                                                             th.ten , km.ten ,
+                                                             km.thoi_gian_bat_dau , km.thoi_gian_ket_thuc ,
+                                                             spct.gia_sau_giam , km.gia_tri_giam ,
+                                                             vl.ten ,tl.value ;
             """, nativeQuery = true)
     List<AdminSanPhamChiTietResponse> loc(@Param("comboBoxValue") String comboBoxValue);
 

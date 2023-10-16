@@ -118,6 +118,9 @@ DROP TABLE IF EXISTS `dia_chi`;
 CREATE TABLE `dia_chi` (
   `id` int NOT NULL AUTO_INCREMENT,
   `dia_chi` varchar(10000) DEFAULT NULL,
+  `tinh_thanh` int DEFAULT NULL,
+  `quan_huyen` int DEFAULT NULL,
+  `phuong_xa` varchar(255) DEFAULT NULL,
   `loai_dia_chi` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
@@ -135,7 +138,9 @@ CREATE TABLE `dia_chi` (
 
 LOCK TABLES `dia_chi` WRITE;
 /*!40000 ALTER TABLE `dia_chi` DISABLE KEYS */;
-INSERT INTO `dia_chi` VALUES (1,'Số 1, Hàng Than','Công ty','2023-09-10','2023-04-03',1,2),(2,'Số 3, Mỹ Đình','Công ty','2023-10-10','2023-08-23',1,2),(3,'Thọ Hải, Thọ Xuân','Nhà riêng','2023-07-10','2023-05-13',1,3);
+INSERT INTO `dia_chi` VALUES  (1,'Số 1, Hàng Than',269,2264,'90816','Công ty','2023-09-10','2023-04-03',1,2),
+                              (2,'Số 3, Mỹ Đình',268,2194,'220714','Công ty','2023-10-10','2023-08-23',1,2),
+                              (3,'Thọ Hải, Thọ Xuân',249,1768,'190211','Nhà riêng','2023-07-10','2023-05-13',1,3);
 /*!40000 ALTER TABLE `dia_chi` ENABLE KEYS */;
 UNLOCK TABLES;
 
