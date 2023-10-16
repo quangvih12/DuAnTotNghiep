@@ -9,6 +9,7 @@ import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -60,7 +61,7 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
     public AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD) {
         HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
         if (hoaDon != null) {
-            hoaDon.setNgaySua(DatetimeUtil.getCurrentDate());
+            hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
             hoaDon.setTrangThai(HoaDonStatus.GIAO_CHO_DON_VI_VAN_CHUYEN);
             HoaDon hd = hoaDonReponsitory.save(hoaDon);
             return hoaDonReponsitory.getByIds(hd.getId());
