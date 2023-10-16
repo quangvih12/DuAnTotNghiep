@@ -1,8 +1,11 @@
 package com.example.demo.core.Admin.repository;
 
 import com.example.demo.core.Admin.model.response.AdminHoaDonResponse;
+import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.reponsitory.HoaDonChiTietReponsitory;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,4 +29,8 @@ public interface AdHoaDonChiTietReponsitory extends HoaDonChiTietReponsitory {
             										join datn.user u on u.id = hd.id_user where hd.id =:id
             """, nativeQuery = true)
     List<AdminHoaDonResponse> getHoaDonChiTietByIdHD(Integer id);
+
+    @Query(value = "select hdct from HoaDonChiTiet hdct where hdct.hoaDon.id = :idHd")
+    List<HoaDonChiTiet> findByIdHoaDon(@Param("idHd") Integer idHd, Sort sort);
+
 }

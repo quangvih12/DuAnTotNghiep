@@ -13,11 +13,11 @@ public interface AdHoaDonReponsitory extends HoaDonReponsitory {
     @Query(value = """
                    SELECT ROW_NUMBER() OVER(ORDER BY hd.id DESC) AS stt,
                     u.email as email ,u.sdt,hd.hinh_thuc_giao_hang as hinhThucGiaoHang, 
-                    hd.ma as maHD, hd.ngay_nhan as ngayNhan, hd.ngay_ship as ngayShip, hd.ngay_tao as ngayTao,
-            		hd.ten_nguoi_nhan as tenNguoiNhan, hd.tien_sau_khi_giam_gia as tienSauKhiGiam,
+                    hd.ma as maHD, u.ten as nguoiTao, hd.ngay_nhan as ngayNhan, hd.ngay_ship as ngayShip, hd.ngay_tao as ngayTao, 
+            		hd.ngay_sua as ngaySua, hd.ten_nguoi_nhan as tenNguoiNhan, hd.tien_sau_khi_giam_gia as tienSauKhiGiam,
             		hd.tien_ship as tienShip, hd.tong_tien as tongTien, hd.trang_thai as trangThai,
             		hd.id as idHD, spct.gia_ban as giaBan, spct.gia_sau_giam as giaSPSauGiam,
-            		sp.ten as tenSP, dc.dia_chi as diaChi, pttt.ten as tenPTTT
+            		sp.ten as tenSP, dc.dia_chi as diaChi, pttt.ten as tenPTTT, hd.ngay_thanh_toan  as ngayThanhToan
                    FROM datn.hoa_don_chi_tiet hdct join datn.hoa_don hd on hdct.id_hoa_don = hd.id 
             										join datn.san_pham_chi_tiet spct on hdct.id_san_pham_chi_tiet = spct.id
                                                     join datn.san_pham sp on sp.id = spct.id_san_pham
@@ -30,11 +30,11 @@ public interface AdHoaDonReponsitory extends HoaDonReponsitory {
     @Query(value = """
                    SELECT ROW_NUMBER() OVER(ORDER BY hd.id DESC) AS stt,
                     u.email as email ,u.sdt,hd.hinh_thuc_giao_hang as hinhThucGiaoHang, 
-                    hd.ma as maHD, hd.ngay_nhan as ngayNhan, hd.ngay_ship as ngayShip, hd.ngay_tao as ngayTao,
-            		hd.ten_nguoi_nhan as tenNguoiNhan, hd.tien_sau_khi_giam_gia as tienSauKhiGiam,
+                    hd.ma as maHD, u.ten as nguoiTao, hd.ngay_nhan as ngayNhan, hd.ngay_ship as ngayShip, hd.ngay_tao as ngayTao, 
+            		hd.ngay_sua as ngaySua, hd.ten_nguoi_nhan as tenNguoiNhan, hd.tien_sau_khi_giam_gia as tienSauKhiGiam,
             		hd.tien_ship as tienShip, hd.tong_tien as tongTien, hd.trang_thai as trangThai,
             		hd.id as idHD, spct.gia_ban as giaBan, spct.gia_sau_giam as giaSPSauGiam,
-            		sp.ten as tenSP, dc.dia_chi as diaChi, pttt.ten as tenPTTT
+            		sp.ten as tenSP, dc.dia_chi as diaChi, pttt.ten as tenPTTT, hd.ngay_thanh_toan  as ngayThanhToan
                    FROM datn.hoa_don_chi_tiet hdct join datn.hoa_don hd on hdct.id_hoa_don = hd.id 
             										join datn.san_pham_chi_tiet spct on hdct.id_san_pham_chi_tiet = spct.id
                                                     join datn.san_pham sp on sp.id = spct.id_san_pham
@@ -46,13 +46,13 @@ public interface AdHoaDonReponsitory extends HoaDonReponsitory {
     AdminHoaDonResponse getByIds(Integer id);
 
     @Query(value = """
-                   SELECT ROW_NUMBER() OVER(ORDER BY hd.id DESC) AS stt,
+                  SELECT ROW_NUMBER() OVER(ORDER BY hd.id DESC) AS stt,
                     u.email as email ,u.sdt,hd.hinh_thuc_giao_hang as hinhThucGiaoHang, 
-                    hd.ma as maHD, hd.ngay_nhan as ngayNhan, hd.ngay_ship as ngayShip, hd.ngay_tao as ngayTao,
-            		hd.ten_nguoi_nhan as tenNguoiNhan, hd.tien_sau_khi_giam_gia as tienSauKhiGiam,
+                    hd.ma as maHD, u.ten as nguoiTao, hd.ngay_nhan as ngayNhan, hd.ngay_ship as ngayShip, hd.ngay_tao as ngayTao, 
+            		hd.ngay_sua as ngaySua, hd.ten_nguoi_nhan as tenNguoiNhan, hd.tien_sau_khi_giam_gia as tienSauKhiGiam,
             		hd.tien_ship as tienShip, hd.tong_tien as tongTien, hd.trang_thai as trangThai,
             		hd.id as idHD, spct.gia_ban as giaBan, spct.gia_sau_giam as giaSPSauGiam,
-            		sp.ten as tenSP, dc.dia_chi as diaChi, pttt.ten as tenPTTT
+            		sp.ten as tenSP, dc.dia_chi as diaChi, pttt.ten as tenPTTT, hd.ngay_thanh_toan  as ngayThanhToan
                    FROM datn.hoa_don_chi_tiet hdct join datn.hoa_don hd on hdct.id_hoa_don = hd.id 
             										join datn.san_pham_chi_tiet spct on hdct.id_san_pham_chi_tiet = spct.id
                                                     join datn.san_pham sp on sp.id = spct.id_san_pham

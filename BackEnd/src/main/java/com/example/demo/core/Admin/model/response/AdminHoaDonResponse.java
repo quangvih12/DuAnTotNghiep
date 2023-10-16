@@ -11,6 +11,9 @@ public interface AdminHoaDonResponse {
     @Value("#{target.maHD}")
     String getMaHD();
 
+    @Value("#{target.nguoiTao}")
+    String getNguoiTao();
+
     @Value("#{target.tenSP}")
     String getTenSP();
 
@@ -23,11 +26,17 @@ public interface AdminHoaDonResponse {
     @Value("#{target.hinhThucGiaoHang}")
     String getHinhThucGiaoHang();
 
+    @Value("#{target.ngayThanhToan}")
+    String getNgayThanhToan();
+
     @Value("#{target.ngayNhan}")
     String getNgayNhan();
 
     @Value("#{target.ngayShip}")
     String getNgayShip();
+
+    @Value("#{target.ngaySua}")
+    String getNgaySua();
 
     @Value("#{target.ngayTao}")
     String getNgayTao();
