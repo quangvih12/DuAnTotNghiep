@@ -76,11 +76,13 @@ public class HoaDonApi {
         return ResponseEntity.ok(adHoaDonChoXacNhanService.huyHoaDonChoXacNhan(id));
     }
 
+    // từ chờ xác nhận -> đang chuẩn bị
     @PutMapping("/XacNhan/{id}")
     public ResponseEntity<?> xacNhanHoaDon(@PathVariable Integer id){
         return ResponseEntity.ok(adHoaDonChoXacNhanService.xacNhanHoaDon(id));
     }
 
+    // chuẩn bị xong -> đang giao
     @PutMapping("/XacNhanGiaoHang/{id}")
     public ResponseEntity<?> XacNhanGiaoHang(@PathVariable Integer id){
         return ResponseEntity.ok(adminTatCaHoaDonService.giaoHoaDonChoVanChuyen(id));

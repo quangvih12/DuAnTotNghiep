@@ -1,0 +1,23 @@
+package com.example.demo.core.Admin.service.impl;
+
+import com.example.demo.core.Admin.repository.AdHoaDonChiTietReponsitory;
+import com.example.demo.core.Admin.service.AdHoaDonChiTietService;
+import com.example.demo.entity.HoaDonChiTiet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class HoaDonChiTietImpl implements AdHoaDonChiTietService {
+    @Autowired
+    private AdHoaDonChiTietReponsitory repo;
+
+    @Override
+    public List<HoaDonChiTiet> findHDCTByIdHoaDon(Integer idHD) {
+        Sort sort = Sort.by(Sort.Direction.DESC,"ngayTao");
+        return repo.findByIdHoaDon(idHD,sort);
+    }
+
+}
