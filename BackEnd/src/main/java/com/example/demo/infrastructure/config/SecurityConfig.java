@@ -49,7 +49,7 @@ public class SecurityConfig {
                                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                         .requestMatchers("/api/login").permitAll()
                                         .requestMatchers("/api/**").permitAll()
-//                       .requestMatchers("/api/**").permitAll()
+                                        .anyRequest().permitAll()
 
                         )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
