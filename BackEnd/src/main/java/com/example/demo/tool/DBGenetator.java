@@ -4,6 +4,8 @@ import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
 import com.example.demo.core.Admin.repository.AdHoaDonChiTietReponsitory;
 import com.example.demo.core.Admin.repository.AdHoaDonReponsitory;
 import com.example.demo.core.Admin.repository.AdUserRepository;
+import com.example.demo.core.khachHang.repository.KHGioHangChiTietRepository;
+import com.example.demo.core.khachHang.repository.KHGioHangRepository;
 import com.example.demo.entity.*;
 import com.example.demo.infrastructure.status.HoaDonStatus;
 import com.example.demo.util.DatetimeUtil;
@@ -35,9 +37,15 @@ public class DBGenetator implements CommandLineRunner {
     @Autowired
     private AdUserRepository userReponsitory;
 
+    @Autowired
+    private KHGioHangRepository khGioHangRepository;
+
+    @Autowired
+    private KHGioHangChiTietRepository khGioHangChiTietRepository;
+
     @Override
     public void run(String... args) throws Exception {
-        for (int i = 1; i <=1 ; i++) {
+        for (int i = 1; i <=5 ; i++) {
             SanPhamChiTiet sanPhamChiTiet = chiTietSanPhamReponsitory.findById(1).get();
             User user = userReponsitory.findById(3).get();
             HoaDon hoaDon = new HoaDon();
@@ -67,6 +75,24 @@ public class DBGenetator implements CommandLineRunner {
             donChiTiet.setMa("HDCT "+donChiTiet.getId());
             hoaDonChiTietReponsitory.save(donChiTiet);
         }
+
+//        for (int i = 1; i <=20 ; i++) {
+//            SanPhamChiTiet sanPhamChiTiet = chiTietSanPhamReponsitory.findById(1).get();
+//            User user = userReponsitory.findById(3).get();
+//           GioHang gioHang  = new GioHang();
+//
+//           gioHang.setUser(user);
+//          GioHang newGioHang =  khGioHangRepository.save(gioHang);
+//
+//            GioHangChiTiet gioHangChiTiet = new GioHangChiTiet();
+//            gioHangChiTiet.setGioHang(newGioHang);
+//            gioHangChiTiet.setDonGia(sanPhamChiTiet.getGiaBan());
+//            gioHangChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+//            gioHangChiTiet.setSoLuong(2);
+//            gioHangChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+//            khGioHangChiTietRepository.save(gioHangChiTiet);
+//
+//        }
 
     }
 

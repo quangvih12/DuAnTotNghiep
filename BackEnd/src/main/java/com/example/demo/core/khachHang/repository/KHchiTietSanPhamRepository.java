@@ -1,11 +1,11 @@
-package com.example.demo.core.khachHang.repository.KHDetailRepository;
+package com.example.demo.core.khachHang.repository;
 
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.reponsitory.ChiTietSanPhamReponsitory;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface KHDetailCTSPRepository extends ChiTietSanPhamReponsitory {
+public interface KHchiTietSanPhamRepository extends ChiTietSanPhamReponsitory {
 
     @Query(value = """ 
                           SELECT (SELECT COUNT(*) FROM datn.san_pham_chi_tiet spct
