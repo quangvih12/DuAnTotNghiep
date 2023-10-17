@@ -4,6 +4,7 @@ import com.example.demo.core.Admin.model.request.AdminTrongLuongRequest;
 import com.example.demo.core.Admin.repository.AdTrongLuongRepository;
 import com.example.demo.core.Admin.service.AdTrongLuongService;
 import com.example.demo.entity.TrongLuong;
+import com.example.demo.entity.VatLieu;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -82,6 +83,12 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
     public HashMap<String, Object> update(AdminTrongLuongRequest request, Integer id) {
         Optional<TrongLuong> optional = repository.findById(id);
         if (optional.isPresent()) {
+            TrongLuong trongLuong = optional.get();
+            trongLuong.setMa(trongLuong.getMa());
+            trongLuong.setDonVi(request.getDonVi());
+            trongLuong.setValue(request.getValue());
+            trongLuong.setNgayTao(trongLuong.getNgayTao());
+            trongLuong.setNgaySua(DatetimeUtil.getCurrentDate());
             TrongLuong tl = optional.get();
             tl.setMa(tl.getMa());
             tl.setDonVi(request.getDonVi());
@@ -94,7 +101,7 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
                 return DataUltil.setData("error", "error");
             }
         } else {
-            return DataUltil.setData("error", "không tìm thấy loại sản phẩm để sửa");
+            return DataUltil.setData("error", "không tìm thấy vật liệu để sửa");
         }
     }
 
@@ -110,7 +117,7 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
                 return DataUltil.setData("error", "error");
             }
         } else {
-            return DataUltil.setData("error", "không tìm thấy trọng lượng để xóa");
+            return DataUltil.setData("error", "không tìm thấy vật liệu để xóa");
         }
     }
 

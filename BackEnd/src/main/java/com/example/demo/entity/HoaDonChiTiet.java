@@ -49,6 +49,9 @@ public class HoaDonChiTiet {
     @Column(name = "trang_thai")
     private Integer trangThai;
 
+    @Column(name = "ly_do")
+    private String lyDo;
+
     @ManyToOne
     @JoinColumn(name = "id_san_pham_chi_tiet")
     private SanPhamChiTiet sanPhamChiTiet;
