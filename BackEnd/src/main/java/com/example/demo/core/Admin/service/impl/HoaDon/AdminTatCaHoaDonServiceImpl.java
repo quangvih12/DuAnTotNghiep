@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -56,6 +57,14 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
     @Override
     public List<AdminHoaDonResponse> getHoaDonDangChuanBiHang() {
         return hoaDonReponsitory.getHoaDonTrangThai(HoaDonStatus.DANG_CHUAN_BI_HANG);
+    }
+
+    @Override
+    public List<AdminHoaDonResponse> searchDate(Date startDate, Date endDate) {
+        List<AdminHoaDonResponse> test = hoaDonReponsitory.getHoaDonByDate(startDate,endDate);
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        test.forEach(i -> System.out.println(i.getIdHD()));
+        return hoaDonReponsitory.getHoaDonByDate(startDate,endDate);
     }
 
     public AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD) {

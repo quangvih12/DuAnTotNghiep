@@ -1,5 +1,6 @@
 package com.example.demo.core.Admin.model.response;
 
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Value;
 
 public interface AdminHoaDonResponse {
@@ -10,6 +11,9 @@ public interface AdminHoaDonResponse {
 
     @Value("#{target.maHD}")
     String getMaHD();
+
+    @Value("#{target.nguoiTao}")
+    String getNguoiTao();
 
     @Value("#{target.tenSP}")
     String getTenSP();
@@ -23,11 +27,17 @@ public interface AdminHoaDonResponse {
     @Value("#{target.hinhThucGiaoHang}")
     String getHinhThucGiaoHang();
 
+    @Value("#{target.ngayThanhToan}")
+    String getNgayThanhToan();
+
     @Value("#{target.ngayNhan}")
     String getNgayNhan();
 
     @Value("#{target.ngayShip}")
     String getNgayShip();
+
+    @Value("#{target.ngaySua}")
+    String getNgaySua();
 
     @Value("#{target.ngayTao}")
     String getNgayTao();
@@ -53,10 +63,32 @@ public interface AdminHoaDonResponse {
     @Value("#{target.giaSPSauGiam}")
     String getGiaSPSauGiam();
 
-    @Value("#{target.diaChi}")
-    String getDiaChi();
+    @Value("#{target.diaChiCuThe}")
+    String getDiaChiCuThe();
+
+    @Value("#{target.idTinhThanh}")
+    String getIdTinhThanh();
+
+    @Value("#{target.tenTinhThanh}")
+    String getTenTinhThanh();
+
+    @Value("#{target.idQuanHuyen}")
+    String getIdQuanHuyen();
+
+    @Value("#{target.tenQuanHuyen}")
+    String getTenQuanHuyen();
+
+    @Value("#{target.idPhuongXa}")
+    String getIdPhuongXa();
+
+    @Value("#{target.tenPhuongXa}")
+    String getTenPhuongXa();
+
+    @Value("#{target.lyDo}")
+    String getLyDo();
 
     @Value("#{target.tenPTTT}")
     String getTenPTTT();
+
 
 }
