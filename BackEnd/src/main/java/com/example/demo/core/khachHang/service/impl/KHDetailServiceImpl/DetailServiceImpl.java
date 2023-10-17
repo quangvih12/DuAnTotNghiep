@@ -1,7 +1,7 @@
 package com.example.demo.core.khachHang.service.impl.KHDetailServiceImpl;
 
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
-import com.example.demo.core.khachHang.repository.KHDetailRepository.KHDetailCTSPRepository;
+import com.example.demo.core.khachHang.repository.KHchiTietSanPhamRepository;
 import com.example.demo.core.khachHang.service.KHDetailService.DetaiService;
 import com.example.demo.entity.SanPhamChiTiet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.List;
 public class DetailServiceImpl implements DetaiService {
 
     @Autowired
-    private KHDetailCTSPRepository repository;
+    private KHchiTietSanPhamRepository repository;
 
     @Override
     public AdminSanPhamChiTietResponse get(Integer id) {

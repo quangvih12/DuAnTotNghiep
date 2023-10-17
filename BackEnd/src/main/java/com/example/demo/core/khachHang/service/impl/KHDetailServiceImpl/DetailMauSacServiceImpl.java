@@ -1,6 +1,6 @@
 package com.example.demo.core.khachHang.service.impl.KHDetailServiceImpl;
 
-import com.example.demo.core.khachHang.repository.KHDetailRepository.KHDetailMauSacRepository;
+import com.example.demo.core.khachHang.repository.KHMauSacRepository;
 import com.example.demo.core.khachHang.service.KHDetailService.DetailMauSacService;
 import com.example.demo.entity.MauSacChiTiet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import java.util.List;
 public class DetailMauSacServiceImpl implements DetailMauSacService {
 
     @Autowired
-    KHDetailMauSacRepository mauSacRepository;
+    KHMauSacRepository mauSacRepository;
 
     @Override
     public List<MauSacChiTiet> findByIdCTSP(Integer id) {
