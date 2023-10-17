@@ -43,6 +43,12 @@ public class HoaDonChiTiet {
     @Column(name = "ngay_sua")
     private String ngaySua;
 
+    @Column(name = "ten_size")
+    private String tenSize;
+
+    @Column(name = "ten_mau_sac")
+    private String tenMauSac;
+
     @Column(name = "ngay_tao")
     private String ngayTao;
 
