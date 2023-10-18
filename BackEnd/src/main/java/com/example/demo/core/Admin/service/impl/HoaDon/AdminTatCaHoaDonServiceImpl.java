@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,6 +33,7 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
     public List<AdminHoaDonResponse> getHoaDonHoanThanh() {
         return hoaDonReponsitory.getHoaDonTrangThai(HoaDonStatus.HOAN_THANH);
     }
+
     @Override
     public List<AdminHoaDonResponse> getHoaDonHuy() {
         return hoaDonReponsitory.getHoaDonTrangThai(HoaDonStatus.DA_HUY);
@@ -60,9 +61,16 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
     }
 
     @Override
-    public List<AdminHoaDonResponse> searchDate(Date startDate, Date endDate) {
-        return hoaDonReponsitory.getHoaDonByDate(startDate,endDate);
+    public List<AdminHoaDonResponse> searchDate(LocalDateTime startDate, LocalDateTime endDate) {
+        List<HoaDon> hoaDon = hoaDonReponsitory.getHoaDonByDate(startDate, endDate);
+        List<AdminHoaDonResponse> adminHoaDonResponses = new ArrayList<>();
+        for (HoaDon hd : hoaDon) {
+            List<AdminHoaDonResponse> responses = hoaDonReponsitory.getListByIds(hd.getId());
+            adminHoaDonResponses.addAll(responses); // Thêm tất cả phần tử từ responses vào danh sách adminHoaDonResponses
+        }
+        return adminHoaDonResponses;
     }
+
 
     public AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD) {
         HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
