@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @CrossOrigin("*")
@@ -41,10 +43,9 @@ public class HoaDonApi {
 
     @GetMapping("/search-date")
     public ResponseEntity<?> getHoaDonHuy(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) throws ParseException {
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        Date date = format.parse(startDate);
-        Date date2 = format.parse(endDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime date =  LocalDateTime.parse(startDate, formatter);
+        LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
 //        return null;
         return ResponseEntity.ok(adminTatCaHoaDonService.searchDate(date, date2));
     }
