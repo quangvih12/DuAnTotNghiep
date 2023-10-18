@@ -7,6 +7,7 @@ import com.example.demo.entity.HoaDon;
 import com.example.demo.infrastructure.status.HoaDonStatus;
 import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -61,14 +62,8 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
     }
 
     @Override
-    public List<AdminHoaDonResponse> searchDate(LocalDateTime startDate, LocalDateTime endDate) {
-        List<HoaDon> hoaDon = hoaDonReponsitory.getHoaDonByDate(startDate, endDate);
-        List<AdminHoaDonResponse> adminHoaDonResponses = new ArrayList<>();
-        for (HoaDon hd : hoaDon) {
-            List<AdminHoaDonResponse> responses = hoaDonReponsitory.getListByIds(hd.getId());
-            adminHoaDonResponses.addAll(responses); // Thêm tất cả phần tử từ responses vào danh sách adminHoaDonResponses
-        }
-        return adminHoaDonResponses;
+    public List<AdminHoaDonResponse> searchDate(LocalDateTime startDate, LocalDateTime endDate, String  comboBoxValue) {
+        return hoaDonReponsitory.getHoaDonByDate(startDate, endDate,comboBoxValue);
     }
 
 

@@ -42,12 +42,12 @@ public class HoaDonApi {
     }
 
     @GetMapping("/search-date")
-    public ResponseEntity<?> getHoaDonHuy(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) throws ParseException {
+    public ResponseEntity<?> getHoaDonHuy(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,@RequestParam  String  comboBoxValue) throws ParseException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime date =  LocalDateTime.parse(startDate, formatter);
         LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
 //        return null;
-        return ResponseEntity.ok(adminTatCaHoaDonService.searchDate(date, date2));
+        return ResponseEntity.ok(adminTatCaHoaDonService.searchDate(date, date2,comboBoxValue));
     }
 
     @GetMapping("/detail/{id}")
