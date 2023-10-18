@@ -13,26 +13,26 @@ public class AdminThongKeHoaDonServiceImpl implements AdThongKeHoaDonService {
 
     @Override
     public Integer tongDonhang() {
-        return null;
+        return hoaDonReponsitory.tongDonhang();
     }
 
     @Override
     public Integer tongDonhangHoanThanh() {
-        return null;
+        return hoaDonReponsitory.tongDonhangHoanThanh();
     }
 
     @Override
     public Integer tongDonhangDangGiao() {
-        return null;
+        return hoaDonReponsitory.tongDonhangDangGiao();
     }
 
     @Override
     public Integer tongDonhangHuy() {
-        return null;
+        return hoaDonReponsitory.tongDonhangHuy();
     }
 
     @Override
     public Integer tongDonhangHoanTra() {
-        return null;
+        return hoaDonReponsitory.tongDonhangHoanTra();
     }
 }
