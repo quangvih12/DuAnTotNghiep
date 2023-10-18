@@ -61,9 +61,6 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
 
     @Override
     public List<AdminHoaDonResponse> searchDate(Date startDate, Date endDate) {
-        List<AdminHoaDonResponse> test = hoaDonReponsitory.getHoaDonByDate(startDate,endDate);
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        test.forEach(i -> System.out.println(i.getIdHD()));
         return hoaDonReponsitory.getHoaDonByDate(startDate,endDate);
     }
 
