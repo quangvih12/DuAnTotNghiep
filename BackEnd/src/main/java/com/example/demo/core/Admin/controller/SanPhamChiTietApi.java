@@ -93,9 +93,9 @@ public class SanPhamChiTietApi {
         updateSanPhamServiceIpml.deleteSize(idSP, idSize);
     }
 
-    @DeleteMapping("/deleteMauSac")
-    public void deleteMauSac(@RequestParam Integer idSP, @RequestParam Integer idMau) {
-        updateSanPhamServiceIpml.deleteMauSac(idSP, idMau);
+    @DeleteMapping("/deleteMauSac/{idMau}")
+    public void deleteMauSac(@PathVariable Integer idMau) {
+        updateSanPhamServiceIpml.deleteMauSac(idMau);
     }
 
     @DeleteMapping("/deleteImg")

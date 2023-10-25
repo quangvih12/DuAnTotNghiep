@@ -479,8 +479,8 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
     }
 
     @Override
-    public void deleteMauSac(Integer idSp, Integer idMau) {
-        MauSacChiTiet mauSac = mauSacChiTietReponsitory.findMSBySPAndMS(idSp, idMau);
+    public void deleteMauSac( Integer idMau) {
+        MauSacChiTiet mauSac = mauSacChiTietReponsitory.findById(idMau).get();
         mauSacChiTietReponsitory.delete(mauSac);
     }
 

@@ -31,7 +31,7 @@ public interface AdUpdateSanPhamService {
 
     void deleteSize(Integer idSp, Integer idSize);
 
-    void deleteMauSac(Integer idSp, Integer idMau);
+    void deleteMauSac( Integer idMau);
 
     void deleteImg(Integer idSp, String img);
 }
