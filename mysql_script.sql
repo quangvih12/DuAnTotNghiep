@@ -440,6 +440,7 @@ CREATE TABLE `mau_sac_ctsp` (
   `trang_thai` int DEFAULT NULL,
   `id_mau_sac` int DEFAULT NULL,
   `id_ctsp` int DEFAULT NULL,
+  `so_luong` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK90wg4hfm5w6pfpgstcvi8m0mb` (`id_mau_sac`),
   KEY `FKr94uquvys8b1ish8yirhj3ah5` (`id_ctsp`),
@@ -454,19 +455,20 @@ CREATE TABLE `mau_sac_ctsp` (
 
 LOCK TABLES `mau_sac_ctsp` WRITE;
 /*!40000 ALTER TABLE `mau_sac_ctsp` DISABLE KEYS */;
-INSERT INTO `mau_sac_ctsp` VALUES (1,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/Zt7RKI_MG_3349.jpg',NULL,'2023-05-05','2023-04-13',1,1,1),
-(2,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/P0jXDB_MG_3354.jpg',NULL,'2023-05-05','2023-04-13',1,2,1),
-(3,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/K6uk81_MG_3354-muc.jpg','Xanh mực','2023-05-05','2023-04-13',1,4,1),
-(4,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/0IAa3e_MG_0585.jpg','Trắng bóng','2023-05-05','2023-04-13',1,3,1),
-(5,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/ahK7SV_MG_0593.jpg','Đen bóng','2023-05-05','2023-04-13',1,2,1),
-(6,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/FofRWKroyal-m139-v1-5.jpg','V1-Đen','2023-05-05','2023-04-13',1,2,2),
-(7,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/5JoMl9royal-m139-v2-2.jpg','V2-Đen','2023-05-05','2023-04-13',1,2,2),
-(8,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,3,2),
-(9,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/4eOVB1royal-m139-v9.jpg','V1-Trắng','2023-05-05','2023-04-13',1,3,2),
-(10,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/xKHMALIMG_5434.jpg','Xanh ngọc','2023-05-05','2023-04-13',1,4,3),
-(11,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/AfmhwnIMG_5283.jpg','Đỏ đô','2023-05-05','2023-04-13',1,5,3),
-(12,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/8MzEPqIMG_5454.jpg','Sữa bóng','2023-05-05','2023-04-13',1,8,3),
-(13,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/PeCI1GIMG_3358.jpg','Đen mờ','2023-05-05','2023-04-13',1,2,3),(14,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/lANmFe_MG_9655.jpg','Đen ','2023-05-05','2023-04-13',1,2,4);
+INSERT INTO `mau_sac_ctsp` VALUES (1,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/Zt7RKI_MG_3349.jpg',NULL,'2023-05-05','2023-04-13',1,1,1,2),
+(2,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/P0jXDB_MG_3354.jpg',NULL,'2023-05-05','2023-04-13',1,2,1,3),
+(3,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/K6uk81_MG_3354-muc.jpg','Xanh mực','2023-05-05','2023-04-13',1,4,1,1),
+(4,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/0IAa3e_MG_0585.jpg','Trắng bóng','2023-05-05','2023-04-13',1,3,1,2),
+(5,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/ahK7SV_MG_0593.jpg','Đen bóng','2023-05-05','2023-04-13',1,2,1,4),
+(6,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/FofRWKroyal-m139-v1-5.jpg','V1-Đen','2023-05-05','2023-04-13',1,2,2,1),
+(7,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/5JoMl9royal-m139-v2-2.jpg','V2-Đen','2023-05-05','2023-04-13',1,2,2,3),
+(8,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,3,2,4),
+(9,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/4eOVB1royal-m139-v9.jpg','V1-Trắng','2023-05-05','2023-04-13',1,3,2,5),
+(10,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/xKHMALIMG_5434.jpg','Xanh ngọc','2023-05-05','2023-04-13',1,4,3,3),
+(11,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/AfmhwnIMG_5283.jpg','Đỏ đô','2023-05-05','2023-04-13',1,5,3,5),
+(12,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/8MzEPqIMG_5454.jpg','Sữa bóng','2023-05-05','2023-04-13',1,8,3,1),
+(13,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/PeCI1GIMG_3358.jpg','Đen mờ','2023-05-05','2023-04-13',1,2,3,10),
+(14,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/lANmFe_MG_9655.jpg','Đen ','2023-05-05','2023-04-13',1,2,4,8);
 /*!40000 ALTER TABLE `mau_sac_ctsp` ENABLE KEYS */;
 UNLOCK TABLES;
 

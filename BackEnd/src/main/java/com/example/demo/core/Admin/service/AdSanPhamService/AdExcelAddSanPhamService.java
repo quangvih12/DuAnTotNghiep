@@ -22,7 +22,7 @@ public interface AdExcelAddSanPhamService {
 
     void mutitheard(List<SanPhamChiTiet> saveSanPhamChiTiet, AdminExcelAddSanPhamBO adminExcelAddSanPhamBO);
 
-    List<MauSacChiTiet> saveAllMauSacChiTiet(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets);
+    List<MauSacChiTiet> saveAllMauSacChiTiet(  List<SizeChiTiet> sizes,AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets);
 
     List<SizeChiTiet> saveAllSizeChiTiet(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets);
 

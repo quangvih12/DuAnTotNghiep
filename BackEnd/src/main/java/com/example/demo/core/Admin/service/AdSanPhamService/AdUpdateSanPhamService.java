@@ -10,17 +10,18 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public interface AdUpdateSanPhamService {
-    AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
+    AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id) throws URISyntaxException, StorageException, InvalidKeyException, IOException, ExecutionException, InterruptedException;
 
-    void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request);
+    void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request) throws ExecutionException, InterruptedException;
 
     List<Image> updateImage(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
 
     List<SizeChiTiet> updateSizeChiTiet(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto);
 
-    List<MauSacChiTiet> updateMauSacChiTiet(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
+    List<MauSacChiTiet> updateMauSacChiTiet(List<SizeChiTiet> sizes,SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
 
     SanPham updateSanPham(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
 
