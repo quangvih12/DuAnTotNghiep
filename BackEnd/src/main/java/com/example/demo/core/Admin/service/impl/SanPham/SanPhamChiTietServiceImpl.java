@@ -21,7 +21,12 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Service
 public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
@@ -127,56 +132,52 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
         return sanPhamReponsitory.save(sanPhamSave);
     }
 
+
     @Override
     public void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request) {
+        ExecutorService executor = Executors.newFixedThreadPool(3);
 
-        // Tạo các luồng cho các công việc cần thực hiện đồng thời
-        Thread mauSacThread = new Thread(() -> {
-            try {
-                saveMauSac(request.getIdMauSac(), request.getImgMauSac(), sanPhamChiTiet);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (StorageException e) {
-                e.printStackTrace();
-            } catch (InvalidKeyException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
+        Future<List<SizeChiTiet>> sizeFuture = executor.submit(() -> {
+            if (request.getIdSize() != null && !request.getIdSize().isEmpty()) {
+                return saveSize(request.getIdSize(), sanPhamChiTiet, request.getSoLuongSize());
+            } else {
+                return Collections.emptyList();
             }
         });
-        Thread sizeThread = new Thread(() -> saveSize(request.getIdSize(), sanPhamChiTiet, request.getSoLuongSize()));
-        Thread imageThread = new Thread(() -> {
+
+        Future<Void> mauSacFuture = executor.submit(() -> {
+            try {
+                List<SizeChiTiet> sizes = sizeFuture.get();
+                saveMauSac(sizes, request.getIdMauSac(), request.getImgMauSac(), request.getSoLuongSize(), sanPhamChiTiet);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        });
+
+        Future<Void> imageFuture = executor.submit(() -> {
             try {
                 saveImage(sanPhamChiTiet, request.getImagesProduct());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (StorageException e) {
-                e.printStackTrace();
-            } catch (InvalidKeyException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
+            return null;
         });
 
-        // Bắt đầu chạy các luồng
-        mauSacThread.start();
-        sizeThread.start();
-        imageThread.start();
-
         try {
-            // Đợi cho tất cả các luồng hoàn thành
-            mauSacThread.join();
-            sizeThread.join();
-            imageThread.join();
-        } catch (InterruptedException e) {
+            mauSacFuture.get();
+            imageFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+
+        executor.shutdown();
     }
+
 
     @Override
     //lưu mau sắc chi tiết
-    public Iterable<MauSacChiTiet> saveMauSac(List<String> idMauSac, List<String> imgMauSac, SanPhamChiTiet sanPhamChiTiet) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
+    public List<MauSacChiTiet> saveMauSac(List<SizeChiTiet> sizes, List<String> idMauSac, List<String> imgMauSac, List<String> lstSoLuong, SanPhamChiTiet sanPhamChiTiet) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         List<MauSacChiTiet> mauSacChiTietList = new ArrayList<>();
 
         // Đảm bảo rằng số lượng idMauSac và imgMauSac là giống nhau
@@ -186,38 +187,49 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
         for (int i = 0; i < idMauSac.size(); i++) {
             String mauSacId = idMauSac.get(i);
             String imgMauSacValue = imgMauSac.get(i);
+            String soluong = lstSoLuong.get(i);
 
-            MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
-            mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSacId)).build());
-            mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-            mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-            String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
-            mauSacChiTiet.setAnh(linkAnh);
-            mauSacChiTietList.add(mauSacChiTiet);
+            List<SizeChiTiet> applicableSizes = sizes.isEmpty() ? Collections.singletonList(null) : sizes;
+
+            for (SizeChiTiet sizeChiTiet : applicableSizes) {
+                MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
+                mauSacChiTiet.setSizeChiTiet(sizeChiTiet);
+                mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSacId)).build());
+                mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
+                mauSacChiTiet.setAnh(linkAnh);
+                mauSacChiTiet.setSoLuong(Integer.valueOf(soluong));
+                mauSacChiTietList.add(mauSacChiTiet);
+            }
         }
         return this.mauSacChiTietReponsitory.saveAll(mauSacChiTietList);
-
     }
+
+
 
     @Override
     // lưu size chi tiet
-    public Iterable<SizeChiTiet> saveSize(List<String> idSize, SanPhamChiTiet sanPhamChiTiet, List<String> soLuongSize) {
+    public List<SizeChiTiet> saveSize(List<String> idSize, SanPhamChiTiet sanPhamChiTiet, List<String> soLuongSize) {
         List<SizeChiTiet> sizeChiTietList = new ArrayList<>();
 
+        if (idSize.isEmpty() && soLuongSize.isEmpty())
+            return null;
+
         // Đảm bảo rằng số lượng idSize và soLuongSize là giống nhau
-        if (idSize.size() != soLuongSize.size())
-            throw new IllegalArgumentException("Số lượng idSize và soLuongSize không khớp");
+//        if (idSize.size() != soLuongSize.size())
+//            throw new IllegalArgumentException("Số lượng idSize và soLuongSize không khớp");
 
 
         for (int i = 0; i < idSize.size(); i++) {
             String sizeId = idSize.get(i);
-            String soLuongSizeValue = soLuongSize.get(i);
+        //    String soLuongSizeValue = soLuongSize.get(i);
 
             SizeChiTiet sizeChiTiet = new SizeChiTiet();
             sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(sizeId)).build());
             sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
             sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-            sizeChiTiet.setSoLuong(Integer.valueOf(soLuongSizeValue));
+        //    sizeChiTiet.setSoLuong(Integer.valueOf(soLuongSizeValue));
 
             sizeChiTietList.add(sizeChiTiet);
         }
@@ -228,7 +240,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
 
     @Override
     // lưu ảnh
-    public Iterable<Image> saveImage(SanPhamChiTiet sanPhamChiTiet, List<String> imgSanPham) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
+    public List<Image> saveImage(SanPhamChiTiet sanPhamChiTiet, List<String> imgSanPham) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         List<Image> imageList = new ArrayList<>();
         for (String img : imgSanPham) {
             Image image = new Image();
