@@ -1,6 +1,6 @@
 package com.example.demo.core.khachHang.service.impl;
 
-import com.example.demo.core.khachHang.repository.KHChiTietSPRepository;
+import com.example.demo.core.khachHang.repository.KHchiTietSanPhamRepository;
 import com.example.demo.core.khachHang.service.ChiTietSPService;
 import com.example.demo.entity.SanPhamChiTiet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class ChiTietSPServiceImpl implements ChiTietSPService{
     @Autowired
-    private KHChiTietSPRepository repo;
+    private KHchiTietSanPhamRepository repo;
 
     @Override
     public Page<SanPhamChiTiet> findAllByTenLoai(String tenLoai) {

@@ -89,8 +89,6 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
             trongLuong.setValue(request.getValue());
             trongLuong.setNgayTao(trongLuong.getNgayTao());
             trongLuong.setNgaySua(DatetimeUtil.getCurrentDate());
-            try {
-                return DataUltil.setData("success", repository.save(trongLuong));
             TrongLuong tl = optional.get();
             tl.setMa(tl.getMa());
             tl.setDonVi(request.getDonVi());

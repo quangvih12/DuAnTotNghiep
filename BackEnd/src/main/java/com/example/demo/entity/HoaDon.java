@@ -21,6 +21,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class HoaDon {
     private String tenNguoiNhan;
 
     @Column(name = "ngay_nhan")
-    private String ngayNhan;
+    private LocalDateTime ngayNhan;
 
     @Column(name = "tien_ship", precision = 20, scale = 0)
     private BigDecimal tienShip;
@@ -56,23 +57,29 @@ public class HoaDon {
     @Column(name = "tien_sau_khi_giam_gia", precision = 20, scale = 0)
     private BigDecimal tienSauKhiGiam;
 
+    @Column(name = "ly_do")
+    private String lyDo;
+
     @Column(name = "ngay_sua")
-    private String ngaySua;
+    private LocalDateTime ngaySua;
 
     @Column(name = "ngay_tao")
-    private String ngayTao;
+    private LocalDateTime ngayTao;
 
     @Column(name = "trang_thai")
     private Integer trangThai;
 
     @Column(name = "ngay_thanh_toan")
-    private String ngayThanhToan;
+    private LocalDateTime ngayThanhToan;
 
     @Column(name = "ngay_ship")
-    private String ngayShip;
+    private LocalDateTime ngayShip;
 
     @Column(name = "hinh_thuc_giao_hang")
     private Integer hinhThucGiaoHang;
+
+    @Column(name = "mo_ta")
+    private String moTa;
 
     @ManyToOne
     @JoinColumn(name = "id_dia_chi_sdt")

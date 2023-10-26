@@ -1,9 +1,8 @@
 package com.example.demo.core.Admin.model.response;
 
-import lombok.ToString;
 import org.springframework.beans.factory.annotation.Value;
 
-public interface AdminHoaDonResponse {
+public interface AdminHoaDonChitietResponse {
     Integer getStt();
 
     @Value("#{target.idHD}")
@@ -14,6 +13,9 @@ public interface AdminHoaDonResponse {
 
     @Value("#{target.nguoiTao}")
     String getNguoiTao();
+
+    @Value("#{target.tenSP}")
+    String getTenSP();
 
     @Value("#{target.email}")
     String getEmail();
@@ -54,6 +56,12 @@ public interface AdminHoaDonResponse {
     @Value("#{target.trangThai}")
     String getTrangThai();
 
+    @Value("#{target.giaBan}")
+    String getGiaBan();
+
+    @Value("#{target.giaSPSauGiam}")
+    String getGiaSPSauGiam();
+
     @Value("#{target.diaChiCuThe}")
     String getDiaChiCuThe();
 
@@ -80,6 +88,4 @@ public interface AdminHoaDonResponse {
 
     @Value("#{target.tenPTTT}")
     String getTenPTTT();
-
-
 }

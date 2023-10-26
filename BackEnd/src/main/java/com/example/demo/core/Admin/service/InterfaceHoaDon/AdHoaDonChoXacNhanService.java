@@ -9,7 +9,7 @@ public interface AdHoaDonChoXacNhanService {
 
     List<AdminHoaDonResponse> getHoaDonChoXacNhan();
 
-    AdminHoaDonResponse huyHoaDonChoXacNhan(Integer idHD);
+    AdminHoaDonResponse huyHoaDonChoXacNhan(Integer idHD, String lyDo);
 
     AdminHoaDonResponse xacNhanHoaDon(Integer idHD);
 }

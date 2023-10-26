@@ -3,6 +3,8 @@ package com.example.demo.core.Admin.service.InterfaceHoaDon;
 import com.example.demo.core.Admin.model.response.AdminHoaDonResponse;
 import com.example.demo.entity.HoaDon;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public interface AdminTatCaHoaDonService {
@@ -22,6 +24,8 @@ public interface AdminTatCaHoaDonService {
     List<AdminHoaDonResponse> getHoaDonXacNhanDoiTra();
 
     List<AdminHoaDonResponse> getHoaDonDangChuanBiHang();
+
+    List<AdminHoaDonResponse> searchDate(LocalDateTime startDate, LocalDateTime endDate, String  comboBoxValue);
 
     AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD);
 

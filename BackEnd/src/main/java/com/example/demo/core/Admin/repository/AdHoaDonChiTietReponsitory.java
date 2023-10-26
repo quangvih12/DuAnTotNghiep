@@ -1,5 +1,6 @@
 package com.example.demo.core.Admin.repository;
 
+import com.example.demo.core.Admin.model.response.AdminHoaDonChitietResponse;
 import com.example.demo.core.Admin.model.response.AdminHoaDonResponse;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.reponsitory.HoaDonChiTietReponsitory;
@@ -28,7 +29,7 @@ public interface AdHoaDonChiTietReponsitory extends HoaDonChiTietReponsitory {
                                                     join datn.phuong_thuc_thanh_toan pttt on pttt.id = hd.id_phuong_thuc_thanh_toan 
             										join datn.user u on u.id = hd.id_user where hd.id =:id
             """, nativeQuery = true)
-    List<AdminHoaDonResponse> getHoaDonChiTietByIdHD(Integer id);
+    List<AdminHoaDonChitietResponse> getHoaDonChiTietByIdHD(Integer id);
 
     @Query(value = "select hdct from HoaDonChiTiet hdct where hdct.hoaDon.id = :idHd")
     List<HoaDonChiTiet> findByIdHoaDon(@Param("idHd") Integer idHd, Sort sort);

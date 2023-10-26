@@ -7,8 +7,11 @@ import com.example.demo.entity.HoaDon;
 import com.example.demo.infrastructure.status.HoaDonStatus;
 import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,6 +34,7 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
     public List<AdminHoaDonResponse> getHoaDonHoanThanh() {
         return hoaDonReponsitory.getHoaDonTrangThai(HoaDonStatus.HOAN_THANH);
     }
+
     @Override
     public List<AdminHoaDonResponse> getHoaDonHuy() {
         return hoaDonReponsitory.getHoaDonTrangThai(HoaDonStatus.DA_HUY);
@@ -57,10 +61,16 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
         return hoaDonReponsitory.getHoaDonTrangThai(HoaDonStatus.DANG_CHUAN_BI_HANG);
     }
 
+    @Override
+    public List<AdminHoaDonResponse> searchDate(LocalDateTime startDate, LocalDateTime endDate, String  comboBoxValue) {
+        return hoaDonReponsitory.getHoaDonByDate(startDate, endDate,comboBoxValue);
+    }
+
+
     public AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD) {
         HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
         if (hoaDon != null) {
-            hoaDon.setNgaySua(DatetimeUtil.getCurrentDate());
+            hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
             hoaDon.setTrangThai(HoaDonStatus.GIAO_CHO_DON_VI_VAN_CHUYEN);
             HoaDon hd = hoaDonReponsitory.save(hoaDon);
             return hoaDonReponsitory.getByIds(hd.getId());

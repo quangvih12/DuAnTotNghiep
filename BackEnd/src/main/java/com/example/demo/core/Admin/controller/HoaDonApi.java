@@ -2,10 +2,17 @@ package com.example.demo.core.Admin.controller;
 
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdDetailHoaDonChiTietService;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdHoaDonChoXacNhanService;
+import com.example.demo.core.Admin.service.InterfaceHoaDon.AdHoaDonDangGiaoService;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdminTatCaHoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @CrossOrigin("*")
 @RestController
@@ -19,6 +26,9 @@ public class HoaDonApi {
     private AdHoaDonChoXacNhanService adHoaDonChoXacNhanService;
 
     @Autowired
+    private AdHoaDonDangGiaoService adHoaDonDangGiaoService;
+
+    @Autowired
     private AdDetailHoaDonChiTietService adDetailHoaDonChiTietService;
 
     @GetMapping()
@@ -29,6 +39,15 @@ public class HoaDonApi {
     @GetMapping("/hoaDonTrangThai/{trangThai}")
     public ResponseEntity<?> getHoaDonHuy(@PathVariable Integer trangThai) {
         return ResponseEntity.ok(adminTatCaHoaDonService.getHoaDonTrangThai(trangThai));
+    }
+
+    @GetMapping("/search-date")
+    public ResponseEntity<?> getHoaDonHuy(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,@RequestParam  String  comboBoxValue) throws ParseException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime date =  LocalDateTime.parse(startDate, formatter);
+        LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
+//        return null;
+        return ResponseEntity.ok(adminTatCaHoaDonService.searchDate(date, date2,comboBoxValue));
     }
 
     @GetMapping("/detail/{id}")
@@ -72,19 +91,25 @@ public class HoaDonApi {
     }
 
     @PutMapping("/huyXacNhan/{id}")
-    public ResponseEntity<?> huyHoaDon(@PathVariable Integer id){
-        return ResponseEntity.ok(adHoaDonChoXacNhanService.huyHoaDonChoXacNhan(id));
+    public ResponseEntity<?> huyHoaDon(@PathVariable Integer id, @RequestParam("lyDo") String lyDo) {
+        return ResponseEntity.ok(adHoaDonChoXacNhanService.huyHoaDonChoXacNhan(id, lyDo));
     }
 
     // từ chờ xác nhận -> đang chuẩn bị
     @PutMapping("/XacNhan/{id}")
-    public ResponseEntity<?> xacNhanHoaDon(@PathVariable Integer id){
+    public ResponseEntity<?> xacNhanHoaDon(@PathVariable Integer id) {
         return ResponseEntity.ok(adHoaDonChoXacNhanService.xacNhanHoaDon(id));
     }
 
     // chuẩn bị xong -> đang giao
     @PutMapping("/XacNhanGiaoHang/{id}")
-    public ResponseEntity<?> XacNhanGiaoHang(@PathVariable Integer id){
+    public ResponseEntity<?> XacNhanGiaoHang(@PathVariable Integer id) {
         return ResponseEntity.ok(adminTatCaHoaDonService.giaoHoaDonChoVanChuyen(id));
+    }
+
+    // từ đang giao -> hoàn thành
+    @PutMapping("/hoan-thanh/{id}")
+    public ResponseEntity<?> hoanThanh(@PathVariable Integer id) {
+        return ResponseEntity.ok(adHoaDonDangGiaoService.xacNhanHoaDon(id));
     }
 }

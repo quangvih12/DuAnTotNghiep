@@ -9,6 +9,7 @@ import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,11 +25,12 @@ public class AdminHoaDonChoXacNhanServiceImpl implements AdHoaDonChoXacNhanServi
 
 
     @Override
-    public AdminHoaDonResponse huyHoaDonChoXacNhan(Integer idHD) {
+    public AdminHoaDonResponse huyHoaDonChoXacNhan(Integer idHD, String lyDo) {
         HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
         if (hoaDon != null) {
-            hoaDon.setNgaySua(DatetimeUtil.getCurrentDate());
+            hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
             hoaDon.setTrangThai(HoaDonStatus.DA_HUY);
+            hoaDon.setLyDo(lyDo);
             HoaDon hd = hoaDonReponsitory.save(hoaDon);
             return hoaDonReponsitory.getByIds(hd.getId());
         } else {
@@ -40,7 +42,7 @@ public class AdminHoaDonChoXacNhanServiceImpl implements AdHoaDonChoXacNhanServi
     public AdminHoaDonResponse xacNhanHoaDon(Integer idHD) {
         HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
         if (hoaDon != null) {
-            hoaDon.setNgaySua(DatetimeUtil.getCurrentDate());
+            hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
             hoaDon.setTrangThai(HoaDonStatus.DANG_CHUAN_BI_HANG);
             HoaDon hd = hoaDonReponsitory.save(hoaDon);
             return hoaDonReponsitory.getByIds(hd.getId());
