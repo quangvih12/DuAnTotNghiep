@@ -22,5 +22,7 @@ public class AdminThongKeBO {
 
     private List<AdminThongKeThangResponse> lstAdminThongKeThangResponses;
 
+    private List<AdminThongKeThangNamTruocResponse> lstAdminThongKeThangNamResponses;
+
 
 }

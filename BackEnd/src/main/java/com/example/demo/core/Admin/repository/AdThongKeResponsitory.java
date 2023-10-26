@@ -54,11 +54,29 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
     List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhat();
 
     @Query(value = """
-            SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien
-            FROM datn.hoa_don hd
+            SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE()) as nam
+            FROM datn.hoa_don hd  where year(hd.ngay_tao)=YEAR(CURDATE())
             GROUP BY MONTH(hd.ngay_tao) ORDER BY MONTH(hd.ngay_tao) ;
               """, nativeQuery = true)
     List<AdminThongKeThangResponse> doanhThuTheoThang();
+
+    @Query(value = """
+            SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE())-1 as nam
+            FROM datn.hoa_don hd \s
+            WHERE YEAR(hd.ngay_tao) = YEAR(CURDATE()) - 1
+            GROUP BY MONTH(hd.ngay_tao)\s
+            ORDER BY MONTH(hd.ngay_tao);
+              """, nativeQuery = true)
+    List<AdminThongKeThangNamTruocResponse> doanhThuTheoThangNamTruoc();
+
+    @Query(value = """
+            SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE()) as nam
+            FROM datn.hoa_don hd \s
+            WHERE YEAR(hd.ngay_tao) = YEAR(CURDATE())
+            GROUP BY MONTH(hd.ngay_tao)\s
+            ORDER BY MONTH(hd.ngay_tao);
+              """, nativeQuery = true)
+    List<AdminThongKeThangNamTruocResponse> doanhThuTheoThangNamHienTai();
 
     @Query(value = """
             WITH DoanhThuThuongHieu AS (
@@ -146,7 +164,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
     List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhatBySanPham(Integer id);
 
     @Query(value = """
-            SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien\s
+            SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE()) as nam
             FROM datn.san_pham_chi_tiet spct
             JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
             JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
@@ -155,6 +173,19 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
             GROUP BY MONTH(hd.ngay_tao) ORDER BY MONTH(hd.ngay_tao)
                 """, nativeQuery = true)
     List<AdminThongKeThangResponse> doanhThuTheoThangBySanPham(Integer id);
+
+    @Query(value = """
+            
+             SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE())-1 as nam
+            FROM datn.san_pham_chi_tiet spct
+            JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+            JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+            JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+            WHERE spct.id =:id and YEAR(hd.ngay_tao) = YEAR(CURDATE()) - 1
+            GROUP BY MONTH(hd.ngay_tao) ORDER BY MONTH(hd.ngay_tao)
+    
+              """, nativeQuery = true)
+    List<AdminThongKeThangNamTruocResponse> doanhThuTheoThangNamTruocBySanPham(Integer id);
 
     @Query(value = """
             WITH DoanhThuThuongHieu AS (
@@ -245,7 +276,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
     List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhatByThuongHieu(Integer id);
 
     @Query(value = """
-            SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien\s
+            SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE()) as nam
             FROM datn.san_pham_chi_tiet spct
             JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
             JOIN datn.thuong_hieu th ON sp.id_thuong_hieu = th.id
@@ -255,6 +286,20 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
             GROUP BY MONTH(hd.ngay_tao) ORDER BY MONTH(hd.ngay_tao)
                """, nativeQuery = true)
     List<AdminThongKeThangResponse> doanhThuTheoThangByThuongHieu(Integer id);
+
+    @Query(value = """
+            
+             SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE())-1 as nam
+            FROM datn.san_pham_chi_tiet spct
+            JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+            JOIN datn.thuong_hieu th ON sp.id_thuong_hieu = th.id
+            JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+            JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+            WHERE th.id =:id and YEAR(hd.ngay_tao) = YEAR(CURDATE()) - 1
+            GROUP BY MONTH(hd.ngay_tao) ORDER BY MONTH(hd.ngay_tao)
+    
+              """, nativeQuery = true)
+    List<AdminThongKeThangNamTruocResponse> doanhThuTheoThangNamTruocByThuongHieu(Integer id);
 
     @Query(value = """
             WITH DoanhThuThuongHieu AS (
@@ -346,7 +391,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
     List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhatByLoai(Integer id);
 
     @Query(value = """
-            SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien\s
+            SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE()) as nam
             FROM datn.san_pham_chi_tiet spct
             JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
             JOIN datn.loai th ON sp.id_loai = th.id
@@ -356,6 +401,20 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
             GROUP BY MONTH(hd.ngay_tao) ORDER BY MONTH(hd.ngay_tao)
                """, nativeQuery = true)
     List<AdminThongKeThangResponse> doanhThuTheoThangByLoai(Integer id);
+
+    @Query(value = """
+            
+             SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE())-1 as nam
+            FROM datn.san_pham_chi_tiet spct
+            JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+            JOIN datn.loai th ON sp.id_loai = th.id
+            JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+            JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+            WHERE th.id =:id and YEAR(hd.ngay_tao) = YEAR(CURDATE()) - 1
+            GROUP BY MONTH(hd.ngay_tao) ORDER BY MONTH(hd.ngay_tao)
+    
+              """, nativeQuery = true)
+    List<AdminThongKeThangNamTruocResponse> doanhThuTheoThangNamTruocByLoai(Integer id);
 
     @Query(value = """
             WITH DoanhThuThuongHieu AS (

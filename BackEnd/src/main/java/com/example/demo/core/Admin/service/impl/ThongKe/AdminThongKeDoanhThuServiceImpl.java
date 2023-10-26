@@ -24,10 +24,11 @@ public class AdminThongKeDoanhThuServiceImpl implements AdThongKeDoanhThuService
         List<AdminThongKeLoaiResponse> lstLoai = adThongKeResponsitory.doanhThuTheoLoai();
         List<AdminThongKeThuongHieuResponse> lstThuongHieu = adThongKeResponsitory.doanhThuTheoThuongHieu();
         List<AdminThongKeThangResponse> lstThang = adThongKeResponsitory.doanhThuTheoThang();
+        List<AdminThongKeThangNamTruocResponse> lstThangNam = adThongKeResponsitory.doanhThuTheoThangNamTruoc();
 
         // Tạo đối tượng AdminThongKeBO bằng constructor
         AdminThongKeBO adminThongKeBO = new AdminThongKeBO(
-                tongDoanhThu, lstLoai, lstSanPhamDoanhThuCao, lstSanPhamDoanhThuThap, lstThuongHieu, lstThang
+                tongDoanhThu, lstLoai, lstSanPhamDoanhThuCao, lstSanPhamDoanhThuThap, lstThuongHieu, lstThang, lstThangNam
         );
 
         return adminThongKeBO;
@@ -42,10 +43,10 @@ public class AdminThongKeDoanhThuServiceImpl implements AdThongKeDoanhThuService
         List<AdminThongKeLoaiResponse> lstLoai = adThongKeResponsitory.doanhThuTheoLoaiBySanPham(id);
         List<AdminThongKeThuongHieuResponse> lstThuongHieu = adThongKeResponsitory.doanhThuTheoThuongHieuBySanPham(id);
         List<AdminThongKeThangResponse> lstThang = adThongKeResponsitory.doanhThuTheoThangBySanPham(id);
-
+        List<AdminThongKeThangNamTruocResponse> lstThangNam = adThongKeResponsitory.doanhThuTheoThangNamTruocBySanPham(id);
         // Tạo đối tượng AdminThongKeBO bằng constructor
         AdminThongKeBO adminThongKeBO = new AdminThongKeBO(
-                tongDoanhThu, lstLoai, lstSanPhamDoanhThuCao, lstSanPhamDoanhThuThap, lstThuongHieu, lstThang
+                tongDoanhThu, lstLoai, lstSanPhamDoanhThuCao, lstSanPhamDoanhThuThap, lstThuongHieu, lstThang, lstThangNam
         );
         return adminThongKeBO;
     }
@@ -59,10 +60,10 @@ public class AdminThongKeDoanhThuServiceImpl implements AdThongKeDoanhThuService
         List<AdminThongKeLoaiResponse> lstLoai = adThongKeResponsitory.doanhThuTheoLoaiByThuongHieu(id);
         List<AdminThongKeThuongHieuResponse> lstThuongHieu = adThongKeResponsitory.doanhThuTheoThuongHieuByThuongHieu(id);
         List<AdminThongKeThangResponse> lstThang = adThongKeResponsitory.doanhThuTheoThangByThuongHieu(id);
-
+        List<AdminThongKeThangNamTruocResponse> lstThangNam = adThongKeResponsitory.doanhThuTheoThangNamTruocByThuongHieu(id);
         // Tạo đối tượng AdminThongKeBO bằng constructor
         AdminThongKeBO adminThongKeBO = new AdminThongKeBO(
-                tongDoanhThu, lstLoai, lstSanPhamDoanhThuCao, lstSanPhamDoanhThuThap, lstThuongHieu, lstThang
+                tongDoanhThu, lstLoai, lstSanPhamDoanhThuCao, lstSanPhamDoanhThuThap, lstThuongHieu, lstThang, lstThangNam
         );
         return adminThongKeBO;
     }
@@ -76,10 +77,10 @@ public class AdminThongKeDoanhThuServiceImpl implements AdThongKeDoanhThuService
         List<AdminThongKeLoaiResponse> lstLoai = adThongKeResponsitory.doanhThuTheoLoaiByLoai(id);
         List<AdminThongKeThuongHieuResponse> lstThuongHieu = adThongKeResponsitory.doanhThuTheoThuongHieuByLoai(id);
         List<AdminThongKeThangResponse> lstThang = adThongKeResponsitory.doanhThuTheoThangByLoai(id);
-
+        List<AdminThongKeThangNamTruocResponse> lstThangNam = adThongKeResponsitory.doanhThuTheoThangNamTruocByLoai(id);
         // Tạo đối tượng AdminThongKeBO bằng constructor
         AdminThongKeBO adminThongKeBO = new AdminThongKeBO(
-                tongDoanhThu, lstLoai, lstSanPhamDoanhThuCao, lstSanPhamDoanhThuThap, lstThuongHieu, lstThang
+                tongDoanhThu, lstLoai, lstSanPhamDoanhThuCao, lstSanPhamDoanhThuThap, lstThuongHieu, lstThang, lstThangNam
         );
         return adminThongKeBO;
     }
@@ -93,10 +94,10 @@ public class AdminThongKeDoanhThuServiceImpl implements AdThongKeDoanhThuService
         List<AdminThongKeLoaiResponse> lstLoai = adThongKeResponsitory.doanhThuTheoLoaiByNam(year);
         List<AdminThongKeThuongHieuResponse> lstThuongHieu = adThongKeResponsitory.doanhThuTheoThuongHieuByNam(year);
         List<AdminThongKeThangResponse> lstThang = adThongKeResponsitory.doanhThuTheoThangByNam(year);
-
+        List<AdminThongKeThangNamTruocResponse> lstThangNam = adThongKeResponsitory.doanhThuTheoThangNamHienTai();
         // Tạo đối tượng AdminThongKeBO bằng constructor
         AdminThongKeBO adminThongKeBO = new AdminThongKeBO(
-                tongDoanhThu, lstLoai, lstSanPhamDoanhThuCao, lstSanPhamDoanhThuThap, lstThuongHieu, lstThang
+                tongDoanhThu, lstLoai, lstSanPhamDoanhThuCao, lstSanPhamDoanhThuThap, lstThuongHieu, lstThang, lstThangNam
         );
         return adminThongKeBO;
     }
@@ -110,10 +111,10 @@ public class AdminThongKeDoanhThuServiceImpl implements AdThongKeDoanhThuService
         List<AdminThongKeLoaiResponse> lstLoai = adThongKeResponsitory.doanhThuTheoLoaiByThang(startMonth, endMonth);
         List<AdminThongKeThuongHieuResponse> lstThuongHieu = adThongKeResponsitory.doanhThuTheoThuongHieuByThang(startMonth, endMonth);
         List<AdminThongKeThangResponse> lstThang = adThongKeResponsitory.doanhThuTheoThangByThang(startMonth, endMonth);
-//
+        List<AdminThongKeThangNamTruocResponse> lstThangNam = adThongKeResponsitory.doanhThuTheoThangNamHienTai();
 //        // Tạo đối tượng AdminThongKeBO bằng constructor
         AdminThongKeBO adminThongKeBO = new AdminThongKeBO(
-                tongDoanhThu, lstLoai, lstSanPhamDoanhThuCao, lstSanPhamDoanhThuThap, lstThuongHieu, lstThang
+                tongDoanhThu, lstLoai, lstSanPhamDoanhThuCao, lstSanPhamDoanhThuThap, lstThuongHieu, lstThang, lstThangNam
         );
         return adminThongKeBO;
     }
