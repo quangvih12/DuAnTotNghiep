@@ -59,6 +59,12 @@ public interface AdminHoaDonChitietResponse {
     @Value("#{target.giaBan}")
     String getGiaBan();
 
+    @Value("#{target.donGia}")
+    String getDonGia();
+
+    @Value("#{target.soLuong}")
+    String getSoLuong();
+
     @Value("#{target.giaSPSauGiam}")
     String getGiaSPSauGiam();
 
@@ -88,4 +94,11 @@ public interface AdminHoaDonChitietResponse {
 
     @Value("#{target.tenPTTT}")
     String getTenPTTT();
+
+    @Value("#{target.mauSac}")
+    String getMauSac();
+
+    @Value("#{target.size}")
+    String getSize();
+
 }

@@ -1,5 +1,6 @@
 package com.example.demo.core.Admin.service.impl;
 
+import com.example.demo.core.Admin.model.response.AdminHoaDonChitietResponse;
 import com.example.demo.core.Admin.repository.AdHoaDonChiTietReponsitory;
 import com.example.demo.core.Admin.service.AdHoaDonChiTietService;
 import com.example.demo.entity.HoaDonChiTiet;
@@ -16,8 +17,12 @@ public class HoaDonChiTietImpl implements AdHoaDonChiTietService {
 
     @Override
     public List<HoaDonChiTiet> findHDCTByIdHoaDon(Integer idHD) {
-        Sort sort = Sort.by(Sort.Direction.DESC,"ngayTao");
-        return repo.findByIdHoaDon(idHD,sort);
+        Sort sort = Sort.by(Sort.Direction.DESC, "ngayTao");
+        return repo.findByIdHoaDon(idHD, sort);
     }
 
+    @Override
+    public List<AdminHoaDonChitietResponse> findHDCTByTrangThai(Integer trangThai) {
+        return repo.findHDCTByTrangThai(trangThai);
+    }
 }

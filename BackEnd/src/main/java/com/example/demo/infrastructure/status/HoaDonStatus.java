@@ -8,6 +8,6 @@ public class HoaDonStatus {
     public static final Integer DANG_CHUAN_BI_HANG = 4;             // -> giao cho don vi van chuyen, khach hang co the huy hoa don
     public static final Integer GIAO_CHO_DON_VI_VAN_CHUYEN = 5;     // -> hoan thanh
     public static final Integer DA_GIAO_CHO_DON_VI_VAN_CHUYEN = 6;  // xoa
-    public static final Integer YEU_CAU_DOI_TRA = 7;
-    public static final Integer XAC_NHAN_DOI_TRA = 8;
+    public static final Integer YEU_CAU_DOI_TRA = 7;                // Yêu cầu trả hàng
+    public static final Integer XAC_NHAN_DOI_TRA = 8;               // Xác nhận trả hàng
 }

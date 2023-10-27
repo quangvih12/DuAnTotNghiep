@@ -1,12 +1,15 @@
 package com.example.demo.core.Admin.service.impl.HoaDon;
 
 import com.example.demo.core.Admin.model.response.AdminHoaDonResponse;
+import com.example.demo.core.Admin.repository.AdHoaDonChiTietReponsitory;
 import com.example.demo.core.Admin.repository.AdHoaDonReponsitory;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdHoaDonChoXacNhanService;
 import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.infrastructure.status.HoaDonStatus;
 import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,6 +21,9 @@ public class AdminHoaDonChoXacNhanServiceImpl implements AdHoaDonChoXacNhanServi
     @Autowired
     private AdHoaDonReponsitory hoaDonReponsitory;
 
+    @Autowired
+    private AdHoaDonChiTietReponsitory hdctRepo;
+
     @Override
     public List<AdminHoaDonResponse> getHoaDonChoXacNhan() {
         return hoaDonReponsitory.getHoaDonTrangThai(HoaDonStatus.YEU_CAU_XAC_NHAN);
@@ -27,11 +33,14 @@ public class AdminHoaDonChoXacNhanServiceImpl implements AdHoaDonChoXacNhanServi
     @Override
     public AdminHoaDonResponse huyHoaDonChoXacNhan(Integer idHD, String lyDo) {
         HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
         if (hoaDon != null) {
             hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
             hoaDon.setTrangThai(HoaDonStatus.DA_HUY);
             hoaDon.setLyDo(lyDo);
             HoaDon hd = hoaDonReponsitory.save(hoaDon);
+            List<HoaDonChiTiet> lstHDCT = hdctRepo.findByIdHoaDon(idHD,sort);
+//            lstHDCT.forEach(hdct -> );
             return hoaDonReponsitory.getByIds(hd.getId());
         } else {
             return null;

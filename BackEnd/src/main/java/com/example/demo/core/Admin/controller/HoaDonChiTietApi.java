@@ -20,4 +20,9 @@ public class HoaDonChiTietApi {
     public ResponseEntity<?> findByIdHd(@PathVariable Integer id) {
         return ResponseEntity.ok(hdctService.findHDCTByIdHoaDon(id));
     }
+
+    @GetMapping("/find-by-trang-thai/{trangThai}")
+    public ResponseEntity<?> findByTrangThai(@PathVariable Integer trangThai) {
+        return ResponseEntity.ok(hdctService.findHDCTByTrangThai(trangThai));
+    }
 }
