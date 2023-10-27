@@ -18,9 +18,21 @@ public interface MauSacChiTietReponsitory extends JpaRepository<MauSacChiTiet, I
     @Query("select pt from MauSacChiTiet  pt where  pt.sanPhamChiTiet.id=:id")
     List<MauSacChiTiet> findMauSacChiTiet(Integer id);
 
+    @Query("select pt from MauSacChiTiet  pt where  pt.sanPhamChiTiet.id=:id")
+    MauSacChiTiet findMauSacChiTietById(Integer id);
+
     @Query("select pt from MauSacChiTiet  pt where  pt.sanPhamChiTiet.id=:idSP and pt.mauSac.id=:idMauSac")
     MauSacChiTiet findMSBySPAndMS(Integer idSP, Integer idMauSac);
 
     @Query("select pt from MauSacChiTiet  pt where  pt.sanPhamChiTiet.id=:id and pt.mauSac.id=:idMau")
-    MauSacChiTiet findMauSacChiTietBySanPhamChiTietAndMauSac(Integer id,Integer idMau);
+    List<MauSacChiTiet> findMauSacChiTietBySanPhamChiTietAndMauSac(Integer id, Integer idMau);
+
+    @Query("select pt from MauSacChiTiet  pt where  pt.sanPhamChiTiet.id=:id and pt.mauSac.id=:idMau and pt.sizeChiTiet.id=:idSize")
+    List<MauSacChiTiet> findMauSac(Integer id, Integer idMau, Integer idSize);
+
+    @Query("select pt from MauSacChiTiet  pt where  pt.sizeChiTiet.id=:id ")
+    List<MauSacChiTiet> findMauSacChiTietBySizeChiTiet(Integer id);
+
+    @Query("select pt from MauSacChiTiet  pt where  pt.sanPhamChiTiet.id=:id and  pt.sizeChiTiet.id is null")
+    List<MauSacChiTiet> findMauSacChiTietBySanPhamChiTietAndSize(Integer id);
 }

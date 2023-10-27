@@ -24,9 +24,7 @@ import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -124,6 +122,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         String anh1 = ExcelUtils.getCellString(row.getCell(14));
         String anh2 = ExcelUtils.getCellString(row.getCell(15));
         String anh3 = ExcelUtils.getCellString(row.getCell(16));
+        //     String soLuongMauSac = String.valueOf(ExcelUtils.getCellString(row.getCell(17)));
         String quaiDeo = ExcelUtils.getCellString(row.getCell(17));
         String demLot = ExcelUtils.getCellString(row.getCell(18));
         String moTa = ExcelUtils.getCellString(row.getCell(19));
@@ -162,14 +161,6 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
             userDTO.setImportMessageMauSac("Tên màu sắc không được để trống tại vị trí: " + stt);
             userDTO.setError(true);
 
-        } else if (DataUltil.isNullObject(tenSize)) {
-            userDTO.setImportMessageSize("Tên size không được để trống tại vị trí: " + stt);
-            userDTO.setError(true);
-
-        } else if (DataUltil.isNullObject(soLuongSize)) {
-            userDTO.setImportMessageSoLuongSize("Số lượng size không được để trống tại vị trí: " + stt);
-            userDTO.setError(true);
-
         } else if (DataUltil.isNullObject(anhChinh)) {
             userDTO.setImportMessageAnhChinh("ảnh chính không được để trống vị trí: " + stt);
             userDTO.setError(true);
@@ -195,6 +186,8 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
             VatLieu vatLieu = vatLieuReponsitory.findByTenVatLieuExcel(TenVatLieu);
             String[] soLuongSizeArray = soLuongSize.split(",");
             List<String> listSoLuongSize = new ArrayList<>();
+            //     String[] soLuongMauArray = soLuongMauSac.split(",");
+            //       List<String> listSoLuongMau = new ArrayList<>();
             Loai loai = loaiReponsitory.findByTens(tenLoai);
             ThuongHieu thuongHieu = thuongHieuReponsitory.findByTen(tenThuongHieu);
             String[] mauSacArray = tenMauSac.split(",");
@@ -203,12 +196,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
                 String trimmedMauSac = mauSac.trim(); // Loại bỏ khoảng trắng trước và sau phần tử
                 listTenMauSac.add(trimmedMauSac);
             }
-            String[] sizeArray = tenSize.split(",");
-            List<String> listTenSize = new ArrayList<>();
-            for (String size : sizeArray) {
-                String trimmedSize = size.trim(); // Loại bỏ khoảng trắng trước và sau phần tử
-                listTenSize.add(trimmedSize);
-            }
+
 
             if (DataUltil.isNullObject(vatLieu)) {
                 userDTO.setImportMessageVatLieu("Vật liệu không tồn tại vị trí: " + stt);
@@ -242,11 +230,14 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
                     String trimmedSize = size.trim(); // Loại bỏ khoảng trắng trước và sau phần tử
                     listSoLuongSize.add(trimmedSize);
                 }
-                userDTO.setSoLuongSize(listSoLuongSize);
-                userDTO.setImportMessageSoLuongSize("SUCCESS");
+
+//                for (String mau : soLuongMauArray) {
+//                    String trimmedMauSac = mau.trim(); // Loại bỏ khoảng trắng trước và sau phần tử
+//                    listSoLuongMau.add(trimmedMauSac);
+//                }
                 List<String> listAnhMauSac = new ArrayList<>(Arrays.asList(anhMau1, anhMau2, anhMau3));
+                listAnhMauSac.removeIf(anhMau -> anhMau == null);
                 List<String> imgMauSacList = azureImgProduct(listAnhMauSac);
-                userDTO.setImgMauSac(imgMauSacList);
                 try {
                     String linkAnh = getImageToAzureUtil.uploadImageToAzure(anhChinh);
                     userDTO.setAnhChinh(linkAnh);
@@ -280,28 +271,50 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
                     // Xử lý khi không tìm thấy idMauSac hợp lệ
                     userDTO.setImportMessageMauSac("Không tìm thấy màu sắc hợp lệ tại vị trí: " + stt);
                     userDTO.setError(true);
+                } else if (idMauSac.size() < imgMauSacList.size()) {
+                    userDTO.setImportMessageMauSac("ảnh của màu sắc không tương ứng với màu sắc tại vị trí: " + stt);
+                    userDTO.setError(true);
+                } else if (idMauSac.size() < imgMauSacList.size()) {
+                    userDTO.setImportMessageSoLuongMau("số lượng của màu sắc không tương ứng với màu sắc tại vị trí: " + stt);
+                    userDTO.setError(true);
                 } else {
                     userDTO.setIdMauSac(idMauSac);
                     userDTO.setTenMau(listTenMauSac);
+                    userDTO.setImgMauSac(imgMauSacList);
+                    userDTO.setSoLuongMauSac(listSoLuongSize);
+                    userDTO.setImportMessageSoLuongMau("SUCCESS");
                     userDTO.setImportMessageMauSac("SUCCESS");
                     userDTO.setError(false);
                 }
-                idSizes = listTenSize.stream()
-                        .map(tenSizes -> {
-                            Size size = adSizeReponsitory.findByTenSizeExcel(tenSizes);
-                            return size != null ? size.getId().toString() : null;
-                        })
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList());
-                if (idSizes.isEmpty()) {
-                    userDTO.setImportMessageSize("Không tìm thấy màu sắc hợp lệ tại vị trí: " + stt);
-                    userDTO.setError(true);
-                } else {
-                    userDTO.setIdSize(idSizes);
-                    userDTO.setTenSize(listTenSize);
-                    userDTO.setImportMessageSize("SUCCESS");
-                    userDTO.setError(false);
+
+                if (!DataUltil.isNullObject(tenSize)) {
+                    String[] sizeArray = tenSize.split(",");
+                    List<String> listTenSize = new ArrayList<>();
+                    for (String size : sizeArray) {
+                        String trimmedSize = size.trim(); // Loại bỏ khoảng trắng trước và sau phần tử
+                        listTenSize.add(trimmedSize);
+                    }
+                    idSizes = listTenSize.stream()
+                            .map(tenSizes -> {
+                                Size size = adSizeReponsitory.findByTenSizeExcel(tenSizes);
+                                return size != null ? size.getId().toString() : null;
+                            })
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList());
+                    if (idSizes.isEmpty()) {
+                        userDTO.setImportMessageSize("Không tìm thấy size hợp lệ tại vị trí: " + stt);
+                        userDTO.setError(true);
+                    } else {
+                        userDTO.setSoLuongSize(listSoLuongSize);
+                        userDTO.setImportMessageSoLuongSize("SUCCESS");
+                        userDTO.setIdSize(idSizes);
+                        userDTO.setTenSize(listTenSize);
+                        userDTO.setImportMessageSize("SUCCESS");
+                        userDTO.setError(false);
+                    }
                 }
+
+
             }
 
         }
@@ -314,15 +327,16 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
 
         try {
             for (AdminExcelAddSanPhamResponse o : adminExcelAddSanPhamBO.getResponseList()) {
-                if (o.getTenSanPham() == null || o.getGiaBan() == null || o.getGiaNhap() == null || o.getAnhChinh() == null
-                        || o.getSoLuong() == null || o.getTenSize() == null || o.getTenMau() == null || o.getTenLoai() == null
-                        || o.getTenThuongHieu() == null || o.getSoLuongSize() == null || o.getQuaiDeo() == null || o.getDemLot() == null
-                        || o.getIdLoai() == null || o.getIdSize() == null || o.getIdMauSac() == null || o.getIdThuongHieu() == null
+                if (o.getTenSanPham() == null || o.getGiaBan() == null || o.getGiaNhap() == null
+                        || o.getSoLuong() == null || o.getTenMau() == null || o.getTenLoai() == null
+                        || o.getTenThuongHieu() == null || o.getQuaiDeo() == null || o.getDemLot() == null
+                        || o.getIdLoai() == null || o.getIdThuongHieu() == null
                         || o.getIdTrongLuong() == null || o.getIdVatLieu() == null) {
                     return null;
                 }
             }
-            if (adminExcelAddSanPhamBO.getTotalError() != null && Integer.valueOf(adminExcelAddSanPhamBO.getTotalError().toString()) != 0) return null;
+            if (adminExcelAddSanPhamBO.getTotalError() != null && Integer.valueOf(adminExcelAddSanPhamBO.getTotalError().toString()) != 0)
+                return null;
             List<SanPhamChiTiet> saveSanPhamChiTiet = this.saveAll(adminExcelAddSanPhamBO);
             this.mutitheard(saveSanPhamChiTiet, adminExcelAddSanPhamBO);
         } catch (Exception e) {
@@ -394,29 +408,54 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
 
     @Override
     public void mutitheard(List<SanPhamChiTiet> saveSanPhamChiTiet, AdminExcelAddSanPhamBO adminExcelAddSanPhamBO) {
+        ExecutorService executor = Executors.newFixedThreadPool(3);
 
-        // Tạo các luồng cho các công việc cần thực hiện đồng thời
-        Thread mauSacThread = new Thread(() -> this.saveAllMauSacChiTiet(adminExcelAddSanPhamBO, saveSanPhamChiTiet));
-        Thread sizeThread = new Thread(() -> this.saveAllSizeChiTiet(adminExcelAddSanPhamBO, saveSanPhamChiTiet));
-        Thread imageThread = new Thread(() -> this.saveAllImage(adminExcelAddSanPhamBO, saveSanPhamChiTiet));
+        Future<List<SizeChiTiet>> sizeFuture = executor.submit(() -> {
+            List<SizeChiTiet> result = new ArrayList<>();
+            for (AdminExcelAddSanPhamResponse o : adminExcelAddSanPhamBO.getResponseList()) {
+                if (o.getIdSize() != null && !o.getIdSize().isEmpty()) {
+                    result.addAll(saveAllSizeChiTiet(adminExcelAddSanPhamBO, saveSanPhamChiTiet));
+                    break;
+                } else {
+                    result.addAll(Collections.emptyList());
+                    break;
+                }
+            }
+            return result;
+        });
 
-        // Bắt đầu chạy các luồng
-        mauSacThread.start();
-        sizeThread.start();
-        imageThread.start();
+
+        Future<Void> mauSacFuture = executor.submit(() -> {
+            try {
+                List<SizeChiTiet> sizes = sizeFuture.get();
+                saveAllMauSacChiTiet(sizes, adminExcelAddSanPhamBO, saveSanPhamChiTiet);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        });
+
+        Future<Void> imageFuture = executor.submit(() -> {
+            try {
+                saveAllImage(adminExcelAddSanPhamBO, saveSanPhamChiTiet);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        });
 
         try {
-            // Đợi cho tất cả các luồng hoàn thành
-            mauSacThread.join();
-            sizeThread.join();
-            imageThread.join();
-        } catch (InterruptedException e) {
+            mauSacFuture.get();
+            imageFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+
+        executor.shutdown();
     }
 
     @Override
-    public List<MauSacChiTiet> saveAllMauSacChiTiet(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets) {
+    public List<MauSacChiTiet> saveAllMauSacChiTiet(List<SizeChiTiet> sizes, AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets) {
         List<MauSacChiTiet> mauSacChiTiets = new ArrayList<>();
 
         adminExcelAddSanPhamBO.getResponseList().forEach(request -> {
@@ -425,46 +464,59 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
 
             List<String> idMauSac = request.getIdMauSac();
             List<String> imgMauSac = request.getImgMauSac();
+            List<String> soLuong = request.getSoLuongMauSac();
 
             for (int i = 0; i < idMauSac.size(); i++) {
                 String mauSac = idMauSac.get(i);
 
                 List<MauSacChiTiet> mauSacChiTietList = mauSacChiTietReponsitory.findBySanPhamChiTietIdAndMauSacId(sanPhamChiTiet.getId(), Integer.valueOf(mauSac));
+                List<SizeChiTiet> applicableSizes = sizes.isEmpty() ? Collections.singletonList(null) : sizes;
+
 
                 if (mauSacChiTietList.isEmpty()) {
                     // Thiết lập thông tin màu sắc chi tiết mới và thêm vào danh sách
-                    MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
-                    mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
-                    mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                    mauSacChiTiet.setTrangThai(1);
-
-                    // Kiểm tra xem có ảnh tương ứng không
-                    if (i < imgMauSac.size()) {
-                        mauSacChiTiet.setAnh(imgMauSac.get(i));
+                    for (SizeChiTiet sizeChiTiet : applicableSizes) {
+                        if (sizeChiTiet.getSanPhamChiTiet().getId() == sanPhamChiTiet.getId()) {
+                            MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
+                            mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
+                            mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                            mauSacChiTiet.setTrangThai(1);
+                            mauSacChiTiet.setSizeChiTiet(sizeChiTiet);
+                            // Kiểm tra xem có ảnh tương ứng không
+                            if (i < imgMauSac.size()) {
+                                mauSacChiTiet.setAnh(imgMauSac.get(i));
+                            }
+                            if (i < soLuong.size()) {
+                                mauSacChiTiet.setSoLuong(Integer.valueOf(soLuong.get(i)));
+                            }
+                            mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                            mauSacChiTiets.add(mauSacChiTiet);
+                        }
                     }
-                    mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-                    mauSacChiTiets.add(mauSacChiTiet);
                 } else {
-                    // Xóa các phần tử cũ khỏi danh sách mauSacChiTiets
-                    mauSacChiTiets.removeAll(mauSacChiTietList);
 
-                    // Cập nhật thông tin màu sắc chi tiết cho danh sách đã tìm thấy
-                    mauSacChiTietList.stream().map(mauSacChiTiet -> {
+                    for (MauSacChiTiet mauSacChiTiet : mauSacChiTietList) {
                         mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
                         mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
                         mauSacChiTiet.setTrangThai(1);
-                        //     mauSacChiTiet.setAnh(request.getImgMauSac().get(Integer.parseInt(mauSac)));
-                        mauSacChiTiet.setNgayTao(mauSacChiTiet.getNgayTao());
-                        mauSacChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
-                        //       mauSacChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
-                        return mauSacChiTiet;
-                    }).forEach(mauSacChiTiets::add);
+                        // Kiểm tra xem có ảnh tương ứng không
+                        if (i < imgMauSac.size()) {
+                            mauSacChiTiet.setAnh(imgMauSac.get(i));
+                        }
+                        if (i < soLuong.size()) {
+                            mauSacChiTiet.setSoLuong(Integer.valueOf(soLuong.get(i)));
+                        }
+                        mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                        mauSacChiTiets.add(mauSacChiTiet);
+                    }
+
                 }
             }
         });
 
         return this.mauSacChiTietReponsitory.saveAll(mauSacChiTiets);
     }
+
 
     @Override
     public List<SizeChiTiet> saveAllSizeChiTiet(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets) {
@@ -474,10 +526,10 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
             int index = adminExcelAddSanPhamBO.getResponseList().indexOf(request);
             SanPhamChiTiet sanPhamChiTiet = savedSanPhamChiTiets.get(index);
 
-            List<String> soLuongList = request.getSoLuongSize();
-            for (int sizeIndex = 0; sizeIndex < soLuongList.size(); sizeIndex++) {
-                String soLuong = soLuongList.get(sizeIndex);
-                int idsize = Integer.valueOf(request.getIdSize().get(sizeIndex));
+
+            List<String> sizeId = request.getIdSize();
+            for (int sizeIndex = 0; sizeIndex < sizeId.size(); sizeIndex++) {
+                int idsize = Integer.valueOf(sizeId.get(sizeIndex));
                 SanPhamChiTiet existingChiTiet = chiTietSanPhamReponsitory.findBySanPhamTen(request.getTenSanPham());
                 List<SizeChiTiet> sizeChiTietList = sizeChiTietReponsitory.findBySanPhamChiTietIdAndSizeId(existingChiTiet.getId(), Integer.valueOf(request.getIdSize().get(sizeIndex)));
 
@@ -487,7 +539,6 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
                         sizeChiTiet.setSize(Size.builder().id(idsize).build());
                         sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
                         sizeChiTiet.setTrangThai(1);
-                        sizeChiTiet.setSoLuong(Integer.valueOf(soLuong));
                         sizeChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
 
                         sizeChiTiets.add(sizeChiTiet);
@@ -498,7 +549,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
                     sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(request.getIdSize().get(sizeIndex))).build());
                     sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
                     sizeChiTiet.setTrangThai(1);
-                    sizeChiTiet.setSoLuong(Integer.valueOf(soLuong));
+                    //       sizeChiTiet.setSoLuong(Integer.valueOf(soLuong));
                     sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
 
                     sizeChiTiets.add(sizeChiTiet);

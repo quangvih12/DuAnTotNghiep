@@ -5,6 +5,7 @@ import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
 import com.example.demo.core.Admin.repository.AdImageReponsitory;
+import com.example.demo.core.Admin.repository.AdMauSacChiTietReponsitory;
 import com.example.demo.core.Admin.repository.AdSizeChiTietReponsitory;
 import com.example.demo.core.Admin.service.AdSanPhamService.AdUpdateSanPhamService;
 import com.example.demo.entity.*;
@@ -21,9 +22,12 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -47,12 +51,15 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
     @Autowired
     ImageToAzureUtil getImageToAzureUtil;
 
+    @Autowired
+    private AdMauSacChiTietReponsitory adMauSacChiTietReponsitory;
+
 
     @Override
-    public AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
+    public AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id) throws URISyntaxException, StorageException, InvalidKeyException, IOException, ExecutionException, InterruptedException {
         // Lấy sản phẩm chi tiết từ kho dự trữ
         Optional<SanPhamChiTiet> optionalSanPhamChiTiet = chiTietSanPhamReponsitory.findById(id);
-
+        //  System.out.println( optionalSanPhamChiTiet.get().getTrangThai());
         if (optionalSanPhamChiTiet.isPresent()) {
             SanPhamChiTiet sanPhamChiTiet = optionalSanPhamChiTiet.get();
 
@@ -67,6 +74,7 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
             sanPhamChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(dto.getVatLieu())).build());
             sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(dto.getTrongLuong()).build());
 
+
             // Lưu sản phẩm chi tiết đã cập nhật
             SanPhamChiTiet save = chiTietSanPhamReponsitory.save(sanPhamChiTiet);
             this.mutitheard(save, dto);
@@ -77,51 +85,49 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
     }
 
     @Override
-    public void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request) {
+    public void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request) throws ExecutionException, InterruptedException {
 
-        // Tạo các luồng cho các công việc cần thực hiện đồng thời
-        Thread mauSacThread = new Thread(() -> {
-            try {
-                updateMauSacChiTiet(sanPhamChiTiet, request);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (StorageException e) {
-                e.printStackTrace();
-            } catch (InvalidKeyException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
+
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+
+        Future<List<SizeChiTiet>> sizeFuture = executor.submit(() -> {
+            if (request.getIdSize() != null && !request.getIdSize().isEmpty()) {
+                return updateSizeChiTiet(sanPhamChiTiet, request);
+            } else {
+                return Collections.emptyList();
             }
         });
-        Thread sizeThread = new Thread(() -> updateSizeChiTiet(sanPhamChiTiet, request));
-        Thread imageThread = new Thread(() -> {
+
+        List<SizeChiTiet> sizes = sizeFuture.get();
+        Future<Void> mauSacFuture = executor.submit(() -> {
+            try {
+
+                updateMauSacChiTiet(sizes, sanPhamChiTiet, request);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        });
+
+        Future<Void> imageFuture = executor.submit(() -> {
             try {
                 updateImage(sanPhamChiTiet, request);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (StorageException e) {
-                e.printStackTrace();
-            } catch (InvalidKeyException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
+            return null;
         });
 
-        // Bắt đầu chạy các luồng
-        mauSacThread.start();
-        sizeThread.start();
-        imageThread.start();
-
         try {
-            // Đợi cho tất cả các luồng hoàn thành
-            mauSacThread.join();
-            sizeThread.join();
-            imageThread.join();
-        } catch (InterruptedException e) {
+            mauSacFuture.get();
+            imageFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+
+        executor.shutdown();
     }
+
 
     @Override
     public List<Image> updateImage(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
@@ -163,72 +169,249 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
         return updatedImages;
     }
 
+
     @Override
     public List<SizeChiTiet> updateSizeChiTiet(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) {
-        List<String> idSize = dto.getIdSize();
-        List<String> soLuongSize = dto.getSoLuongSize();
-        List<SizeChiTiet> updatedSizeChiTietList = new ArrayList<>();
 
-        // Đảm bảo rằng số lượng idSize và soLuongSize là giống nhau
-        if (idSize.size() != soLuongSize.size()) {
-            throw new IllegalArgumentException("Số lượng idSize và soLuongSize không khớp");
+        // Lấy danh sách SizeChiTiet hiện tại của sản phẩm
+        List<SizeChiTiet> currentSizeChiTietList = sizeChiTietReponsitory.findSizeChiTietBySanPhamChiTiet(sanPhamChiTiet.getId());
+
+        // nếu id size == null thì set lại idSizeChiTiet trong mauSacChiTiet và delete nó đi
+        if (dto.getIdSize() == null || dto.getIdSize().isEmpty()) {
+            List<SizeChiTiet> sizeChiTiets = sizeChiTietReponsitory.findSizeChiTietBySanPhamChiTiet(sanPhamChiTiet.getId());
+            for (SizeChiTiet sizeChiTiet : sizeChiTiets) {
+                List<MauSacChiTiet> mauSacChiTiet = mauSacChiTietReponsitory.findMauSacChiTietBySizeChiTiet(sizeChiTiet.getId());
+                for (MauSacChiTiet mauSac : mauSacChiTiet) {
+                    mauSac.setSizeChiTiet(null);
+                    mauSacChiTietReponsitory.save(mauSac);
+                }
+
+                sizeChiTietReponsitory.deleteById(sizeChiTiet.getId());
+            }
+            return null;
         }
 
-        for (int i = 0; i < idSize.size(); i++) {
-            String sizeId = idSize.get(i);
-            String soLuongSizeValue = soLuongSize.get(i);
+        List<String> idSize = dto.getIdSize();
+        List<String> soLuongSize = dto.getSoLuongSize();
 
-            // Tìm kiếm SizeChiTiet dựa trên sanPhamChiTiet và idSize
-            SizeChiTiet sizeChiTiet = sizeChiTietReponsitory.findSizeChiTietBySanPhamChiTietAndSize(sanPhamChiTiet.getId(), Integer.valueOf(sizeId));
+        // Lấy danh sách idSize hiện có
+        List<Integer> currentSizeIds = currentSizeChiTietList.stream()
+                .map(sizeChiTiet -> sizeChiTiet.getSize().getId())
+                .collect(Collectors.toList());
+
+        // Xóa các SizeChiTiet không còn trong danh sách mới
+        List<SizeChiTiet> sizesToDelete = currentSizeChiTietList.stream()
+                .filter(sizeChiTiet -> !idSize.contains(String.valueOf(sizeChiTiet.getSize().getId())))
+                .collect(Collectors.toList());
+
+        for (SizeChiTiet sizeChiTiet : sizesToDelete) {
+            List<MauSacChiTiet> mauSacChiTiet = mauSacChiTietReponsitory.findMauSacChiTietBySizeChiTiet(sizeChiTiet.getId());
+            mauSacChiTietReponsitory.deleteAll(mauSacChiTiet);
+            sizeChiTietReponsitory.deleteById(sizeChiTiet.getId());
+        }
+
+        // Cập nhật hoặc tạo mới SizeChiTiet
+        List<SizeChiTiet> updatedSizeChiTietList = new ArrayList<>();
+
+        for (int i = 0; i < idSize.size(); i++) {
+            int sizeId = Integer.parseInt(idSize.get(i));
+            //    int soLuong = Integer.parseInt(soLuongSize.get(i));
+            SizeChiTiet sizeChiTiet = currentSizeChiTietList.stream()
+                    .filter(s -> s.getSize().getId() == sizeId)
+                    .findFirst()
+                    .orElse(null);
 
             if (sizeChiTiet == null) {
-                // Nếu không tìm thấy, tạo mới SizeChiTiet
                 sizeChiTiet = new SizeChiTiet();
-                sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(sizeId)).build());
+                sizeChiTiet.setSize(Size.builder().id(sizeId).build());
                 sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
                 sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                currentSizeChiTietList.add(sizeChiTiet);
             }
 
-            // Cập nhật thông tin của SizeChiTiet
-            sizeChiTiet.setSoLuong(Integer.valueOf(soLuongSizeValue));
+            //    sizeChiTiet.setSoLuong(soLuong);
             sizeChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
 
-            // Thêm SizeChiTiet đã cập nhật vào danh sách
             updatedSizeChiTietList.add(sizeChiTiet);
         }
 
         // Lưu danh sách SizeChiTiet đã cập nhật
-        return sizeChiTietReponsitory.saveAll(updatedSizeChiTietList);
+        List<SizeChiTiet> newSize = sizeChiTietReponsitory.saveAll(updatedSizeChiTietList);
+
+        // Cập nhật MauSacChiTiet
+        List<MauSacChiTiet> mauSacChiTiet = mauSacChiTietReponsitory.findMauSacChiTietBySanPhamChiTietAndSize(sanPhamChiTiet.getId());
+
+        for (MauSacChiTiet mauSac : mauSacChiTiet) {
+            for (SizeChiTiet sizeChiTiet : newSize) {
+                mauSac.setSizeChiTiet(sizeChiTiet);
+            }
+        }
+        mauSacChiTietReponsitory.saveAll(mauSacChiTiet);
+
+        return newSize;
     }
 
     @Override
-    public List<MauSacChiTiet> updateMauSacChiTiet(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
-        List<String> idMau = dto.getIdMauSac();
-        List<String> anhMau = dto.getImgMauSac();
+    public List<MauSacChiTiet> updateMauSacChiTiet(List<SizeChiTiet> sizes, SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
+        List<String> idMauSac = new ArrayList<>();
+        List<String> idMauSac1 = new ArrayList<>();
+        List<String> idMauSac2 = dto.getIdMauSac();
+        List<String> imgMauSac = dto.getImgMauSac();
+        List<String> soLuong = dto.getSoLuongSize();
         List<MauSacChiTiet> updatedMauSacChiTietList = new ArrayList<>();
 
-        // Lặp qua danh sách imgMauSacValue
-        for (int i = 0; i < idMau.size(); i++) {
-            String mauSacId = idMau.get(i);
-            String imgMauSacValue = anhMau.get(i);
-
-            if (imgMauSacValue.matches("https://imagedatn.blob.core.windows.net/imagecontainer/D:" + ".*")) {
-
-            } else {
-                MauSacChiTiet mauSacChiTiet = mauSacChiTietReponsitory.findMauSacChiTietBySanPhamChiTietAndMauSac(sanPhamChiTiet.getId(), Integer.valueOf(mauSacId));
-
-                if (mauSacChiTiet == null) {
-                    mauSacChiTiet = new MauSacChiTiet();
-                    mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSacId)).build());
-                    mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                    mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+        // nếu size null thì thêm mới ngược lại xóa hết màu sắc và size của sản phẩm
+        if (sizes == null || sizes.isEmpty()) {
+            List<SizeChiTiet> sizeChiTiets = sizeChiTietReponsitory.findSizeChiTietBySanPhamChiTiet(sanPhamChiTiet.getId());
+            if (!sizeChiTiets.isEmpty()) {
+                for (SizeChiTiet sizeChiTiet : sizeChiTiets) {
+                    List<MauSacChiTiet> mauSacChiTiet = mauSacChiTietReponsitory.findMauSacChiTietBySizeChiTiet(sizeChiTiet.getId());
+                    mauSacChiTietReponsitory.deleteAll(mauSacChiTiet);
+                    sizeChiTietReponsitory.deleteById(sizeChiTiet.getId());
                 }
+                return null;
+            } else {
+                for (int i = 0; i < idMauSac2.size(); i++) {
+                    String mauSac = idMauSac2.get(i);
+                    List<MauSacChiTiet> mauSacChiTietList = adMauSacChiTietReponsitory.findBySanPhamChiTietIdAndMauSacId(sanPhamChiTiet.getId(), Integer.valueOf(mauSac));
+                    if (!mauSacChiTietList.isEmpty()) {
+                        for (MauSacChiTiet mauSacChiTiet : mauSacChiTietList) {
+                            mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
+                            mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                            mauSacChiTiet.setTrangThai(1);
 
-                String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
-                mauSacChiTiet.setAnh(linkAnh);
-                mauSacChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
+                            // Kiểm tra xem có ảnh tương ứng không
+                            if (!imgMauSac.get(i).matches("https://imagedatn.blob.core.windows.net/imagecontainer/D:" + ".*")) {
+                                String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSac.get(i));
+                                mauSacChiTiet.setAnh(linkAnh);
+                            } else {
+                                mauSacChiTiet.setAnh(imgMauSac.get(i));
+                            }
+                            if (i < soLuong.size()) {
+                                mauSacChiTiet.setSoLuong(Integer.valueOf(soLuong.get(i)));
+                            }
+                            mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                            updatedMauSacChiTietList.add(mauSacChiTiet);
+                        }
+                    } else {
+                        MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
+                        mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
+                        mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                        mauSacChiTiet.setTrangThai(1);
 
-                updatedMauSacChiTietList.add(mauSacChiTiet);
+                        // Kiểm tra xem có ảnh tương ứng không
+                        String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSac.get(i));
+                        mauSacChiTiet.setAnh(linkAnh);
+                        mauSacChiTiet.setSoLuong(Integer.valueOf(soLuong.get(i)));
+                        mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                        updatedMauSacChiTietList.add(mauSacChiTiet);
+                    }
+                }
+                return mauSacChiTietReponsitory.saveAll(updatedMauSacChiTietList);
+            }
+        }
+
+
+        for (SizeChiTiet sizeChiTiet : sizes) {
+            List<MauSacChiTiet> mauSacChiTiet1 = mauSacChiTietReponsitory.findMauSacChiTietBySizeChiTiet(sizeChiTiet.getId());
+            for (MauSacChiTiet o : mauSacChiTiet1) {
+                idMauSac1.add(String.valueOf(o.getMauSac().getId()));
+            }
+        }
+
+        // loại bỏ những dữ liệu trùng nhau trong list idMauSac2
+        Set<Integer> uniqueIds = new HashSet<>();
+        List<Integer> uniqueIdMauSacChiTietList = new ArrayList<>();
+        for (String id : idMauSac1) {
+            if (uniqueIds.add(Integer.valueOf(id))) {
+                uniqueIdMauSacChiTietList.add(Integer.valueOf(id));
+            }
+        }
+        // check nếu list mauSacChiTiet nếu null mình tạo mới theo size vừa thêm mới
+        for (SizeChiTiet sizeChiTiet : sizes) {
+            List<MauSacChiTiet> mauSacChiTiet1 = mauSacChiTietReponsitory.findMauSacChiTietBySizeChiTiet(sizeChiTiet.getId());
+
+            for (int i = 0; i < uniqueIdMauSacChiTietList.size(); i++) {
+                Integer id_Mau = uniqueIdMauSacChiTietList.get(i);
+
+                if (mauSacChiTiet1.isEmpty()) {
+                    if (sizeChiTiet.getSanPhamChiTiet().getId() == sanPhamChiTiet.getId()) {
+                        MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
+                        mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(id_Mau)).build());
+                        mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                        mauSacChiTiet.setTrangThai(1);
+                        mauSacChiTiet.setSizeChiTiet(sizeChiTiet);
+
+                        // Kiểm tra xem có ảnh tương ứng không
+                        if (!imgMauSac.get(i).matches("https://imagedatn.blob.core.windows.net/imagecontainer/D:" + ".*")) {
+                            String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSac.get(i));
+                            mauSacChiTiet.setAnh(linkAnh);
+                        } else {
+                            mauSacChiTiet.setAnh(imgMauSac.get(i));
+                        }
+                        if (i < soLuong.size()) {
+                            mauSacChiTiet.setSoLuong(Integer.valueOf(soLuong.get(i)));
+                        }
+                        mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                        updatedMauSacChiTietList.add(mauSacChiTiet);
+                    }
+                }
+            }
+
+            for (MauSacChiTiet o : mauSacChiTiet1) {
+                idMauSac.add(String.valueOf(o.getId()));
+            }
+        }
+
+        for (int i = 0; i < idMauSac2.size(); i++) {
+            String id_Mau = idMauSac2.get(i);
+            List<SizeChiTiet> applicableSizes = sizes.isEmpty() ? Collections.singletonList(null) : sizes;
+            for (SizeChiTiet sizeChiTiet : applicableSizes) {
+                List<MauSacChiTiet> mauSacChiTiet1 = mauSacChiTietReponsitory.findMauSacChiTietBySanPhamChiTietAndMauSac(sanPhamChiTiet.getId(), Integer.valueOf(id_Mau));
+
+                if (mauSacChiTiet1.isEmpty()) {
+
+                    if (sizeChiTiet.getSanPhamChiTiet().getId() == sanPhamChiTiet.getId()) {
+                        MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
+                        mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(id_Mau)).build());
+                        mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                        mauSacChiTiet.setTrangThai(1);
+                        mauSacChiTiet.setSizeChiTiet(sizeChiTiet);
+                        // Kiểm tra xem có ảnh tương ứng không
+                        if (!imgMauSac.get(i).matches("https://imagedatn.blob.core.windows.net/imagecontainer/D:" + ".*")) {
+                            String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSac.get(i));
+                            mauSacChiTiet.setAnh(linkAnh);
+                        } else {
+                            mauSacChiTiet.setAnh(imgMauSac.get(i));
+                        }
+                        if (i < soLuong.size()) {
+                            mauSacChiTiet.setSoLuong(Integer.valueOf(soLuong.get(i)));
+                        }
+                        mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                        updatedMauSacChiTietList.add(mauSacChiTiet);
+                    }
+                }
+            }
+
+        }
+
+
+        // update lại màu sắc chi tiết theo id mau sắc
+        for (int i = 0; i < idMauSac.size(); i++) {
+            String mauSac = idMauSac.get(i);
+            //    System.out.println(idMauSac.size() + " - " + imgMauSac.size());
+            MauSacChiTiet mauSacChiTietList = adMauSacChiTietReponsitory.findById(Integer.valueOf(mauSac)).get();
+            if (mauSacChiTietList != null) {
+                mauSacChiTietList.setSanPhamChiTiet(sanPhamChiTiet);
+
+                if (!imgMauSac.get(i).matches("https://imagedatn.blob.core.windows.net/imagecontainer/D:" + ".*")) {
+                    String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSac.get(i));
+                    mauSacChiTietList.setAnh(linkAnh);
+                } else {
+                    mauSacChiTietList.setAnh(imgMauSac.get(i));
+                }
+                mauSacChiTietList.setSoLuong(Integer.valueOf(soLuong.get(i)));
+                updatedMauSacChiTietList.add(mauSacChiTietList);
             }
         }
         return mauSacChiTietReponsitory.saveAll(updatedMauSacChiTietList);
@@ -296,8 +479,8 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
     }
 
     @Override
-    public void deleteMauSac(Integer idSp, Integer idMau) {
-        MauSacChiTiet mauSac = mauSacChiTietReponsitory.findMSBySPAndMS(idSp, idMau);
+    public void deleteMauSac( Integer idMau) {
+        MauSacChiTiet mauSac = mauSacChiTietReponsitory.findById(idMau).get();
         mauSacChiTietReponsitory.delete(mauSac);
     }
 
