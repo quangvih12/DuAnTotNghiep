@@ -101,4 +101,13 @@ public interface AdminHoaDonChitietResponse {
     @Value("#{target.size}")
     String getSize();
 
+    @Value("#{target.tenSize}")
+    String getTenSize();
+
+    @Value("#{target.tenMS}")
+    String getTenMS();
+
+    @Value("#{target.anh}")
+    String getAnh();
+
 }

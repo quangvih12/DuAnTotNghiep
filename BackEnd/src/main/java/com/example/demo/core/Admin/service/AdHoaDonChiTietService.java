@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AdHoaDonChiTietService {
 
-    List<HoaDonChiTiet> findHDCTByIdHoaDon(Integer idHD);
+    List<AdminHoaDonChitietResponse> findHDCTByIdHoaDon(Integer idHD);
 
     List<AdminHoaDonChitietResponse> findHDCTByTrangThai(Integer trangThai);
 

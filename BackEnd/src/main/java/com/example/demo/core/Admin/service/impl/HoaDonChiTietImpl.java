@@ -16,9 +16,9 @@ public class HoaDonChiTietImpl implements AdHoaDonChiTietService {
     private AdHoaDonChiTietReponsitory repo;
 
     @Override
-    public List<HoaDonChiTiet> findHDCTByIdHoaDon(Integer idHD) {
+    public List<AdminHoaDonChitietResponse> findHDCTByIdHoaDon(Integer idHD) {
         Sort sort = Sort.by(Sort.Direction.DESC, "ngayTao");
-        return repo.findByIdHoaDon(idHD, sort);
+        return repo.findHDCTByIDHD(idHD);
     }
 
     @Override
