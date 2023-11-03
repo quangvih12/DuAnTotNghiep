@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @CrossOrigin("*")
 @RestController
@@ -92,9 +93,9 @@ public class SanPhamChiTietApi {
         updateSanPhamServiceIpml.deleteSize(idSP, idSize);
     }
 
-    @DeleteMapping("/deleteMauSac")
-    public void deleteMauSac(@RequestParam Integer idSP, @RequestParam Integer idMau) {
-        updateSanPhamServiceIpml.deleteMauSac(idSP, idMau);
+    @DeleteMapping("/deleteMauSac/{idMau}")
+    public void deleteMauSac(@PathVariable Integer idMau) {
+        updateSanPhamServiceIpml.deleteMauSac(idMau);
     }
 
     @DeleteMapping("/deleteImg")
@@ -121,7 +122,7 @@ public class SanPhamChiTietApi {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody AdminSanPhamChiTietRequest sanPhamChiTietRequest, @PathVariable Integer id
-            , BindingResult result) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
+            , BindingResult result) throws IOException, StorageException, InvalidKeyException, URISyntaxException, ExecutionException, InterruptedException {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return ResponseEntity.ok(DataUltil.setData("error", list));
