@@ -42,12 +42,24 @@ public class HoaDonApi {
     }
 
     @GetMapping("/search-date")
-    public ResponseEntity<?> getHoaDonHuy(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,@RequestParam  String  comboBoxValue) throws ParseException {
+    public ResponseEntity<?> getHoaDonHuy(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate, @RequestParam String comboBoxValue) throws ParseException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-        LocalDateTime date =  LocalDateTime.parse(startDate, formatter);
+        LocalDateTime date = LocalDateTime.parse(startDate, formatter);
         LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
 //        return null;
-        return ResponseEntity.ok(adminTatCaHoaDonService.searchDate(date, date2,comboBoxValue));
+
+        return ResponseEntity.ok(adminTatCaHoaDonService.searchDate(date, date2, comboBoxValue));
+    }
+
+    @GetMapping("/search-date-by-trang-thai")
+    public ResponseEntity<?> getHDByTrangThai(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,
+                                              @RequestParam String comboBoxValue, @RequestParam("trangThai") Integer trangThai) throws ParseException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime date = LocalDateTime.parse(startDate, formatter);
+        LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
+//        return null;
+
+        return ResponseEntity.ok(adminTatCaHoaDonService.searchDateByTrangThai(date, date2, comboBoxValue,trangThai));
     }
 
     @GetMapping("/detail/{id}")
@@ -92,6 +104,7 @@ public class HoaDonApi {
 
     @PutMapping("/huyXacNhan/{id}")
     public ResponseEntity<?> huyHoaDon(@PathVariable Integer id, @RequestParam("lyDo") String lyDo) {
+        System.out.println("haha");
         return ResponseEntity.ok(adHoaDonChoXacNhanService.huyHoaDonChoXacNhan(id, lyDo));
     }
 
