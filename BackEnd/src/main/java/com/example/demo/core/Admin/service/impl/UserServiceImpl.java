@@ -47,10 +47,22 @@ public class UserServiceImpl implements AdUserService {
     @Override
     public AdminUserResponse add(AdminUserRequest request) {
         User user = request.dtoToEntity(new User());
-        User newUser = userRepository.save(user);
-        newUser.setMa("US" + newUser.getId());
-        User u = userRepository.save(newUser);
-        return userRepository.findUserById(u.getId());
+        if (request.getDiaChi() == null) {
+            User newUser = userRepository.save(user);
+            newUser.setMa("US" + newUser.getId());
+            User u = userRepository.save(newUser);
+            return userRepository.findUserById(u.getId());
+        } else {
+            User newUser = userRepository.save(user);
+            DiaChi diaChi = new DiaChi();
+            diaChi.setUser(newUser);
+            diaChi.setNgayTao(DatetimeUtil.getCurrentDate());
+            diaChi.setDiaChi(request.getDiaChi());
+            adDiaChiReponsitory.save(diaChi);
+            newUser.setMa("US" + newUser.getId());
+            User u = userRepository.save(newUser);
+            return userRepository.findUserById(u.getId());
+        }
     }
 
     @Override
@@ -70,15 +82,19 @@ public class UserServiceImpl implements AdUserService {
         if (u != null) {
             u.setEmail(request.getEmail());
             u.setNgaySua(DatetimeUtil.getCurrentDate());
-            u.setTrangThai(request.getTrangThai());
             u.setTen(request.getTen());
-            u.setUserName(request.getUserName());
-            u.setPassword(request.getPassword());
             u.setNgaySinh(request.getNgaySinh());
             u.setSdt(request.getSdt());
-            u.setRole(request.getRole());
-            User newUser = userRepository.save(u);
-            return userRepository.findUserById(newUser.getId());
+            u.setGioiTinh(request.getGioiTinh());
+            u.setImage(request.getImage());
+            String newDiaChi = request.getDiaChi();
+            if (newDiaChi != null) {
+                // Cập nhật địa chỉ hiện tại của người dùng với địa chỉ mới
+                u.getDiaChiList().forEach(diaChi -> diaChi.setDiaChi(newDiaChi));
+            }
+            // Lưu thông tin người dùng và trả về thông tin đã được cập nhật
+            User updatedUser = userRepository.save(u);
+            return userRepository.findUserById(updatedUser.getId());
         }
         return null;
     }
