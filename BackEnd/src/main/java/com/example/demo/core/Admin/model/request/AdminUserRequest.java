@@ -36,6 +36,8 @@ public class AdminUserRequest implements DtoToEntity<User> {
 
     private Integer gioiTinh;
 
+    private String diaChi;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -51,6 +53,7 @@ public class AdminUserRequest implements DtoToEntity<User> {
     public User dtoToEntity(User user) {
 
         user.setTen(this.getTen());
+        user.setUserName(this.getUserName());
         user.setTrangThai(this.getTrangThai());
         user.setNgayTao(DatetimeUtil.getCurrentDate());
         user.setPassword(passwordEncoder.encode(this.getPassword()));
@@ -60,7 +63,7 @@ public class AdminUserRequest implements DtoToEntity<User> {
         user.setSdt(this.getSdt());
         user.setGioiTinh(this.getGioiTinh());
         user.setRole(this.getRole());
-     //   user.setChucVu(ChucVu.builder().id(this.getChucVu()).build());
+        //   user.setChucVu(ChucVu.builder().id(this.getChucVu()).build());
         return user;
     }
 }
