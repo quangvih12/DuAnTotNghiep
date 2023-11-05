@@ -467,12 +467,12 @@ INSERT INTO `mau_sac_ctsp` VALUES (1,'https://royalhelmet.com.vn/ckfinder/userfi
 (4,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/0IAa3e_MG_0585.jpg','Trắng bóng','2023-05-05','2023-04-13',1,3,1,3, null),
 (5,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/ahK7SV_MG_0593.jpg','Đen bóng','2023-05-05','2023-04-13',1,2,1,3, null),
 (6,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/FofRWKroyal-m139-v1-5.jpg','V1-Đen','2023-05-05','2023-04-13',1,2,2,4, 11),
-(7,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/5JoMl9royal-m139-v2-2.jpg','V2-Đen','2023-05-05','2023-04-13',1,2,2,4, 11),
-(8,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/5JoMl9royal-m139-v2-2.jpg','V2-Đen','2023-05-05','2023-04-13',1,3,5,4, 12),
+(7,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/5JoMl9royal-m139-v2-2.jpg','V2-Đen','2023-05-05','2023-04-13',1,2,2,4, 12),
+(8,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/5JoMl9royal-m139-v2-2.jpg','V2-Đen','2023-05-05','2023-04-13',1,3,5,4, 11),
 (9,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,3,5,4, 12),
 (10,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,1,1,5, 13),
-(11,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,1,1,5, 13),
-(12,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,4,4,5, 14),
+(11,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,1,1,5, 14),
+(12,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,4,4,5, 13),
 (13,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,4,4,5, 14);
 
 /*!40000 ALTER TABLE `mau_sac_ctsp` ENABLE KEYS */;

@@ -90,24 +90,24 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
 
         ExecutorService executor = Executors.newFixedThreadPool(3);
 
-        Future<List<SizeChiTiet>> sizeFuture = executor.submit(() -> {
-            if (request.getIdSize() != null && !request.getIdSize().isEmpty()) {
-                return updateSizeChiTiet(sanPhamChiTiet, request);
-            } else {
-                return Collections.emptyList();
-            }
-        });
-
-        List<SizeChiTiet> sizes = sizeFuture.get();
-        Future<Void> mauSacFuture = executor.submit(() -> {
-            try {
-
-                updateMauSacChiTiet(sizes, sanPhamChiTiet, request);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            return null;
-        });
+//        Future<List<SizeChiTiet>> sizeFuture = executor.submit(() -> {
+//            if (request.getIdSize() != null && !request.getIdSize().isEmpty()) {
+//                return updateSizeChiTiet(sanPhamChiTiet, request);
+//            } else {
+//                return Collections.emptyList();
+//            }
+//        });
+//
+//        List<SizeChiTiet> sizes = sizeFuture.get();
+//        Future<Void> mauSacFuture = executor.submit(() -> {
+//            try {
+//
+//                updateMauSacChiTiet(sizes, sanPhamChiTiet, request);
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//            return null;
+//        });
 
         Future<Void> imageFuture = executor.submit(() -> {
             try {
@@ -119,7 +119,7 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
         });
 
         try {
-            mauSacFuture.get();
+//            mauSacFuture.get();
             imageFuture.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
