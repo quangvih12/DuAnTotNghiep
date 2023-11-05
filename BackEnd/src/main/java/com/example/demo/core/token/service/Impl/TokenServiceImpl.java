@@ -15,4 +15,12 @@ public class TokenServiceImpl implements TokenService {
         String test = jwtTokenProvider.generateTokenByUser(username);
         return test;
     }
+
+    @Override
+    public String getUserNameByToken(String token){
+        String userName = jwtTokenProvider.getUsername(token);
+        return userName;
+    }
+
+
 }

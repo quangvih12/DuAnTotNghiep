@@ -41,10 +41,10 @@ public class GioHangChiTiet {
     private String ngayTao;
 
     @Column(name = "ten_size")
-    private String tenSize;
+    private Integer tenSize;
 
     @Column(name = "ten_mau_sac")
-    private String tenMauSac;
+    private Integer tenMauSac;
 
     @Column(name = "trang_thai")
     private Integer trangThai;
