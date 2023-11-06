@@ -66,6 +66,11 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
         return hoaDonReponsitory.getHoaDonByDate(startDate, endDate,comboBoxValue);
     }
 
+    @Override
+    public List<AdminHoaDonResponse> searchDateByTrangThai(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer trangThai) {
+        return hoaDonReponsitory.getHoaDonByDateByTrangThai(startDate, endDate,comboBoxValue,trangThai);
+    }
+
 
     public AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD) {
         HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();

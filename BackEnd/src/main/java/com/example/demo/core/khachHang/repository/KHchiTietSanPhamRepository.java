@@ -14,7 +14,7 @@ public interface KHchiTietSanPhamRepository extends ChiTietSanPhamReponsitory {
                                                              spct.so_luong_ton as soLuongTon,spct.trang_thai as trangThai,
                                                              sp.quai_deo as quaiDeo,sp.dem_lot as demLot,
                                                              sp.mo_ta as moTa,l.ten AS loai,sp.anh as anh,
-                                                             th.ten as thuongHieu, km.ten as tenKM,
+                                                             th.ten as thuongHieu, km.id as id, km.ten as tenKM,
                                                              km.thoi_gian_bat_dau as thoiGianBatDau, km.thoi_gian_ket_thuc as thoiGianKetThuc,
                                                              spct.gia_sau_giam as giaSauGiam, km.gia_tri_giam as giaTriGiam,
                                                              vl.ten as vatLieu,tl.value as trongLuong

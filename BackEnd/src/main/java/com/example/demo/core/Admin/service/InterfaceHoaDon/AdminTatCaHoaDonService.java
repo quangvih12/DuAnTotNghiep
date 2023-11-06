@@ -27,6 +27,8 @@ public interface AdminTatCaHoaDonService {
 
     List<AdminHoaDonResponse> searchDate(LocalDateTime startDate, LocalDateTime endDate, String  comboBoxValue);
 
+    List<AdminHoaDonResponse> searchDateByTrangThai(LocalDateTime startDate, LocalDateTime endDate, String  comboBoxValue,Integer trangThai);
+
     AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD);
 
 }
