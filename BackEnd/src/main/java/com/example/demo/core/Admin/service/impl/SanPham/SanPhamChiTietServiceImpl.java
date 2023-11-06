@@ -3,7 +3,9 @@ package com.example.demo.core.Admin.service.impl.SanPham;
 import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
 import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
 import com.example.demo.core.Admin.model.request.AdminSearchRequest;
+import com.example.demo.core.Admin.model.response.AdminMauSacChiTietResponse;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
+import com.example.demo.core.Admin.model.response.AdminSizeChiTietResponse;
 import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
 import com.example.demo.core.Admin.repository.AdImageReponsitory;
 import com.example.demo.core.Admin.repository.AdSizeChiTietReponsitory;
@@ -70,12 +72,12 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
     }
 
     @Override
-    public List<SizeChiTiet> getProductSize(Integer idProduct) {
-        return sizeChiTietReponsitory.findSizeChiTiet(idProduct);
+    public List<AdminSizeChiTietResponse> getProductSize(Integer idProduct) {
+        return    sizeChiTietReponsitory.findSizeChiTiet(idProduct);
     }
 
     @Override
-    public List<MauSacChiTiet> getProductMauSac(Integer idProduct) {
+    public List<AdminMauSacChiTietResponse> getProductMauSac(Integer idProduct) {
         return mauSacChiTietReponsitory.findMauSacChiTiet(idProduct);
     }
 
