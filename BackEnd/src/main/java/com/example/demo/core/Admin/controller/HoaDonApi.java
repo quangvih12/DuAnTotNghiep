@@ -104,7 +104,6 @@ public class HoaDonApi {
 
     @PutMapping("/huyXacNhan/{id}")
     public ResponseEntity<?> huyHoaDon(@PathVariable Integer id, @RequestParam("lyDo") String lyDo) {
-        System.out.println("haha");
         return ResponseEntity.ok(adHoaDonChoXacNhanService.huyHoaDonChoXacNhan(id, lyDo));
     }
 
