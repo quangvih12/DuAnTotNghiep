@@ -56,5 +56,5 @@ public class Size {
     @JsonIgnore
     @OneToMany(mappedBy = "size", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<SizeChiTiet> sizeChiTiets = new ArrayList<>();
+    private List<SanPhamChiTiet> sanPhamChiTietList = new ArrayList<>();
 }

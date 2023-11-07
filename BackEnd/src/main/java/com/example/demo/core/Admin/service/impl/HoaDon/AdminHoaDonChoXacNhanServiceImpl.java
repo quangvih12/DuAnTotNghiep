@@ -4,21 +4,16 @@ import com.example.demo.core.Admin.model.response.AdminHoaDonResponse;
 import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
 import com.example.demo.core.Admin.repository.AdHoaDonChiTietReponsitory;
 import com.example.demo.core.Admin.repository.AdHoaDonReponsitory;
-import com.example.demo.core.Admin.repository.AdMauSacChiTietReponsitory;
-import com.example.demo.core.Admin.repository.AdSizeChiTietReponsitory;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdHoaDonChoXacNhanService;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
-import com.example.demo.entity.MauSacChiTiet;
 import com.example.demo.entity.SanPhamChiTiet;
-import com.example.demo.entity.SizeChiTiet;
 import com.example.demo.infrastructure.status.HoaDonStatus;
 import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +26,6 @@ public class AdminHoaDonChoXacNhanServiceImpl implements AdHoaDonChoXacNhanServi
 
     @Autowired
     private AdHoaDonChiTietReponsitory hdctRepo;
-
-    @Autowired
-    private AdSizeChiTietReponsitory sizeRepo;
-
-    @Autowired
-    private AdMauSacChiTietReponsitory mauSacRepo;
 
     @Autowired
     private AdChiTietSanPhamReponsitory ctspRepo;
@@ -59,9 +48,9 @@ public class AdminHoaDonChoXacNhanServiceImpl implements AdHoaDonChoXacNhanServi
             HoaDon hd = hoaDonReponsitory.save(hoaDon);
             List<HoaDonChiTiet> lstHDCT = hdctRepo.findByIdHoaDon(idHD, sort);
             for (HoaDonChiTiet hdct : lstHDCT) {
-                MauSacChiTiet msct = mauSacRepo.findById(Integer.valueOf(hdct.getTenMauSac())).get();
-                msct.setSoLuong(msct.getSoLuong() + hdct.getSoLuong());
-                mauSacRepo.save(msct);
+//                MauSacChiTiet msct = mauSacRepo.findById(Integer.valueOf(hdct.getTenMauSac())).get();
+//                msct.setSoLuong(msct.getSoLuong() + hdct.getSoLuong());
+//                mauSacRepo.save(msct);
                 int idSP = hdct.getSanPhamChiTiet().getId();
                 int quantity = hdct.getSoLuong();
                 if (quantityMap.containsKey(idSP)) {

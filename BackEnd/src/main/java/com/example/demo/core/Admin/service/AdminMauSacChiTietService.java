@@ -1,9 +1,6 @@
 package com.example.demo.core.Admin.service;
 
-import com.example.demo.core.Admin.model.request.AdminMauSacChiTietRequest;
-import com.example.demo.core.Admin.model.request.AdminMauSacRequest;
 import com.example.demo.core.Admin.model.response.AdminMauSacChiTietResponse;
-import com.example.demo.entity.MauSacChiTiet;
 import com.microsoft.azure.storage.StorageException;
 
 import java.io.IOException;
@@ -12,9 +9,9 @@ import java.security.InvalidKeyException;
 
 public interface AdminMauSacChiTietService {
 
-    AdminMauSacChiTietResponse add(AdminMauSacChiTietRequest request) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
-
-    AdminMauSacChiTietResponse update(Integer id, AdminMauSacChiTietRequest request) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
+//    AdminMauSacChiTietResponse add(AdminMauSacChiTietRequest request) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
+//
+//    AdminMauSacChiTietResponse update(Integer id, AdminMauSacChiTietRequest request) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
 
      void delete(Integer id);
 

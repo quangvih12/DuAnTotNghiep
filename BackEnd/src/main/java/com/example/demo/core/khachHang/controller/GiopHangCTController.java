@@ -3,13 +3,8 @@ package com.example.demo.core.khachHang.controller;
 import com.example.demo.core.khachHang.model.request.GioHangCTRequest;
 import com.example.demo.core.khachHang.model.response.GioHangCTResponse;
 import com.example.demo.core.khachHang.repository.KHGioHangChiTietRepository;
-import com.example.demo.core.khachHang.repository.KHMauSacCTRepository;
-import com.example.demo.core.khachHang.repository.KHMauSacRepository;
-import com.example.demo.core.khachHang.repository.KHSizeCTRepository;
 import com.example.demo.core.khachHang.service.impl.KHGioHangServiceImpl;
 import com.example.demo.entity.MauSac;
-import com.example.demo.entity.MauSacChiTiet;
-import com.example.demo.entity.SizeChiTiet;
 import com.microsoft.azure.storage.StorageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,14 +28,8 @@ public class GiopHangCTController {
     @Autowired
     KHGioHangChiTietRepository khGHCTRespon;
 
-    @Autowired
-    KHMauSacCTRepository msctRepo;
 
-    @Autowired
-    KHSizeCTRepository sizectRepo;
 
-    @Autowired
-    KHMauSacRepository msRepo;
 
     @PostMapping("/addGiohang")
     public ResponseEntity<?> addGiohang(@RequestBody GioHangCTRequest ghctrequest, @RequestParam("token") String token
@@ -56,17 +45,7 @@ public class GiopHangCTController {
         return khGHCTRespon.getGHCTByID(idghct);
     }
 
-    @GetMapping("/msct/{idmsct}")
-    public MauSacChiTiet getMsctByID(@PathVariable("idmsct") Integer idmsct){
 
-        return msctRepo.findAllById(idmsct);
-    }
-
-    @GetMapping("/sizect/{idsizect}")
-    public SizeChiTiet getSizeById(@PathVariable("idsizect") Integer idsizect){
-
-        return sizectRepo.findAllById(idsizect);
-    }
 
     @GetMapping("/getListGioHang")
     public List<GioHangCTResponse> getList(){
@@ -101,25 +80,8 @@ public class GiopHangCTController {
         return new ResponseEntity<>("Xoá thành công", HttpStatus.OK);
     }
 
-    // dùng để lấy ảnh màu sắc chi tiết
-    @GetMapping("/msct")
-    public List<MauSacChiTiet> getListMSCT(){
-        List<MauSacChiTiet> listMSCT = msctRepo.findAll();
-        return  listMSCT;
-    }
 
-    // dùng để lấy tên màu sắc trong giỏ hàng
-    @GetMapping("/ms")
-    public List<MauSac> getListMS(){
-        List<MauSac> listMSCT = msRepo.findAll();
-        return  listMSCT;
-    }
 
-    @GetMapping("/sizect")
-    public List<SizeChiTiet> getListsizeCT(){
-        List<SizeChiTiet> listSizeCT = sizectRepo.findAll();
-        return  listSizeCT;
-    }
 
     @GetMapping("/countGHCT")
     public Integer countGHCTByUser(@RequestParam("userId") Integer userId){

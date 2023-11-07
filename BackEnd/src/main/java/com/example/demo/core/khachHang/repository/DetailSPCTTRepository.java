@@ -4,7 +4,6 @@ import com.example.demo.core.khachHang.model.response.DetailSanPhamResponse;
 import com.example.demo.core.khachHang.model.response.MauSacResponse;
 import com.example.demo.core.khachHang.model.response.SelectedSanPhamResponse;
 import com.example.demo.core.khachHang.model.response.SizeResponse;
-import com.example.demo.entity.MauSacChiTiet;
 import com.example.demo.entity.SanPhamChiTiet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,13 +29,6 @@ public interface DetailSPCTTRepository extends JpaRepository<SanPhamChiTiet, Int
     DetailSanPhamResponse getDetailCTSP(Integer idctsp);
 
 
-    @Query("select spct.id, msct.id, sp.ten, ms.ten, msct.moTa from SanPhamChiTiet  spct join SanPham  sp on spct.sanPham.id = sp.id " +
-            "join MauSacChiTiet msct on msct.sanPhamChiTiet.id = spct.id " +
-            "join MauSac  ms on ms.id = msct.mauSac.id where spct.id =:id " +
-            "group by spct.id, sp.ten, msct.id, msct.moTa")
-    List<MauSacChiTiet> findByMauSacCTSP(Integer id);
-
-
     @Query(value = """
              SELECT
                    SUM(IFNULL(msct.so_luong, 0) + IFNULL(sct.so_luong, 0)) AS so_luong_ton_tong
@@ -54,7 +46,7 @@ public interface DetailSPCTTRepository extends JpaRepository<SanPhamChiTiet, Int
                 WHERE id_ctsp =:idctsp
                 GROUP BY id_ctsp
             ) sct ON spct.id = sct.id_ctsp
-            WHERE spct.id =:idctsp      
+            WHERE spct.id =:idctsp
             """,nativeQuery = true)
     Integer getSLTonTongByIDCT(@Param("idctsp") Integer idctsp);
 
@@ -64,7 +56,7 @@ public interface DetailSPCTTRepository extends JpaRepository<SanPhamChiTiet, Int
           from san_pham_chi_tiet spct
          join mau_sac_ctsp msct on msct.id_ctsp = spct.id
          join mau_sac ms on ms.id = msct.id_mau_sac
-         join size_ctsp sizeCT on sizeCT.id = msct.id_size_ctsp   
+         join size_ctsp sizeCT on sizeCT.id = msct.id_size_ctsp
          join size s on s.id = sizeCT.id_size  where spct.id =:idctsp and msct.id_mau_sac =:idms
          group by sizeCT.id,  s.ten , msct.so_luong
          having msct.so_luong > 0
@@ -79,7 +71,7 @@ public interface DetailSPCTTRepository extends JpaRepository<SanPhamChiTiet, Int
         join san_pham sp on spct.id_san_pham = sp.id
         join mau_sac_ctsp msct on msct.id_ctsp = spct.id
         join mau_sac ms on ms.id = msct.id_mau_sac
-        join size_ctsp sizeCT on sizeCT.id = msct.id_size_ctsp     
+        join size_ctsp sizeCT on sizeCT.id = msct.id_size_ctsp
         join size s on s.id = sizeCT.id_size  where spct.id =:idctsp and msct.id_size_ctsp =:idsizect
         group by msct.id,  ms.ten , msct.mo_ta,msct.so_luong
         having msct.so_luong > 0;
@@ -96,11 +88,11 @@ public interface DetailSPCTTRepository extends JpaRepository<SanPhamChiTiet, Int
             join san_pham sp on spct.id_san_pham = sp.id
             join mau_sac_ctsp msct on msct.id_ctsp = spct.id
             join mau_sac ms on ms.id = msct.id_mau_sac
-            join size_ctsp sizeCT on sizeCT.id = msct.id_size_ctsp   
-            join size s on s.id = sizeCT.id_size  
+            join size_ctsp sizeCT on sizeCT.id = msct.id_size_ctsp
+            join size s on s.id = sizeCT.id_size
             where spct.id =:idctsp and  msct.id_size_ctsp =:idsizect and msct.id_mau_sac =:idms
             group by msct.id ,msct.so_luong, s.ten,sizeCT.id
-            having msct.so_luong > 0 
+            having msct.so_luong > 0
             """,nativeQuery = true)
     SelectedSanPhamResponse getSanPhamSelected(Integer idctsp, Integer idms, Integer idsizect);
 

@@ -56,5 +56,5 @@ public class VatLieu {
     @JsonIgnore
     @OneToMany(mappedBy = "vatLieu", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<SanPhamChiTiet> sanPhamChiTietList = new ArrayList<>();
+    private List<SanPham> sanPhamList = new ArrayList<>();
 }

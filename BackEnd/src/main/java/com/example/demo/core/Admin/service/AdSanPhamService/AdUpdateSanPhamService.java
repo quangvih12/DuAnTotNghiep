@@ -19,19 +19,11 @@ public interface AdUpdateSanPhamService {
 
     List<Image> updateImage(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
 
-    List<SizeChiTiet> updateSizeChiTiet(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto);
-
-    List<MauSacChiTiet> updateMauSacChiTiet(List<SizeChiTiet> sizes,SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
-
     SanPham updateSanPham(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
 
     SanPham saveSanPham(AdminSanPhamRequest request);
 
     SanPhamChiTiet delete(Integer id);
-
-    void deleteSize(Integer idSp, Integer idSize);
-
-    void deleteMauSac( Integer idMau);
 
     void deleteImg(Integer idSp, String img);
 }

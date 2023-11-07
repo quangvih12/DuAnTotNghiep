@@ -80,13 +80,13 @@ public class KHGioHangServiceImpl implements KHGiohangService {
 
             for (GioHangChiTiet gioHangChiTiet : list) {
 
-                if (gioHangChiTiet.getTenMauSac().equals(ghct.getTenMauSac()) && gioHangChiTiet.getTenSize().equals(ghct.getTenSize())) {
-                    gioHangChiTiet.setSoLuong(ghct.getSoLuong() + gioHangChiTiet.getSoLuong());
-                    gioHangChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
-                    gioHangCTRespon.save(gioHangChiTiet);
-                    createNewCartDetail = true;
-                    break;
-                }
+//                if (gioHangChiTiet.getTenMauSac().equals(ghct.getTenMauSac()) && gioHangChiTiet.getTenSize().equals(ghct.getTenSize())) {
+//                    gioHangChiTiet.setSoLuong(ghct.getSoLuong() + gioHangChiTiet.getSoLuong());
+//                    gioHangChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
+//                    gioHangCTRespon.save(gioHangChiTiet);
+//                    createNewCartDetail = true;
+//                    break;
+//                }
 //                } else if (!gioHangChiTiet.getTenMauSac().equals(ghct.getTenMauSac()) || !gioHangChiTiet.getTenSize().equals(ghct.getTenSize())) {
 //                    createNewCart(kh, sanPhamCT, ghct);
 //                    createNewCartDetail = true;
@@ -121,8 +121,8 @@ public class KHGioHangServiceImpl implements KHGiohangService {
 
         gioHangChiTiet.setMa("GHCT"+ randomNumber);
         gioHangChiTiet.setSoLuong(ghct.getSoLuong());
-        gioHangChiTiet.setTenSize(ghct.getTenSize());
-        gioHangChiTiet.setTenMauSac(ghct.getTenMauSac());
+//        gioHangChiTiet.setTenSize(ghct.getTenSize());
+//        gioHangChiTiet.setTenMauSac(ghct.getTenMauSac());
         gioHangChiTiet.setGioHang(gh);
         gioHangChiTiet.setSanPhamChiTiet(sanPhamCT);
         gioHangChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
@@ -207,8 +207,8 @@ public class KHGioHangServiceImpl implements KHGiohangService {
 
         if (ghct.isPresent()) {
             GioHangChiTiet _gioHangChiTiet = ghct.get();
-            _gioHangChiTiet.setTenMauSac(idMauSacCT);
-            _gioHangChiTiet.setTenSize(idSizeCT);
+//            _gioHangChiTiet.setTenMauSac(idMauSacCT);
+//            _gioHangChiTiet.setTenSize(idSizeCT);
 
             gioHangCTRespon.save(_gioHangChiTiet);
             HashMap<String, Object> map = DataUltil.setData("warning", gioHangCTRespon.save(_gioHangChiTiet));

@@ -24,10 +24,6 @@ public interface AdSanPhamChiTietService {
 
     List<Image> getProductImages();
 
-    List<AdminSizeChiTietResponse> getProductSize(Integer idProduct);
-
-    List<AdminMauSacChiTietResponse> getProductMauSac(Integer idProduct);
-
     AdminSanPhamChiTietResponse get(Integer id);
 
     Boolean findBySanPhamTen(String ten);
@@ -38,9 +34,6 @@ public interface AdSanPhamChiTietService {
 
     void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request);
 
-    List<MauSacChiTiet> saveMauSac( List<SizeChiTiet> sizes,List<String> idMauSac, List<String> imgMauSac,List<String> lstSoLuong, SanPhamChiTiet sanPhamChiTiet) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
-
-    List<SizeChiTiet> saveSize(List<String> idSize, SanPhamChiTiet sanPhamChiTiet, List<String> soLuongSize);
 
     List<Image> saveImage(SanPhamChiTiet sanPhamChiTiet, List<String> imgSanPham) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
 }

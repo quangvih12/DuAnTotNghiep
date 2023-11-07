@@ -1,11 +1,13 @@
 package com.example.demo.core.Admin.controller;
 
+import com.example.demo.core.Admin.service.AdThongKeService.AdThongKeLoiNhuanService;
 import com.example.demo.core.Admin.service.impl.ThongKe.AdminThongKeDoanhThuServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 
 @CrossOrigin("*")
@@ -15,10 +17,30 @@ public class ThongKeApi {
     @Autowired
     private AdminThongKeDoanhThuServiceImpl adminThongKeDoanhThuService;
 
+    @Autowired
+    private AdThongKeLoiNhuanService adThongKeLoiNhuanService;
+
     @GetMapping()
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(adminThongKeDoanhThuService.getAll());
     }
+
+    @GetMapping("/loi-nhuan")
+    public ResponseEntity<?> getAllLoiNhuan(@RequestParam(required = false) String year,@RequestParam(required = false) String startDate,@RequestParam(required = false) String endDate ) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+        LocalDateTime date = null;
+        LocalDateTime date2 = null;
+        if(startDate != null && !startDate.isEmpty()){
+            date = LocalDateTime.parse(startDate, formatter);
+        }
+        if(endDate != null && !endDate.isEmpty()){
+            date2 = LocalDateTime.parse(endDate, formatter);
+        }
+        return ResponseEntity.ok(adThongKeLoiNhuanService.getAll(year, date != null ? date.toString() : null, date2 != null ? date2.toString() : null));
+    }
+
+
 
     @GetMapping("/san-pham/{id}")
     public ResponseEntity<?> getAllBySanPham(@PathVariable Integer id, @RequestParam(required = false) String year) {
@@ -48,5 +70,7 @@ public class ThongKeApi {
 
         return ResponseEntity.ok(adminThongKeDoanhThuService.getAllByMonth(date, date2));
     }
+
+
 
 }

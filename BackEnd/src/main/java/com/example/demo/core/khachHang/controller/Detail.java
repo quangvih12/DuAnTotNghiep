@@ -4,11 +4,8 @@ import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.core.khachHang.model.response.DetailSanPhamResponse;
 import com.example.demo.core.khachHang.model.response.MauSacResponse;
 import com.example.demo.core.khachHang.repository.DetailSPCTTRepository;
-import com.example.demo.core.khachHang.repository.KHMauSacCTRepository;
-import com.example.demo.core.khachHang.repository.KHSizeCTRepository;
 import com.example.demo.core.khachHang.service.KHDetailService.DetailSizeService;
 import com.example.demo.core.khachHang.service.KHDetailService.ImageServie;
-import com.example.demo.core.Admin.service.impl.SizeServiceImpl;
 import com.example.demo.core.khachHang.service.KHDetailService.DetaiService;
 import com.example.demo.core.khachHang.service.KHDetailService.DetailMauSacService;
 import com.example.demo.entity.SanPhamChiTiet;
@@ -41,11 +38,11 @@ public class Detail {
     @Autowired
     DetailSPCTTRepository detailRepo;
 
-    @Autowired
-    KHSizeCTRepository sizeCTRepo;
-
-    @Autowired
-    KHMauSacCTRepository mausacCTRepo;
+//    @Autowired
+//    KHSizeCTRepository sizeCTRepo;
+//
+//    @Autowired
+//    KHMauSacCTRepository mausacCTRepo;
 
 
     @GetMapping("/{idctsp}")
@@ -60,25 +57,25 @@ public class Detail {
         return ResponseEntity.ok(sanPhamChiTiet);
     }
 
-    @GetMapping("/findByMauSac/{idctsp}")
-    public List<MauSacResponse> listMauSacCT(@PathVariable("idctsp") Integer idctsp){
-        List<MauSacResponse> lisst =  mausacCTRepo.listMsctByIdctsp(idctsp);
-        Set< Integer> set = new HashSet<>();
-        Iterator<MauSacResponse> iterator = lisst.listIterator();
-        while(iterator.hasNext()){
-            MauSacResponse ms = iterator.next();
-            Integer idMauSac = ms.getIdMS();
-            if(!set.add(idMauSac)){
-                iterator.remove();
-            }
-        }
-        return lisst;
-    };
-
-    @GetMapping("/findBySize/{idctsp}")
-    public ResponseEntity<?> findBySize(@PathVariable Integer idctsp){
-        return ResponseEntity.ok(sizeCTRepo.listSizectByIdctsp(idctsp));
-    }
+//    @GetMapping("/findByMauSac/{idctsp}")
+//    public List<MauSacResponse> listMauSacCT(@PathVariable("idctsp") Integer idctsp){
+//        List<MauSacResponse> lisst =  mausacCTRepo.listMsctByIdctsp(idctsp);
+//        Set< Integer> set = new HashSet<>();
+//        Iterator<MauSacResponse> iterator = lisst.listIterator();
+//        while(iterator.hasNext()){
+//            MauSacResponse ms = iterator.next();
+//            Integer idMauSac = ms.getIdMS();
+//            if(!set.add(idMauSac)){
+//                iterator.remove();
+//            }
+//        }
+//        return lisst;
+//    };
+//
+//    @GetMapping("/findBySize/{idctsp}")
+//    public ResponseEntity<?> findBySize(@PathVariable Integer idctsp){
+//        return ResponseEntity.ok(sizeCTRepo.listSizectByIdctsp(idctsp));
+//    }
 
     @GetMapping("/findByImage/{id}")
     public ResponseEntity<?> findByImage(@PathVariable Integer id){

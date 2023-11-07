@@ -79,7 +79,7 @@ public class AdminSanPhamChiTietRequest implements DtoToEntity<SanPhamChiTiet> {
     @Override
     public SanPhamChiTiet dtoToEntity(SanPhamChiTiet sanPhamChiTiet) {
         sanPhamChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-        sanPhamChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(this.getVatLieu())).build());
+      //  sanPhamChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(this.getVatLieu())).build());
         sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(this.getTrongLuong()).build());
         sanPhamChiTiet.setTrangThai(Integer.valueOf(this.getTrangThai()));
         sanPhamChiTiet.setSoLuongTon(Integer.valueOf(this.getSoLuongTon()));
