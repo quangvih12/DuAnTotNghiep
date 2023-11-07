@@ -1,6 +1,7 @@
 package com.example.demo.core.khachHang.service.impl;
 
 import com.example.demo.core.Admin.model.request.AdminDiaChiRequest;
+import com.example.demo.core.khachHang.model.request.KHDiaChiRequest;
 import com.example.demo.core.khachHang.repository.KHDiaChiRepository;
 import com.example.demo.core.khachHang.repository.KHUserRepository;
 import com.example.demo.core.khachHang.service.DiaChiService;
@@ -29,7 +30,7 @@ public class DiaChiServiceImpl implements DiaChiService {
     }
 
     @Override
-    public HashMap<String, Object> addDiaChi(AdminDiaChiRequest request) {
+    public HashMap<String, Object> addDiaChi(KHDiaChiRequest request) {
         DiaChi diaChi = request.dtoToEntity(new DiaChi());
         try {
             DiaChi diaChis = DCrepository.save(diaChi);
@@ -40,7 +41,7 @@ public class DiaChiServiceImpl implements DiaChiService {
     }
 
     @Override
-    public HashMap<String, Object> updateDiaChi(AdminDiaChiRequest request, Integer id) {
+    public HashMap<String, Object> updateDiaChi(KHDiaChiRequest request, Integer id) {
         Optional<DiaChi> optional = DCrepository.findById(id);
         if (optional.isPresent()) {
             DiaChi diaChi = optional.get();

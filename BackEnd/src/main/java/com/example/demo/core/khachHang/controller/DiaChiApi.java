@@ -1,6 +1,7 @@
 package com.example.demo.core.khachHang.controller;
 
 import com.example.demo.core.Admin.model.request.AdminDiaChiRequest;
+import com.example.demo.core.khachHang.model.request.KHDiaChiRequest;
 import com.example.demo.core.khachHang.service.DiaChiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,13 +35,13 @@ public class DiaChiApi {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody AdminDiaChiRequest request) {
+    public ResponseEntity<?> add(@RequestBody KHDiaChiRequest request) {
         HashMap<String, Object> map = service.addDiaChi(request);
         return ResponseEntity.ok(map);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody AdminDiaChiRequest request) {
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody KHDiaChiRequest request) {
         HashMap<String, Object> map = service.updateDiaChi(request, id);
         return ResponseEntity.ok(map);
     }

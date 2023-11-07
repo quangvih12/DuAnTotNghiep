@@ -1,4 +1,4 @@
-package com.example.demo.core.Admin.model.request;
+package com.example.demo.core.khachHang.model.request;
 
 import com.example.demo.entity.DiaChi;
 import com.example.demo.entity.User;
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AdminDiaChiRequest implements DtoToEntity<DiaChi> {
+public class KHDiaChiRequest implements DtoToEntity<DiaChi> {
 
     private Integer idTinhThanh;
 
