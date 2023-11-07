@@ -1,6 +1,5 @@
 package com.example.demo.core.khachHang.service.impl;
 
-import com.example.demo.core.Admin.model.request.AdminDiaChiRequest;
 import com.example.demo.core.khachHang.model.request.KHDiaChiRequest;
 import com.example.demo.core.khachHang.repository.KHDiaChiRepository;
 import com.example.demo.core.khachHang.repository.KHUserRepository;

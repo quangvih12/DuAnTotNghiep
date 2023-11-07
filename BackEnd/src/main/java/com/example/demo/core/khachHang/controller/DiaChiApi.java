@@ -1,6 +1,5 @@
 package com.example.demo.core.khachHang.controller;
 
-import com.example.demo.core.Admin.model.request.AdminDiaChiRequest;
 import com.example.demo.core.khachHang.model.request.KHDiaChiRequest;
 import com.example.demo.core.khachHang.service.DiaChiService;
 import org.springframework.beans.factory.annotation.Autowired;

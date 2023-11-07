@@ -1,6 +1,5 @@
 package com.example.demo.core.khachHang.service;
 
-import com.example.demo.core.Admin.model.request.AdminDiaChiRequest;
 import com.example.demo.core.khachHang.model.request.KHDiaChiRequest;
 import com.example.demo.entity.DiaChi;
 
