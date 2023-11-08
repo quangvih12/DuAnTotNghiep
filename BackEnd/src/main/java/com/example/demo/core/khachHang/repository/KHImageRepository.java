@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface KHImageRepository extends ImageReponsitory {
 
-    @Query("select im from  Image im where im.sanPhamChiTiet.id =:id")
+    @Query("select im from  Image im where im.sanPham.id =:id")
     List<Image> findBySanPhamId(Integer id);
 }

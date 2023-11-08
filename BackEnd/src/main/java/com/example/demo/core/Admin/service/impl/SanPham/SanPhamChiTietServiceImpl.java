@@ -155,7 +155,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
             Image image = new Image();
             String linkAnh = getImageToAzureUtil.uploadImageToAzure(img);
             image.setAnh(linkAnh);
-            image.setSanPhamChiTiet(sanPhamChiTiet);
+     //       image.setSanPhamChiTiet(sanPhamChiTiet);
             image.setTrangThai(1);
             image.setNgayTao(DatetimeUtil.getCurrentDate());
             imageList.add(image);
