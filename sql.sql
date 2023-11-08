@@ -298,10 +298,10 @@ CREATE TABLE `image` (
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
-  `id_san_pham_chi_tiet` int DEFAULT NULL,
+  `id_san_pham` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FKa4gihn9sp5ngnuwb70tce2nxx` (`id_san_pham_chi_tiet`),
-  CONSTRAINT `FKa4gihn9sp5ngnuwb70tce2nxx` FOREIGN KEY (`id_san_pham_chi_tiet`) REFERENCES `san_pham_chi_tiet` (`id`)
+  KEY `FKa4gihn9sp5ngnuwb70tce2nxx` (`id_san_pham`),
+  CONSTRAINT `FKa4gihn9sp5ngnuwb70tce2nxx` FOREIGN KEY (`id_san_pham`) REFERENCES `san_pham` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -523,19 +523,16 @@ CREATE TABLE `san_pham_chi_tiet` (
   `id_khuyen_mai` int DEFAULT NULL,
   `id_mau_sac` int DEFAULT NULL,
   `id_san_pham` int DEFAULT NULL,
-  `id_ctsp` int DEFAULT NULL,
   `id_size` int DEFAULT NULL,
   `id_trong_luong` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK1rjmi0xu7agob46sq32ns1587` (`id_khuyen_mai`),
   KEY `FKdt9xxy835agedr1aa67p8vw0o` (`id_mau_sac`),
   KEY `FKmby561odp360b0sfqx4mmarja` (`id_san_pham`),
-  KEY `FK99pghqanwg6x7bt8mvp6eqecn` (`id_ctsp`),
   KEY `FK899rggxfp9dtblqirh75pme1` (`id_size`),
   KEY `FKdrjkavdharm2dd7tsh3wywlr1` (`id_trong_luong`),
   CONSTRAINT `FK1rjmi0xu7agob46sq32ns1587` FOREIGN KEY (`id_khuyen_mai`) REFERENCES `khuyen_mai` (`id`),
   CONSTRAINT `FK899rggxfp9dtblqirh75pme1` FOREIGN KEY (`id_size`) REFERENCES `size` (`id`),
-  CONSTRAINT `FK99pghqanwg6x7bt8mvp6eqecn` FOREIGN KEY (`id_ctsp`) REFERENCES `san_pham_chi_tiet` (`id`),
   CONSTRAINT `FKdrjkavdharm2dd7tsh3wywlr1` FOREIGN KEY (`id_trong_luong`) REFERENCES `trong_luong` (`id`),
   CONSTRAINT `FKdt9xxy835agedr1aa67p8vw0o` FOREIGN KEY (`id_mau_sac`) REFERENCES `mau_sac` (`id`),
   CONSTRAINT `FKmby561odp360b0sfqx4mmarja` FOREIGN KEY (`id_san_pham`) REFERENCES `san_pham` (`id`)

@@ -81,4 +81,8 @@ public class SanPham {
     @Fetch(value = FetchMode.SUBSELECT)
     private List<SanPhamChiTiet> sanPhamChiTietList = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "sanPham", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<Image> imageList = new ArrayList<>();
 }
