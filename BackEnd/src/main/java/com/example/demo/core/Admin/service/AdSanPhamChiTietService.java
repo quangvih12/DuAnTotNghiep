@@ -22,9 +22,9 @@ public interface AdSanPhamChiTietService {
 
     AdminSanPhamChiTietResponse add(AdminSanPhamChiTietRequest dto
                                     //  , MultipartFile[] files, MultipartFile[] file
-    ) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
+    );
 
-    AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
+    SanPhamChiTiet update(AdminSanPhamChiTietRequest dto, Integer id);
 
     SanPhamChiTiet delete( Integer id);
 
@@ -32,5 +32,7 @@ public interface AdSanPhamChiTietService {
 
     List<SanPhamChiTiet> exportCustomerToExcel(HttpServletResponse response) throws IOException;
 
+    List<SanPhamChiTiet> getAllSPCTByKhuyenMai();
 
+    HashMap<String, Object>  updateProductDetail(Integer productId, Integer idkm);
 }

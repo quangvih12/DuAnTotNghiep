@@ -4,7 +4,6 @@ import com.example.demo.core.Admin.model.request.AdminTrongLuongRequest;
 import com.example.demo.core.Admin.repository.AdTrongLuongRepository;
 import com.example.demo.core.Admin.service.AdTrongLuongService;
 import com.example.demo.entity.TrongLuong;
-import com.example.demo.entity.VatLieu;
 import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -30,22 +29,8 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
     private AdTrongLuongRepository repository;
 
     @Override
-    public Page<TrongLuong> getAll(Integer page) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(page, 5 , sort);
-        return repository.findAll(pageable);
-    }
-
-    @Override
-    public List<TrongLuong> findAll() {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return repository.findAll(sort);
-    }
-
-    @Override
-    public List<TrongLuong> getAllByTrangThai(Integer trangThai) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return repository.findAllByTrangThai(trangThai, sort);
+    public List<TrongLuong> getAll() {
+        return repository.findAll();
     }
 
     @Override
@@ -56,24 +41,20 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
 
     @Override
     public Page<TrongLuong> search(String keyword, Integer page) {
-        if (keyword == null) {
-            return this.getAll(page);
-        } else {
+
             Pageable pageable = PageRequest.of(page, 5);
             return repository.search("%" + keyword + "%", pageable);
-        }
+
     }
 
     @Override
     public HashMap<String, Object> add(AdminTrongLuongRequest request) {
-        request.setTrangThai(1);
-        request.setNgayTao(DatetimeUtil.getCurrentDate());
         TrongLuong trongLuong = request.dtoToEntity(new TrongLuong());
         try {
             TrongLuong trongLuong1 = repository.save(trongLuong);
-            trongLuong1.setMa("TL" + trongLuong1.getId());
-            trongLuong1.setTrangThai(1);
-            return DataUltil.setData("success", repository.save(trongLuong1));
+            trongLuong1.setMa("TL"+trongLuong1.getId());
+            repository.save(trongLuong1);
+            return DataUltil.setData("success", "thêm thành công");
         } catch (Exception e) {
             return DataUltil.setData("error", "error");
         }
@@ -83,41 +64,43 @@ public class TrongLuongServiceImpl implements AdTrongLuongService {
     public HashMap<String, Object> update(AdminTrongLuongRequest request, Integer id) {
         Optional<TrongLuong> optional = repository.findById(id);
         if (optional.isPresent()) {
-            TrongLuong trongLuong = optional.get();
-            trongLuong.setMa(trongLuong.getMa());
-            trongLuong.setDonVi(request.getDonVi());
-            trongLuong.setValue(request.getValue());
-            trongLuong.setNgayTao(trongLuong.getNgayTao());
-            trongLuong.setNgaySua(DatetimeUtil.getCurrentDate());
             TrongLuong tl = optional.get();
             tl.setMa(tl.getMa());
             tl.setDonVi(request.getDonVi());
+            tl.setTrangThai(request.getTrangThai());
             tl.setNgayTao(request.getNgayTao());
             tl.setNgaySua(DatetimeUtil.getCurrentDate());
             tl.setValue(request.getValue());
             try {
-                return DataUltil.setData("success", repository.save(tl));
+                repository.save(tl);
+                return DataUltil.setData("success", "sửa thành công");
             } catch (Exception e) {
                 return DataUltil.setData("error", "error");
             }
         } else {
-            return DataUltil.setData("error", "không tìm thấy vật liệu để sửa");
+            return DataUltil.setData("error", "không tìm thấy loại sản phẩm để sửa");
         }
     }
 
     @Override
-    public HashMap<String, Object> delete(Integer id) {
+    public HashMap<String, Object> delete(AdminTrongLuongRequest request, Integer id) {
         Optional<TrongLuong> optional = repository.findById(id);
         if (optional.isPresent()) {
-            TrongLuong trongLuong = optional.get();
-            trongLuong.setTrangThai(0);
+            TrongLuong tl = optional.get();
+            tl.setMa(tl.getMa());
+            tl.setDonVi(request.getDonVi());
+            tl.setTrangThai(request.getTrangThai());
+            tl.setNgayTao(request.getNgayTao());
+            tl.setNgaySua(DatetimeUtil.getCurrentDate());
+            tl.setValue(request.getValue());
             try {
-                return DataUltil.setData("success", repository.save(trongLuong));
+                repository.save(tl);
+                return DataUltil.setData("success", "Xóa thành công");
             } catch (Exception e) {
                 return DataUltil.setData("error", "error");
             }
         } else {
-            return DataUltil.setData("error", "không tìm thấy vật liệu để xóa");
+            return DataUltil.setData("error", "không tìm thấy loại sản phẩm để sửa");
         }
     }
 

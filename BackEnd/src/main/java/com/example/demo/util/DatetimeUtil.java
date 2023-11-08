@@ -19,11 +19,6 @@ public class DatetimeUtil {
         return dtm.format(now);
     }
 
-    public static LocalDateTime getCurrentDateAndTimeLocal() {
-        LocalDateTime now = LocalDateTime.now();
-        return now;
-    }
-
     public static String getCurrentDate() {
         DateTimeFormatter dtm = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDateTime now = LocalDateTime.now();
