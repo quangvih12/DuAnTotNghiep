@@ -3,6 +3,7 @@ package com.example.demo.core.Admin.service;
 import com.example.demo.core.Admin.model.request.AdminKhuyenMaiRequest;
 import com.example.demo.core.Admin.model.response.AdminKhuyenMaiResponse;
 import com.example.demo.entity.KhuyenMai;
+import com.example.demo.entity.SanPhamChiTiet;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +18,10 @@ public interface AdKhuyenMaiService {
 
     HashMap<String,Object> delete(AdminKhuyenMaiRequest khuyenMaiRequest, Integer id);
 
-
-    HashMap<String,Object> updateSLKhuyenMai( Integer id,Integer soLuong) throws Exception;
-
     KhuyenMai getKhuyenMaiById(Integer id);
+
+    List<SanPhamChiTiet> getAllSPCTByKhuyenMai();
+
+    HashMap<String, Object>  updateProductDetail(Integer productId, Integer idkm);
 
 }

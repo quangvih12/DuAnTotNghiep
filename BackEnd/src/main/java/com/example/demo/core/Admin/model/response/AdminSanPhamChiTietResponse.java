@@ -12,6 +12,9 @@ public interface AdminSanPhamChiTietResponse {
     @Value("#{target.id}")
     Integer getId();
 
+    @Value("#{target.soLuongSanPham}")
+    Integer getSoLuongSanPham();
+
     @Value("#{target.ma}")
     String getMa();
 
@@ -53,5 +56,20 @@ public interface AdminSanPhamChiTietResponse {
 
     @Value("#{target.anh}")
     String getAnh();
+
+    @Value("#{target.tenKM}")
+    String getTenKM();
+
+    @Value("#{target.thoiGianBatDau}")
+    String getThoiGianBatDau();
+
+    @Value("#{target.thoiGianKetThuc}")
+    String getThoiGianKetThuc();
+
+    @Value("#{target.giaSauGiam}")
+    Integer getGiaSauGiam();
+
+    @Value("#{target.giaTriGiam}")
+    Integer getGiaTriGiam();
 
 }

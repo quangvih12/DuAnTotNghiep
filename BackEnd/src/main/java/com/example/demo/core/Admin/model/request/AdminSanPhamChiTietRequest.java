@@ -40,7 +40,7 @@ public class AdminSanPhamChiTietRequest implements DtoToEntity<SanPhamChiTiet> {
     @NotBlank(message = "Vui lòng nhập mô tả")
     private String moTa;
 
-    @NotBlank(message = "Vui lòng nhập ảnh")
+   // @NotBlank(message = "Vui lòng nhập ảnh")
     private String anh;
 
     @Positive(message = "Sai định dạng")
@@ -74,6 +74,7 @@ public class AdminSanPhamChiTietRequest implements DtoToEntity<SanPhamChiTiet> {
     private List<String> imgMauSac;
 
     private List<String> imagesProduct;
+
 
     @Override
     public SanPhamChiTiet dtoToEntity(SanPhamChiTiet sanPhamChiTiet) {

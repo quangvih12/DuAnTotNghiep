@@ -24,9 +24,23 @@ public class TrongLuongApi {
     @Autowired
     private AdTrongLuongService service;
 
+//    @GetMapping()
+//    public ResponseEntity<?> getAll() {
+//        return ResponseEntity.ok(service.findAll());
+//    }
+
     @GetMapping()
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(service.getAll());
+        List<TrongLuong> page = service.findAll();
+        HashMap<String, Object> map = DataUltil.setData("ok", page);
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/trang-thai")
+    public ResponseEntity<?> getAllByTrangThai(@RequestParam("trangThai") Integer trangThai) {
+        List<TrongLuong> page = service.getAllByTrangThai(trangThai);
+        HashMap<String, Object> map = DataUltil.setData("ok", page);
+        return ResponseEntity.ok(map);
     }
 
     @GetMapping("/search")
@@ -62,8 +76,8 @@ public class TrongLuongApi {
 
     // xóa (đổi trạng thái về 0)
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody AdminTrongLuongRequest request) {
-        HashMap<String, Object> map = service.delete(request, id);
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+        HashMap<String, Object> map = service.delete(id);
         return ResponseEntity.ok(map);
     }
 
