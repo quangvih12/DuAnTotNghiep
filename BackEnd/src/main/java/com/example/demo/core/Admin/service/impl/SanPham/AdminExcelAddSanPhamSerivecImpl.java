@@ -435,7 +435,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
             if (!list.isEmpty()) {
                 // Cập nhật thông tin image
                 list.forEach(image -> {
-                    image.setSanPhamChiTiet(sanPhamChiTiet);
+                 //   image.setSanPhamChiTiet(sanPhamChiTiet);
                     image.setTrangThai(1);
                     image.setNgaySua(DatetimeUtil.getCurrentDate());
                 });
@@ -445,7 +445,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
 
                 request.getImagesProduct().forEach(images -> {
                     Image image = new Image();
-                    image.setSanPhamChiTiet(sanPhamChiTiet);
+                //    image.setSanPhamChiTiet(sanPhamChiTiet);
                     image.setTrangThai(1);
                     image.setNgayTao(DatetimeUtil.getCurrentDate());
                     image.setAnh(images);
@@ -455,7 +455,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
                 // Thiết lập thông tin image mới
                 request.getImagesProduct().forEach(images -> {
                     Image image = new Image();
-                    image.setSanPhamChiTiet(sanPhamChiTiet);
+                //    image.setSanPhamChiTiet(sanPhamChiTiet);
                     image.setTrangThai(1);
                     image.setNgayTao(DatetimeUtil.getCurrentDate());
                     image.setAnh(images);
