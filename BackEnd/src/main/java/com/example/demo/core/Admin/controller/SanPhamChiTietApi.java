@@ -1,24 +1,19 @@
 package com.example.demo.core.Admin.controller;
 
-import com.example.demo.core.Admin.model.request.AdminMauSacChiTietRequest;
 import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
 import com.example.demo.core.Admin.model.request.AdminSearchRequest;
-import com.example.demo.core.Admin.model.request.AdminSizeChiTietRequest;
-import com.example.demo.core.Admin.model.response.AdminMauSacChiTietResponse;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
-import com.example.demo.core.Admin.model.response.AdminSizeChiTietResponse;
-import com.example.demo.core.Admin.service.AdSanPhamService.AdExcelAddSanPhamService;
-import com.example.demo.core.Admin.service.AdSanPhamService.AdSanPhamChiTietService;
-import com.example.demo.core.Admin.service.AdSanPhamService.AdUpdateSanPhamService;
-import com.example.demo.core.Admin.service.AdminMauSacChiTietService;
-import com.example.demo.core.Admin.service.impl.AdminSizeChiTietService;
-import com.example.demo.entity.Image;
-import com.example.demo.entity.MauSacChiTiet;
-import com.example.demo.entity.SizeChiTiet;
+import com.example.demo.core.Admin.service.AdExcelAddSanPhamService;
+import com.example.demo.core.Admin.service.impl.SanPham.CreateExcelSanPhamServiceImpl;
+import com.example.demo.core.Admin.service.impl.SanPham.UpdateSanPhamServiceIpml;
+import com.example.demo.entity.*;
+import com.example.demo.core.Admin.service.impl.SanPham.SanPhamChiTietServiceImpl;
 import com.example.demo.util.DataUltil;
 import com.microsoft.azure.storage.StorageException;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -28,29 +23,32 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api/products")
 
 public class SanPhamChiTietApi {
     @Autowired
-    private AdSanPhamChiTietService sanPhamChiTietService;
+    private SanPhamChiTietServiceImpl sanPhamChiTietService;
 
     @Autowired
-    private AdUpdateSanPhamService updateSanPhamServiceIpml;
+    private CreateExcelSanPhamServiceImpl createExcelSanPhamService;
+
+    @Autowired
+    private UpdateSanPhamServiceIpml updateSanPhamServiceIpml;
 
     @Autowired
     private AdExcelAddSanPhamService adExcelAddSanPhamService;
 
-    @Autowired
-    private AdminMauSacChiTietService adminMauSacChiTietService;
-
-    @Autowired
-    private AdminSizeChiTietService adminSizeChiTietService;
-
+    // getAll san pham chi tiet
+    @GetMapping()
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages,
+                                    @RequestParam(required = false) String upAndDown, @RequestParam(required = false) Integer trangThai) {
+        Page<SanPhamChiTiet> page = sanPhamChiTietService.getAll(pages, upAndDown, trangThai);
+        return ResponseEntity.ok(page);
+    }
 
     @GetMapping("/lisst")
     public ResponseEntity<?> getList(final AdminSearchRequest request) {
@@ -58,12 +56,11 @@ public class SanPhamChiTietApi {
         return ResponseEntity.ok(lisst);
     }
 
-    @GetMapping("/loc")
-    public ResponseEntity<?> loc(@RequestParam String comboBoxValue) {
-        List<AdminSanPhamChiTietResponse> lisst = sanPhamChiTietService.loc(comboBoxValue);
+    @GetMapping("/li")
+    public ResponseEntity<?> getList() {
+        List<SanPhamChiTiet> lisst = sanPhamChiTietService.getAlls();
         return ResponseEntity.ok(lisst);
     }
-
 
     @GetMapping("/{productId}/images")
     public ResponseEntity<?> getProductImages(@PathVariable Integer productId) {
@@ -79,13 +76,13 @@ public class SanPhamChiTietApi {
 
     @GetMapping("/{productId}/size")
     public ResponseEntity<?> getProductSize(@PathVariable Integer productId) {
-        List<AdminSizeChiTietResponse> size = sanPhamChiTietService.getProductSize(productId);
+        List<SizeChiTiet> size = sanPhamChiTietService.getProductSize(productId);
         return ResponseEntity.ok(size);
     }
 
     @GetMapping("/{productId}/mauSac")
     public ResponseEntity<?> getProductMauSac(@PathVariable Integer productId) {
-        List<AdminMauSacChiTietResponse> mauSac = sanPhamChiTietService.getProductMauSac(productId);
+        List<MauSacChiTiet> mauSac = sanPhamChiTietService.getProductMauSac(productId);
         return ResponseEntity.ok(mauSac);
     }
 
@@ -105,14 +102,21 @@ public class SanPhamChiTietApi {
         updateSanPhamServiceIpml.deleteSize(idSP, idSize);
     }
 
-    @DeleteMapping("/deleteMauSac/{idMau}")
-    public void deleteMauSac(@PathVariable Integer idMau) {
-        updateSanPhamServiceIpml.deleteMauSac(idMau);
+    @DeleteMapping("/deleteMauSac")
+    public void deleteMauSac(@RequestParam Integer idSP, @RequestParam Integer idMau) {
+        updateSanPhamServiceIpml.deleteMauSac(idSP, idMau);
     }
 
     @DeleteMapping("/deleteImg")
     public void deleteImg(@RequestParam Integer idSP, @RequestParam String img) {
         updateSanPhamServiceIpml.deleteImg(idSP, img);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getOneVL(@PathVariable String id) {
+        SanPham vatLieu = createExcelSanPhamService.getSp(id);
+        HashMap<String, Object> map = DataUltil.setData("ok", vatLieu);
+        return ResponseEntity.ok(map);
     }
 
     // thêm bằng file excel
@@ -121,9 +125,19 @@ public class SanPhamChiTietApi {
         return ResponseEntity.ok(adExcelAddSanPhamService.previewDataImportExcel(file));
     }
 
+    // xuat excel
+    @GetMapping("/export")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=ListSanPham.xlsx";
+        response.setHeader(headerKey, headerValue);
+        sanPhamChiTietService.exportCustomerToExcel(response);
+    }
+
     @PostMapping()
     public ResponseEntity<?> adds(@Valid @RequestBody AdminSanPhamChiTietRequest sanPhamChiTietRequest
-            , BindingResult result) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
+            , BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return ResponseEntity.ok(DataUltil.setData("error", list));
@@ -134,7 +148,7 @@ public class SanPhamChiTietApi {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody AdminSanPhamChiTietRequest sanPhamChiTietRequest, @PathVariable Integer id
-            , BindingResult result) throws IOException, StorageException, InvalidKeyException, URISyntaxException, ExecutionException, InterruptedException {
+            , BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return ResponseEntity.ok(DataUltil.setData("error", list));
@@ -144,53 +158,22 @@ public class SanPhamChiTietApi {
     }
 
     @PutMapping("/{id}/delete")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
-        return ResponseEntity.ok(updateSanPhamServiceIpml.delete(id));
+    public ResponseEntity<?> delete( @PathVariable Integer id) {
+        return ResponseEntity.ok(updateSanPhamServiceIpml.delete( id));
     }
 
-    @PostMapping("/add-mau-sac-chi-tiet")
-    public ResponseEntity<?> addMauSacChiTiet(@RequestBody AdminMauSacChiTietRequest request) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
-        return ResponseEntity.ok(adminMauSacChiTietService.add(request));
+    // áp dụng khuyến mại cho sản phẩm được chọn
+    @PutMapping("/applyKM/{productId}")
+    public ResponseEntity<?> updateKM(@PathVariable("productId") Integer productId, @RequestParam("idkm") Integer idkm){
+        HashMap<String, Object> map = sanPhamChiTietService.updateProductDetail(productId, idkm);
+        return ResponseEntity.ok(map);
     }
 
-    @GetMapping("/checkMauSac")
-    public ResponseEntity<?> checkMauSac(@RequestParam Integer idMauSac, @RequestParam Integer idSP, @RequestParam(required = false) Integer idSizeCT) {
-//        if (idSizeCT == null) {
-//            return ResponseEntity.ok(adminMauSacChiTietService.check(idSP, idMauSac));
-//        } else
-            return ResponseEntity.ok(adminMauSacChiTietService.checks(idSP, idMauSac, idSizeCT));
-    }
 
-    @PutMapping("/update-mau-sac-chi-tiet/{id}")
-    public ResponseEntity<?> updateMauSacChiTiet(@PathVariable Integer id, @RequestBody AdminMauSacChiTietRequest request) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
-        return ResponseEntity.ok(adminMauSacChiTietService.update(id, request));
-    }
+    @GetMapping("/getAllCTSPByKhuyenMai")
+    public List<SanPhamChiTiet> getAllCTSPByKhuyenMai(){
 
-    @DeleteMapping("/delete-mau-sac-chi-tiet/{id}")
-    public ResponseEntity<?> deleteMauSacChiTiet(@PathVariable Integer id) {
-        adminMauSacChiTietService.delete(id);
-        return ResponseEntity.ok("");
-    }
-
-    @PostMapping("/add-size-chi-tiet")
-    public ResponseEntity<?> addSizeChiTiet(@RequestBody AdminSizeChiTietRequest request) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
-        return ResponseEntity.ok(adminSizeChiTietService.add(request));
-    }
-
-    @GetMapping("/checkSize")
-    public ResponseEntity<?> check(@RequestParam Integer idSize, @RequestParam Integer idSP) {
-        return ResponseEntity.ok(adminSizeChiTietService.check(idSP, idSize));
-    }
-
-    @PutMapping("/update-size-chi-tiet/{id}")
-    public ResponseEntity<?> updateSizeChiTiet(@PathVariable Integer id, @RequestBody AdminSizeChiTietRequest request) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
-        return ResponseEntity.ok(adminSizeChiTietService.update(id, request));
-    }
-
-    @DeleteMapping("/delete-size-chi-tiet/{id}")
-    public ResponseEntity<?> deleteSizeChiTiet(@PathVariable Integer id) {
-        adminSizeChiTietService.delete(id);
-        return ResponseEntity.ok("");
+        return sanPhamChiTietService.getAllSPCTByKhuyenMai();
     }
 
 }

@@ -50,8 +50,6 @@ public class AdminExcelAddSanPhamResponse {
 
     private List<String> soLuongSize;
 
-    private List<String> soLuongMauSac;
-
     private List<String> idMauSac;
 
     private List<String> idSize;
@@ -71,8 +69,6 @@ public class AdminExcelAddSanPhamResponse {
     private String importMessageGiaNhap;
 
     private String importMessageSoLuong;
-
-    private String importMessageSoLuongMau;
 
     private String importMessageSize;
 

@@ -40,12 +40,6 @@ public class GioHangChiTiet {
     @Column(name = "ngay_tao")
     private String ngayTao;
 
-    @Column(name = "ten_size")
-    private Integer tenSize;
-
-    @Column(name = "ten_mau_sac")
-    private Integer tenMauSac;
-
     @Column(name = "trang_thai")
     private Integer trangThai;
 
