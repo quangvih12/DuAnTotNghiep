@@ -45,7 +45,7 @@ public class Image {
     private Integer trangThai;
 
     @ManyToOne
-    @JoinColumn(name = "id_san_pham_chi_tiet")
-    private SanPhamChiTiet sanPhamChiTiet;
+    @JoinColumn(name = "id_san_pham")
+    private SanPham sanPham;
 
 }
