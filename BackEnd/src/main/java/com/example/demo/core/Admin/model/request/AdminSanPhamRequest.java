@@ -1,5 +1,6 @@
 package com.example.demo.core.Admin.model.request;
 
+import com.example.demo.entity.VatLieu;
 import com.example.demo.infrastructure.adapter.DtoToEntity;
 import com.example.demo.entity.Loai;
 import com.example.demo.entity.SanPham;
@@ -26,6 +27,8 @@ public class AdminSanPhamRequest implements DtoToEntity<SanPham> {
 
     private Integer thuongHieu;
 
+    private Integer vatLieu;
+
     private Integer loai;
 
     private String anh;
@@ -39,6 +42,7 @@ public class AdminSanPhamRequest implements DtoToEntity<SanPham> {
         sanPham.setDemLot(this.getDemLot());
         sanPham.setQuaiDeo(this.getQuaiDeo());
         sanPham.setAnh(this.getAnh());
+        sanPham.setVatLieu(VatLieu.builder().id(this.getVatLieu()).build());
         sanPham.setThuongHieu(ThuongHieu.builder().id(this.getThuongHieu()).build());
         sanPham.setLoai(Loai.builder().id(this.getLoai()).build());
         return sanPham;

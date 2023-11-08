@@ -173,7 +173,7 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
                 if (!list.isEmpty()) {
                     // Cập nhật thông tin image
                     list.stream().map(image -> {
-                        image.setSanPhamChiTiet(sanPhamChiTiet);
+                     //   image.setSanPhamChiTiet(sanPhamChiTiet);
                         image.setTrangThai(1);
                         image.setNgaySua(DatetimeUtil.getCurrentDate());
                         image.setAnh(images);
@@ -184,7 +184,7 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
                 } else {
                     // Thiết lập thông tin image mới
                     Image image = new Image();
-                    image.setSanPhamChiTiet(sanPhamChiTiet);
+                 //   image.setSanPhamChiTiet(sanPhamChiTiet);
                     image.setTrangThai(1);
                     image.setNgayTao(DatetimeUtil.getCurrentDate());
                     image.setAnh(images);

@@ -75,10 +75,6 @@ public class SanPhamChiTiet {
     private KhuyenMai khuyenMai;
 
     @ManyToOne
-    @JoinColumn(name = "id_ctsp")
-    private SanPhamChiTiet sanPhamChiTiet;
-
-    @ManyToOne
     @JoinColumn(name = "id_mau_sac")
     private MauSac mauSac;
 
@@ -86,10 +82,6 @@ public class SanPhamChiTiet {
     @JoinColumn(name = "id_size")
     private Size size;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
-    private List<Image> imageList = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)

@@ -143,7 +143,7 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
                 } else {
                     // Tạo ảnh mới nếu ảnh không tồn tại
                     Image newImg = new Image();
-                    newImg.setSanPhamChiTiet(sanPhamChiTiet);
+             //       newImg.setSanPhamChiTiet(sanPhamChiTiet);
                     String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgAnh);
                     newImg.setAnh(linkAnh);
                     // Lưu lại ảnh mới
