@@ -51,6 +51,16 @@ public class Detail {
         return sanPhamChiTiet;
     }
 
+    @GetMapping("/find-by-id/{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Integer idctsp) {
+        return ResponseEntity.ok(detaiService.findById(idctsp));
+    }
+
+    @GetMapping("/find-spct-by-idSP/{id}")
+    public ResponseEntity<?> getSpctByIdSp(@PathVariable("id") Integer idctsp) {
+        return ResponseEntity.ok(detaiService.getAllByIdSp(idctsp));
+    }
+
     @GetMapping("/getOne/{id}")
     public ResponseEntity<?> getOne(@PathVariable Integer id) {
         AdminSanPhamChiTietResponse sanPhamChiTiet = detaiService.get(id);
@@ -78,7 +88,7 @@ public class Detail {
 //    }
 
     @GetMapping("/findByImage/{id}")
-    public ResponseEntity<?> findByImage(@PathVariable Integer id){
+    public ResponseEntity<?> findByImage(@PathVariable Integer id) {
         return ResponseEntity.ok(servie.findByIdCTSP(id));
     }
 
@@ -89,27 +99,27 @@ public class Detail {
     }
 
     @GetMapping("/getSLTon/{idctsp}")
-    public ResponseEntity<?> getSLTon(@PathVariable("idctsp") Integer idctsp){
+    public ResponseEntity<?> getSLTon(@PathVariable("idctsp") Integer idctsp) {
         return ResponseEntity.ok(detailRepo.getSLTonTongByIDCT(idctsp));
     }
 
     @GetMapping("/getSizeByMS/{idctsp}")
-    public ResponseEntity<?> gettListSizeByMauSac(@PathVariable("idctsp") Integer idctsp, @RequestParam("idms") Integer idms ){
+    public ResponseEntity<?> gettListSizeByMauSac(@PathVariable("idctsp") Integer idctsp, @RequestParam("idms") Integer idms) {
 
         return ResponseEntity.ok(detailRepo.getListSizeByMauSac(idctsp, idms));
     }
 
 
     @GetMapping("/getMauSacBySize/{idctsp}")
-    public ResponseEntity<?> getListMauSacBySize(@PathVariable("idctsp") Integer idctsp, @RequestParam("idsizect") Integer idsizect){
+    public ResponseEntity<?> getListMauSacBySize(@PathVariable("idctsp") Integer idctsp, @RequestParam("idsizect") Integer idsizect) {
 
         return ResponseEntity.ok(detailRepo.getListMauSacBySize(idctsp, idsizect));
     }
 
 
     @GetMapping("/getSanPhamSelected/{idctsp}")
-    public ResponseEntity<?> getSanPhamSelected(@PathVariable("idctsp") Integer idctsp, @RequestParam("idms") Integer idms,@RequestParam("idsizect") Integer idsizect){
+    public ResponseEntity<?> getSanPhamSelected(@PathVariable("idctsp") Integer idctsp, @RequestParam("idms") Integer idms, @RequestParam("idsizect") Integer idsizect) {
 
-        return ResponseEntity.ok(detailRepo.getSanPhamSelected(idctsp, idms,idsizect));
+        return ResponseEntity.ok(detailRepo.getSanPhamSelected(idctsp, idms, idsizect));
     }
 }

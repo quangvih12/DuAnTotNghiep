@@ -1,6 +1,7 @@
 package com.example.demo.core.khachHang.controller;
 
 import com.example.demo.core.khachHang.service.ChiTietSPService;
+import com.example.demo.core.khachHang.service.TrangChuService;
 import com.example.demo.entity.ChucVu;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.util.DataUltil;
@@ -16,23 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("/api/trang-chu")
+@RequestMapping("/api/khach-hang/trang-chu")
 @CrossOrigin(origins = {"*"})
-public class TrangChu {
+public class TrangChuApi {
 
     @Autowired
-    private ChiTietSPService service;
+    private TrangChuService trangChuService;
 
-    @GetMapping("/loai")
+    @GetMapping("/get-all-by-ten-loai")
     public ResponseEntity<?> getAllByTenLoai(@RequestParam("tenLoai") String tenLoai) {
-        HashMap<String, Object> map = DataUltil.setData("ok", service.findAllByTenLoai(tenLoai).getContent());
-        return ResponseEntity.ok(map);
+        return ResponseEntity.ok(trangChuService.getAllByTenLoai(tenLoai));
     }
 
-    @GetMapping("/ngay-tao")
-    public ResponseEntity<?> getAllByNgayTao() {
-        HashMap<String, Object> map = DataUltil.setData("ok", service.findAllByNgayTao().getContent());
-        return ResponseEntity.ok(map);
+    //sp mới
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(trangChuService.getAll());
     }
-//test git mới
 }
