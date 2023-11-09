@@ -1,82 +1,71 @@
 package com.example.demo.core.Admin.controller;
 
-import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
-import com.example.demo.entity.SanPham;
-import com.example.demo.core.Admin.service.impl.SanPhamServiceImpl;
-import com.example.demo.util.DataUltil;
-import jakarta.validation.Valid;
+import com.example.demo.core.Admin.model.request.AdminSanPhamRepuest2;
+import com.example.demo.core.Admin.model.response.AdminSanPhamChiTiet2Response;
+import com.example.demo.core.Admin.model.response.AdminSanPhamResponse;
+import com.example.demo.core.Admin.service.AdSanPhamService.AdSanPhamService;
+import com.example.demo.entity.Image;
+import com.microsoft.azure.storage.StorageException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/sanPham")
+@RequestMapping("/api/admin/san-pham")
 public class SanPhamApi {
     @Autowired
-    private SanPhamServiceImpl sanPhamService;
+    private AdSanPhamService sanPhamService;
 
     // getAll loai
     @GetMapping()
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", value = "pages") Integer pages) {
-        Page<SanPham> page = sanPhamService.getAll(pages);
-        HashMap<String, Object> map = DataUltil.setData("ok", page);
-        return ResponseEntity.ok(map);
+    public ResponseEntity<?> getAll() {
+        List<AdminSanPhamResponse> page = sanPhamService.getAll();
+        return ResponseEntity.ok(page);
     }
 
-    // tim kiếm theo ten hoặc mã
-    @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam(defaultValue = "0", value = "pages") Integer pages, @RequestParam(required = false) String keyword) {
-        Page<SanPham> page = sanPhamService.search(keyword, pages);
-        HashMap<String, Object> map = DataUltil.setData("ok", page);
-        return ResponseEntity.ok(map);
+    @GetMapping("/{idSP}")
+    public ResponseEntity<?> getbySanPhamCT(@PathVariable Integer idSP) {
+        List<AdminSanPhamChiTiet2Response> page = sanPhamService.findBySanPhamCT(idSP);
+        return ResponseEntity.ok(page);
     }
 
-    // check validate
-    @PostMapping("/validation")
-    public ResponseEntity<?> validation(@RequestBody @Valid AdminSanPhamRequest request, BindingResult result) {
-        if (result.hasErrors()) {
-            List<ObjectError> list = result.getAllErrors();
-            HashMap<String, Object> map = DataUltil.setData("error", list);
-            return ResponseEntity.ok(map);
-        } else {
-            HashMap<String, Object> map = DataUltil.setData("ok", "");
-            return ResponseEntity.ok(map);
-        }
+    @GetMapping("/{idSP}/images")
+    public ResponseEntity<?> getbyImage(@PathVariable Integer idSP) {
+        List<Image> page = sanPhamService.getProductImages(idSP);
+        return ResponseEntity.ok(page);
     }
 
-    // thêm
-    @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody AdminSanPhamRequest request) {
-        HashMap<String, Object> map = sanPhamService.add(request);
-        return ResponseEntity.ok(map);
+    @GetMapping("/loc")
+    public ResponseEntity<?> loc(@RequestParam String comboBoxValue) {
+        List<AdminSanPhamResponse> lisst = sanPhamService.loc(comboBoxValue);
+        return ResponseEntity.ok(lisst);
     }
 
-    // sửa
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody AdminSanPhamRequest request) {
-        HashMap<String, Object> map = sanPhamService.update(request, id);
-        return ResponseEntity.ok(map);
+    @GetMapping("/check/{ten}")
+    public ResponseEntity<?> check(@PathVariable String ten) {
+        return ResponseEntity.ok(sanPhamService.findBySanPhamTen(ten));
     }
 
-    // xóa (đổi trạng thái về 0)
+    @PostMapping()
+    public ResponseEntity<?> add(@RequestBody AdminSanPhamRepuest2 request) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
+        AdminSanPhamResponse save = sanPhamService.save(request);
+        return ResponseEntity.ok(save);
+    }
+
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id, @RequestBody AdminSanPhamRequest request) {
-        HashMap<String, Object> map = sanPhamService.delete(request, id);
-        return ResponseEntity.ok(map);
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        AdminSanPhamResponse sp = sanPhamService.delete(id);
+        return ResponseEntity.ok(sp);
     }
 
-    // thêm bằng file excel
-    @PostMapping("/upload")
-    public ResponseEntity<?> uploadCustomersData(@RequestParam("file") MultipartFile file) {
-        this.sanPhamService.saveExcel(file);
-        HashMap<String, Object> map = DataUltil.setData("success", " thêm sản phẩm thành công");
-        return ResponseEntity.ok(map);
+    @PutMapping("/khoi-phuc/{id}")
+    public ResponseEntity<?> khoiPhuc(@PathVariable Integer id) {
+        AdminSanPhamResponse sp = sanPhamService.khoiPhuc(id);
+        return ResponseEntity.ok(sp);
     }
 }

@@ -8,10 +8,8 @@ import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.core.Admin.model.response.AdminSizeChiTietResponse;
 import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
 import com.example.demo.core.Admin.repository.AdImageReponsitory;
-import com.example.demo.core.Admin.repository.AdSizeChiTietReponsitory;
 import com.example.demo.core.Admin.service.AdSanPhamService.AdSanPhamChiTietService;
 import com.example.demo.entity.*;
-import com.example.demo.reponsitory.MauSacChiTietReponsitory;
 import com.example.demo.reponsitory.SanPhamReponsitory;
 import com.example.demo.util.DatetimeUtil;
 import com.example.demo.util.ImageToAzureUtil;
@@ -39,11 +37,6 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
     @Autowired
     private AdImageReponsitory imageReponsitory;
 
-    @Autowired
-    private AdSizeChiTietReponsitory sizeChiTietReponsitory;
-
-    @Autowired
-    private MauSacChiTietReponsitory mauSacChiTietReponsitory;
 
     @Autowired
     private SanPhamReponsitory sanPhamReponsitory;
@@ -71,15 +64,6 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
         return imageReponsitory.findAll();
     }
 
-    @Override
-    public List<AdminSizeChiTietResponse> getProductSize(Integer idProduct) {
-        return    sizeChiTietReponsitory.findSizeChiTiet(idProduct);
-    }
-
-    @Override
-    public List<AdminMauSacChiTietResponse> getProductMauSac(Integer idProduct) {
-        return mauSacChiTietReponsitory.findMauSacChiTiet(idProduct);
-    }
 
     @Override
     public AdminSanPhamChiTietResponse get(Integer id) {
@@ -139,23 +123,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
     public void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request) {
         ExecutorService executor = Executors.newFixedThreadPool(3);
 
-        Future<List<SizeChiTiet>> sizeFuture = executor.submit(() -> {
-            if (request.getIdSize() != null && !request.getIdSize().isEmpty()) {
-                return saveSize(request.getIdSize(), sanPhamChiTiet, request.getSoLuongSize());
-            } else {
-                return Collections.emptyList();
-            }
-        });
 
-        Future<Void> mauSacFuture = executor.submit(() -> {
-            try {
-                List<SizeChiTiet> sizes = sizeFuture.get();
-                saveMauSac(sizes, request.getIdMauSac(), request.getImgMauSac(), request.getSoLuongSize(), sanPhamChiTiet);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            return null;
-        });
 
         Future<Void> imageFuture = executor.submit(() -> {
             try {
@@ -167,7 +135,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
         });
 
         try {
-            mauSacFuture.get();
+
             imageFuture.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
@@ -177,68 +145,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
     }
 
 
-    @Override
-    //lưu mau sắc chi tiết
-    public List<MauSacChiTiet> saveMauSac(List<SizeChiTiet> sizes, List<String> idMauSac, List<String> imgMauSac, List<String> lstSoLuong, SanPhamChiTiet sanPhamChiTiet) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
-        List<MauSacChiTiet> mauSacChiTietList = new ArrayList<>();
 
-        // Đảm bảo rằng số lượng idMauSac và imgMauSac là giống nhau
-        if (idMauSac.size() != imgMauSac.size())
-            throw new IllegalArgumentException("Số lượng idMauSac và imgMauSac không khớp");
-
-        for (int i = 0; i < idMauSac.size(); i++) {
-            String mauSacId = idMauSac.get(i);
-            String imgMauSacValue = imgMauSac.get(i);
-            String soluong = lstSoLuong.get(i);
-
-            List<SizeChiTiet> applicableSizes = sizes.isEmpty() ? Collections.singletonList(null) : sizes;
-
-            for (SizeChiTiet sizeChiTiet : applicableSizes) {
-                MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
-                mauSacChiTiet.setSizeChiTiet(sizeChiTiet);
-                mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSacId)).build());
-                mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-                String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
-                mauSacChiTiet.setAnh(linkAnh);
-                mauSacChiTiet.setSoLuong(Integer.valueOf(soluong));
-                mauSacChiTietList.add(mauSacChiTiet);
-            }
-        }
-        return this.mauSacChiTietReponsitory.saveAll(mauSacChiTietList);
-    }
-
-
-
-    @Override
-    // lưu size chi tiet
-    public List<SizeChiTiet> saveSize(List<String> idSize, SanPhamChiTiet sanPhamChiTiet, List<String> soLuongSize) {
-        List<SizeChiTiet> sizeChiTietList = new ArrayList<>();
-
-        if (idSize.isEmpty() && soLuongSize.isEmpty())
-            return null;
-
-        // Đảm bảo rằng số lượng idSize và soLuongSize là giống nhau
-//        if (idSize.size() != soLuongSize.size())
-//            throw new IllegalArgumentException("Số lượng idSize và soLuongSize không khớp");
-
-
-        for (int i = 0; i < idSize.size(); i++) {
-            String sizeId = idSize.get(i);
-        //    String soLuongSizeValue = soLuongSize.get(i);
-
-            SizeChiTiet sizeChiTiet = new SizeChiTiet();
-            sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(sizeId)).build());
-            sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-            sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-        //    sizeChiTiet.setSoLuong(Integer.valueOf(soLuongSizeValue));
-
-            sizeChiTietList.add(sizeChiTiet);
-        }
-
-        return this.sizeChiTietReponsitory.saveAll(sizeChiTietList);
-
-    }
 
     @Override
     // lưu ảnh
@@ -248,7 +155,7 @@ public class SanPhamChiTietServiceImpl implements AdSanPhamChiTietService {
             Image image = new Image();
             String linkAnh = getImageToAzureUtil.uploadImageToAzure(img);
             image.setAnh(linkAnh);
-            image.setSanPhamChiTiet(sanPhamChiTiet);
+     //       image.setSanPhamChiTiet(sanPhamChiTiet);
             image.setTrangThai(1);
             image.setNgayTao(DatetimeUtil.getCurrentDate());
             imageList.add(image);

@@ -72,9 +72,17 @@ public class SanPham {
     @JoinColumn(name = "id_loai")
     private Loai loai;
 
+    @ManyToOne
+    @JoinColumn(name = "id_vat_lieu")
+    private VatLieu vatLieu;
+
     @JsonIgnore
     @OneToMany(mappedBy = "sanPham", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<SanPhamChiTiet> sanPhamChiTietList = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "sanPham", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<Image> imageList = new ArrayList<>();
 }

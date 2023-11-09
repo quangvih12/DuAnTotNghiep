@@ -44,6 +44,9 @@ public class SanPhamChiTiet {
     @Column(name = "ngay_tao")
     private String ngayTao;
 
+    @Column(name = "anh")
+    private String anh;
+
     @Column(name = "trang_thai")
     private Integer trangThai;
 
@@ -64,10 +67,6 @@ public class SanPhamChiTiet {
     private SanPham sanPham;
 
     @ManyToOne
-    @JoinColumn(name = "id_vat_lieu")
-    private VatLieu vatLieu;
-
-    @ManyToOne
     @JoinColumn(name = "id_trong_luong")
     private TrongLuong trongLuong;
 
@@ -75,20 +74,14 @@ public class SanPhamChiTiet {
     @JoinColumn(name = "id_khuyen_mai")
     private KhuyenMai khuyenMai;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
-    private List<Image> imageList = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "id_mau_sac")
+    private MauSac mauSac;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
-    private List<SizeChiTiet> sizeChiTiets = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "id_size")
+    private Size size;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
-    private List<MauSacChiTiet> mauSacChiTiets = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
@@ -109,4 +102,6 @@ public class SanPhamChiTiet {
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Comment> commentList = new ArrayList<>();
+
+
 }

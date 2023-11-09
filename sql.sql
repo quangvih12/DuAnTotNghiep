@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `datn` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `datn`;
 -- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
 --
 -- Host: localhost    Database: datn
@@ -32,7 +30,7 @@ CREATE TABLE `chuc_vu` (
   `ten` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +39,6 @@ CREATE TABLE `chuc_vu` (
 
 LOCK TABLES `chuc_vu` WRITE;
 /*!40000 ALTER TABLE `chuc_vu` DISABLE KEYS */;
-INSERT INTO `chuc_vu` VALUES (1,'CV1','2023-11-10','2023-10-24','Nhân viên',1),(2,'CV3','2023-11-10','2023-10-24','Giám đốc',1),(3,'CV4','2023-11-10','2023-10-24','Nhân viên Maketing',1);
 /*!40000 ALTER TABLE `chuc_vu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,21 +115,21 @@ DROP TABLE IF EXISTS `dia_chi`;
 CREATE TABLE `dia_chi` (
   `id` int NOT NULL AUTO_INCREMENT,
   `dia_chi` varchar(10000) DEFAULT NULL,
-  `id_tinh_thanh` int DEFAULT NULL,
-  `ten_tinh_thanh` varchar(100) DEFAULT NULL,
   `id_quan_huyen` int DEFAULT NULL,
-  `ten_quan_huyen` varchar(100) DEFAULT NULL,
+  `id_tinh_thanh` int DEFAULT NULL,
   `id_phuong_xa` varchar(255) DEFAULT NULL,
-  `ten_phuong_xa` varchar(100) DEFAULT NULL,
   `loai_dia_chi` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
+  `ten_quan_huyen` varchar(255) DEFAULT NULL,
+  `ten_tinh_thanh` varchar(255) DEFAULT NULL,
+  `ten_phuong_xa` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   `id_user` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKbfv0wiqy3kyntfe72a952m3ym` (`id_user`),
   CONSTRAINT `FKbfv0wiqy3kyntfe72a952m3ym` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -141,9 +138,6 @@ CREATE TABLE `dia_chi` (
 
 LOCK TABLES `dia_chi` WRITE;
 /*!40000 ALTER TABLE `dia_chi` DISABLE KEYS */;
-INSERT INTO `dia_chi` VALUES  (1,'Số 1, Hàng Than',269,'Lào Cai',2264,'Huyện Si Ma Cai','90816','Thị Trấn Si Ma Cai','Công ty','2023-09-10','2023-04-03',1,2),
-                              (2,'Số 3, Mỹ Đình',268,'Hưng Yên',2194,'Huyện Phù Cừ','220714','Xã Tống Trân','Công ty','2023-10-10','2023-08-23',1,2),
-                              (3,'Thọ Hải, Thọ Xuân',249,'Bắc Ninh',1768,'Yên Phong','190211','Trung Nghĩa','Nhà riêng','2023-07-10','2023-05-13',1,3);
 /*!40000 ALTER TABLE `dia_chi` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,8 +151,8 @@ DROP TABLE IF EXISTS `gio_hang`;
 CREATE TABLE `gio_hang` (
   `id` int NOT NULL AUTO_INCREMENT,
   `ma` varchar(255) DEFAULT NULL,
-  `ngay_sua` datetime DEFAULT NULL,
-  `ngay_tao` datetime DEFAULT NULL,
+  `ngay_sua` varchar(255) DEFAULT NULL,
+  `ngay_tao` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   `id_user` int DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -187,8 +181,6 @@ CREATE TABLE `gio_hang_chi_tiet` (
   `id` int NOT NULL AUTO_INCREMENT,
   `don_gia` decimal(20,0) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
-  `ten_mau_sac` varchar(255) DEFAULT NULL,
-  `ten_size` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
   `so_luong` int DEFAULT NULL,
@@ -222,14 +214,14 @@ DROP TABLE IF EXISTS `hoa_don`;
 CREATE TABLE `hoa_don` (
   `id` int NOT NULL AUTO_INCREMENT,
   `hinh_thuc_giao_hang` int DEFAULT NULL,
+  `ly_do` varchar(255) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
-  `mo_ta` varchar(1000) DEFAULT NULL,
-  `ly_do` varchar(1000) DEFAULT NULL,
-  `ngay_nhan` datetime DEFAULT NULL,
-  `ngay_ship` datetime DEFAULT NULL,
-  `ngay_sua` datetime DEFAULT NULL,
-  `ngay_tao` datetime DEFAULT NULL,
-  `ngay_thanh_toan` datetime DEFAULT NULL,
+  `mo_ta` varchar(255) DEFAULT NULL,
+  `ngay_nhan` datetime(6) DEFAULT NULL,
+  `ngay_ship` datetime(6) DEFAULT NULL,
+  `ngay_sua` datetime(6) DEFAULT NULL,
+  `ngay_tao` datetime(6) DEFAULT NULL,
+  `ngay_thanh_toan` datetime(6) DEFAULT NULL,
   `ten_nguoi_nhan` varchar(255) DEFAULT NULL,
   `tien_sau_khi_giam_gia` decimal(20,0) DEFAULT NULL,
   `tien_ship` decimal(20,0) DEFAULT NULL,
@@ -267,10 +259,8 @@ DROP TABLE IF EXISTS `hoa_don_chi_tiet`;
 CREATE TABLE `hoa_don_chi_tiet` (
   `id` int NOT NULL AUTO_INCREMENT,
   `don_gia` decimal(20,0) DEFAULT NULL,
-  `ma` varchar(255) DEFAULT NULL,
   `ly_do` varchar(255) DEFAULT NULL,
-  `ten_mau_sac` varchar(255) DEFAULT NULL,
-  `ten_size` varchar(255) DEFAULT NULL,
+  `ma` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
   `so_luong` int DEFAULT NULL,
@@ -303,16 +293,16 @@ DROP TABLE IF EXISTS `image`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `image` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `anh` varchar(50000) DEFAULT NULL,
+  `anh` varchar(10000) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
-  `id_san_pham_chi_tiet` int DEFAULT NULL,
+  `id_san_pham` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FKa4gihn9sp5ngnuwb70tce2nxx` (`id_san_pham_chi_tiet`),
-  CONSTRAINT `FKa4gihn9sp5ngnuwb70tce2nxx` FOREIGN KEY (`id_san_pham_chi_tiet`) REFERENCES `san_pham_chi_tiet` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `FKa4gihn9sp5ngnuwb70tce2nxx` (`id_san_pham`),
+  CONSTRAINT `FKa4gihn9sp5ngnuwb70tce2nxx` FOREIGN KEY (`id_san_pham`) REFERENCES `san_pham` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -321,7 +311,6 @@ CREATE TABLE `image` (
 
 LOCK TABLES `image` WRITE;
 /*!40000 ALTER TABLE `image` DISABLE KEYS */;
-INSERT INTO `image` VALUES (1,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/klIZba_MG_3349.jpg','IM1','2023-05-05','2023-04-13',1,1),(2,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/TLXYEi_MG_3350.jpg','IM2','2023-05-05','2023-04-13',1,1),(3,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/NOYMt4_MG_3352.jpg','IM3','2023-05-05','2023-04-13',1,1),(4,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/gqyBwx_MG_3348.jpg','IM4','2023-05-05','2023-04-13',1,1),(5,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/b4hEP5SwGTU0royal-m139-v7.jpg','IM5','2023-05-05','2023-04-13',1,2),(6,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/3IqhWcroyal-m139-v7-1.jpg','IM6','2023-05-05','2023-04-13',1,2),(7,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/hD1uIXroyal-m139-v7-2.jpg','IM7','2023-05-05','2023-04-13',1,2),(8,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/u50Ujeroyal-m139-v7-3.jpg','IM8','2023-05-05','2023-04-13',1,2),(9,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/RsOSbzroyal-m139-v7-4.jpg','IM9','2023-05-05','2023-04-13',1,2),(10,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/xKHMALIMG_5434.jpg','IM10','2023-05-05','2023-04-13',1,3),(11,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/OSknJrIMG_5435.jpg','IM11','2023-05-05','2023-04-13',1,3),(12,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/gJnFjBIMG_5433.jpg','IM12','2023-05-05','2023-04-13',1,3),(13,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/ikwHUAIMG_5436.jpg','IM13','2023-05-05','2023-04-13',1,3),(14,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/cDpyPNIMG_5437.jpg','IM14','2023-05-05','2023-04-13',1,3),(15,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/lANmFe_MG_9655.jpg','IM15','2023-05-05','2023-04-13',1,4),(16,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/4SNrqJ_MG_9657.jpg','IM16','2023-05-05','2023-04-13',1,4),(17,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/qKPAJv_MG_9659.jpg','IM17','2023-05-05','2023-04-13',1,4);
 /*!40000 ALTER TABLE `image` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -335,20 +324,20 @@ DROP TABLE IF EXISTS `khuyen_mai`;
 CREATE TABLE `khuyen_mai` (
   `id` int NOT NULL AUTO_INCREMENT,
   `dieu_kien` decimal(20,0) DEFAULT NULL,
-  `gia_tri_giam` decimal(20,0) DEFAULT NULL,
+  `gia_tri_giam` int DEFAULT NULL,
   `giam_toi_da` decimal(20,0) DEFAULT NULL,
   `kieu_giam_gia` varchar(255) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
   `mo_ta` varchar(10000) DEFAULT NULL,
-  `ngay_sua` datetime DEFAULT NULL,
-  `ngay_tao` datetime DEFAULT NULL,
+  `ngay_sua` datetime(6) DEFAULT NULL,
+  `ngay_tao` datetime(6) DEFAULT NULL,
   `so_luong` int DEFAULT NULL,
   `ten` varchar(255) DEFAULT NULL,
-  `thoi_gian_bat_dau` datetime DEFAULT NULL,
-  `thoi_gian_ket_thuc` datetime DEFAULT NULL,
+  `thoi_gian_bat_dau` datetime(6) DEFAULT NULL,
+  `thoi_gian_ket_thuc` datetime(6) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -357,15 +346,40 @@ CREATE TABLE `khuyen_mai` (
 
 LOCK TABLES `khuyen_mai` WRITE;
 /*!40000 ALTER TABLE `khuyen_mai` DISABLE KEYS */;
-INSERT INTO `khuyen_mai` VALUES (1,NULL,5,NULL,NULL,'KM1','giảm 5% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-11-10','2023-10-24',100,'giảm 5%','2023-11-15','2023-11-23',1),
-(2,NULL,15,NULL,NULL,'KM2','giảm 15% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-10-10','2023-09-24',80,'giảm 15%','2023-10-15','2023-10-23',1),
-(3,NULL,20,NULL,NULL,'KM2','giảm 20% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-07-10','2023-06-24',60,'giảm 20%','2023-07-15','2023-07-23',0),
-(4,NULL,25,NULL,NULL,'KM4','giảm 25% giá tiền của 1 sản phẩm với tất cả mặt hàng','2023-09-10','2023-08-24',400,'giảm 25%','2023-09-15','2023-09-23',1);
 /*!40000 ALTER TABLE `khuyen_mai` ENABLE KEYS */;
 UNLOCK TABLES;
 
+--
+-- Table structure for table `khuyen_mai_ctsp`
+--
 
+DROP TABLE IF EXISTS `khuyen_mai_ctsp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `khuyen_mai_ctsp` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `ngay_sua` varchar(255) DEFAULT NULL,
+  `ngay_tao` varchar(255) DEFAULT NULL,
+  `so_tien_con_lai` decimal(20,0) DEFAULT NULL,
+  `trang_thai` int DEFAULT NULL,
+  `id_khuyen_mai` int DEFAULT NULL,
+  `id_ctsp` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKe781xl7r1mbttpsw0k5tydfky` (`id_khuyen_mai`),
+  KEY `FKknc3jbrh4y8bl4umf81oce3v` (`id_ctsp`),
+  CONSTRAINT `FKe781xl7r1mbttpsw0k5tydfky` FOREIGN KEY (`id_khuyen_mai`) REFERENCES `khuyen_mai` (`id`),
+  CONSTRAINT `FKknc3jbrh4y8bl4umf81oce3v` FOREIGN KEY (`id_ctsp`) REFERENCES `san_pham_chi_tiet` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Dumping data for table `khuyen_mai_ctsp`
+--
+
+LOCK TABLES `khuyen_mai_ctsp` WRITE;
+/*!40000 ALTER TABLE `khuyen_mai_ctsp` DISABLE KEYS */;
+/*!40000 ALTER TABLE `khuyen_mai_ctsp` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `loai`
@@ -382,7 +396,7 @@ CREATE TABLE `loai` (
   `ten` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -391,7 +405,6 @@ CREATE TABLE `loai` (
 
 LOCK TABLES `loai` WRITE;
 /*!40000 ALTER TABLE `loai` DISABLE KEYS */;
-INSERT INTO `loai` VALUES (1,'L1','2023-09-10','2023-09-05','3/4 đầu',1),(2,'L2','2023-09-15','2023-09-10','Fullrace',1),(3,'L3','2023-09-23','2023-09-19','1/2 đầu',0),(4,'L4','2023-09-24','2023-09-20','Xe đạp',0),(5,'L5','2023-08-10','2023-07-25','Trẻ em',1),(6,'L6','2023-07-19','2023-07-15','Lật cằm',1);
 /*!40000 ALTER TABLE `loai` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -411,7 +424,7 @@ CREATE TABLE `mau_sac` (
   `ten` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -420,62 +433,7 @@ CREATE TABLE `mau_sac` (
 
 LOCK TABLES `mau_sac` WRITE;
 /*!40000 ALTER TABLE `mau_sac` DISABLE KEYS */;
-INSERT INTO `mau_sac` VALUES (1,'MS1',NULL,'2023-05-05','2023-04-13','Vàng',1),(2,'MS2',NULL,'2023-05-05','2023-04-13','Đen',1),(3,'MS3',NULL,'2023-05-05','2023-04-13','Trắng',1),(4,'MS4',NULL,'2023-05-05','2023-04-13','Xanh',1),(5,'MS5',NULL,'2023-05-05','2023-04-13','Đỏ',1),(6,'MS6',NULL,'2023-05-05','2023-04-13','Hồng',1),(7,'MS7',NULL,'2023-05-05','2023-04-13','Rêu',1),(8,'MS8',NULL,'2023-05-05','2023-04-13','Sữa',1);
 /*!40000 ALTER TABLE `mau_sac` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `mau_sac_ctsp`
---
-
-DROP TABLE IF EXISTS `mau_sac_ctsp`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `mau_sac_ctsp` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `anh` varchar(50000) DEFAULT NULL,
-  `mo_ta` varchar(255) DEFAULT NULL,
-  `ngay_sua` varchar(255) DEFAULT NULL,
-  `ngay_tao` varchar(255) DEFAULT NULL,
-  `trang_thai` int DEFAULT NULL,
-  `id_mau_sac` int DEFAULT NULL,
-   `so_luong` int DEFAULT NULL,
-  `id_ctsp` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK90wg4hfm5w6pfpgstcvi8m0mb` (`id_mau_sac`),
-  KEY `FKr94uquvys8b1ish8yirhj3ah5` (`id_ctsp`),
-  CONSTRAINT `FK90wg4hfm5w6pfpgstcvi8m0mb` FOREIGN KEY (`id_mau_sac`) REFERENCES `mau_sac` (`id`),
-  CONSTRAINT `FKr94uquvys8b1ish8yirhj3ah5` FOREIGN KEY (`id_ctsp`) REFERENCES `san_pham_chi_tiet` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-ALTER TABLE datn.mau_sac_ctsp
-ADD COLUMN id_size_ctsp INT;
-
-
-ALTER TABLE datn.mau_sac_ctsp
-ADD CONSTRAINT FK_mau_sac_ctsp_size_ctsp FOREIGN KEY (id_size_ctsp) REFERENCES datn.size_ctsp(id);
---
--- Dumping data for table `mau_sac_ctsp`
---
-
-LOCK TABLES `mau_sac_ctsp` WRITE;
-/*!40000 ALTER TABLE `mau_sac_ctsp` DISABLE KEYS */;
-INSERT INTO `mau_sac_ctsp` VALUES (1,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/Zt7RKI_MG_3349.jpg',NULL,'2023-05-05','2023-04-13',1,1,1,1, null),
-(2,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/P0jXDB_MG_3354.jpg',NULL,'2023-05-05','2023-04-13',1,2,1,2, null),
-(3,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/K6uk81_MG_3354-muc.jpg','Xanh mực','2023-05-05','2023-04-13',1,4,1,2, null),
-(4,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/0IAa3e_MG_0585.jpg','Trắng bóng','2023-05-05','2023-04-13',1,3,1,3, null),
-(5,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/ahK7SV_MG_0593.jpg','Đen bóng','2023-05-05','2023-04-13',1,2,1,3, null),
-(6,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/FofRWKroyal-m139-v1-5.jpg','V1-Đen','2023-05-05','2023-04-13',1,2,2,4, 11),
-(7,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/5JoMl9royal-m139-v2-2.jpg','V2-Đen','2023-05-05','2023-04-13',1,2,2,4, 12),
-(8,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/5JoMl9royal-m139-v2-2.jpg','V2-Đen','2023-05-05','2023-04-13',1,3,5,4, 11),
-(9,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,3,5,4, 12),
-(10,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,1,1,5, 13),
-(11,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,1,1,5, 14),
-(12,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,4,4,5, 13),
-(13,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','Trắng bóng','2023-05-05','2023-04-13',1,4,4,5, 14);
-
-/*!40000 ALTER TABLE `mau_sac_ctsp` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -493,7 +451,7 @@ CREATE TABLE `phuong_thuc_thanh_toan` (
   `ten` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -502,7 +460,6 @@ CREATE TABLE `phuong_thuc_thanh_toan` (
 
 LOCK TABLES `phuong_thuc_thanh_toan` WRITE;
 /*!40000 ALTER TABLE `phuong_thuc_thanh_toan` DISABLE KEYS */;
-INSERT INTO `phuong_thuc_thanh_toan` VALUES (1,'TT1','2022-09-07','2022-08-06','Online',1),(2,'TT2','2022-09-07','2022-08-06','Tiền mặt',1);
 /*!40000 ALTER TABLE `phuong_thuc_thanh_toan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -515,6 +472,7 @@ DROP TABLE IF EXISTS `san_pham`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `san_pham` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `anh` varchar(255) DEFAULT NULL,
   `dem_lot` varchar(255) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
   `mo_ta` varchar(10000) DEFAULT NULL,
@@ -522,16 +480,18 @@ CREATE TABLE `san_pham` (
   `ngay_tao` varchar(255) DEFAULT NULL,
   `quai_deo` varchar(255) DEFAULT NULL,
   `ten` varchar(255) DEFAULT NULL,
-  `anh` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   `id_loai` int DEFAULT NULL,
   `id_thuong_hieu` int DEFAULT NULL,
+  `id_vat_lieu` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK3ietyty0m29mftr3yaff0v4wb` (`id_loai`),
   KEY `FKng0be3yah8qweo3tnmxm9pnrw` (`id_thuong_hieu`),
+  KEY `FKk978ncnc6kbpaj5ugxf5y6ia3` (`id_vat_lieu`),
   CONSTRAINT `FK3ietyty0m29mftr3yaff0v4wb` FOREIGN KEY (`id_loai`) REFERENCES `loai` (`id`),
+  CONSTRAINT `FKk978ncnc6kbpaj5ugxf5y6ia3` FOREIGN KEY (`id_vat_lieu`) REFERENCES `vat_lieu` (`id`),
   CONSTRAINT `FKng0be3yah8qweo3tnmxm9pnrw` FOREIGN KEY (`id_thuong_hieu`) REFERENCES `thuong_hieu` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -540,19 +500,6 @@ CREATE TABLE `san_pham` (
 
 LOCK TABLES `san_pham` WRITE;
 /*!40000 ALTER TABLE `san_pham` DISABLE KEYS */;
-INSERT INTO `san_pham` (id,dem_lot,anh,ma,mo_ta,ngay_sua,ngay_tao,quai_deo,ten,trang_thai,id_loai,id_thuong_hieu) VALUES 
-(1,'Vải nâu đất, có thể tháo rời','https://royalhelmet.com.vn/ckfinder/userfiles/images/products/Zt7RKI_MG_3349.jpg','SP1','Được thiết kế theo phong cách hiện đại với những đường nét bo tròn đầy tinh tế gọn gàng đã khiến ngoại hình của Royal M20C trở nên tinh tế gọn hàng hơn rất nhiều so với những thế hệ mũ bảo hiểm ¾ trước đây. Một nguyên nhân khiến cho mọi người thường chọn mũ bảo hiểm nửa đầu thay vì nón fullface hoặc mũ ¾ chính là vì sự gọn gàng, tiện lợi trong sử dụng, bảo quản, nhưng có thể thấy, với Royal M20C, bạn hoàn toàn yên tâm về sự gọn gàng, tiện lợi trong khi sử dụng','2023-09-10','2023-09-05','Có thể tháo rời','ROYAL M20D',1,1,9),
-(2,'Vải nâu đất, có thể tháo rời','https://royalhelmet.com.vn/ckfinder/userfiles/images/products/P0jXDB_MG_3354.jpg','SP2','Thiết kế kính âm mang tới sự khác biệt của Royal M139 so với các sản phẩm mũ bảo hiểm khác. Khi được kéo lên, lớp kính bảo vệ sẽ ẩn mình vào bên trong nón, biến Royal M139 thành chiếc mũ bảo hiểm  ¾  đầy năng động, phong cách. Khi kéo xuống, lớp kính chắc chắn, trong suốt sẽ bảo vệ bạn khỏi khói bụi, dị vật mà vẫn mang đến cho bạn tầm nhìn thoáng đãng và  phong cách thời trang trên mọi cung đường.','2023-09-15','2023-09-10','có thể tháo rời','ROYAL M139',1,1,9),
-(3,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/K6uk81_MG_3354-muc.jpg','Vải đen , có thể tháo rời','SP3','Mũ bảo hiểm Royal M268 siêu phẩm mũ ¾ hai kính mới nhất của Royal Helmet. Giữ nguyên những đặc điểm“đẳng cấp” làm nên thương hiệu Royal, Royal M268 vẫn biết làm nổi bật mình với thiết kế 2 kính độc đáo mang lại những trải nghiệm thú vị, tươi mới cho người đội!','2023-09-23','2023-09-19','có thể tháo rời','ROYAL M268 TRƠN - 2 KÍNH',0,1,9),
-(4,'Vải đen , có thể tháo rời','https://royalhelmet.com.vn/ckfinder/userfiles/images/products/0IAa3e_MG_0585.jpg','SP4','Mũ bảo hiểm Royal M134C do công ty Mafa sản xuất. Thương hiệu nón Royal ra đời năm 2008 do ông Mai Văn Thuận sáng lập. Với mục tiêu sản xuất ra những chiếc nón chất lượng nhất, đáp ứng nhu cầu ngày càng cao không chỉ của người dùng ở Việt Nam và cả ở thị trường thế giới.','2023-09-10','2023-09-05','có thể tháo rời','ROYAL M134C',1,1,9),
-(5,'Vải nâu đất, có thể tháo rời','https://royalhelmet.com.vn/ckfinder/userfiles/images/products/ahK7SV_MG_0593.jpg','SP5','Mũ bảo hiểm nguyên đầu Andes Luxury 810B là dòng mũ bảo hiểm fullface cao cấp cải tiến mới của Andes. Nhờ thiết kế nguyên khối bền chắc, Andes Luxury 810B có thể bao bọc toàn bộ phần đầu như mặt, tai, gáy và cả cằm, bền bỉ bảo vệ người đội mũ trong suốt chặng đường dài','2023-07-19','2023-07-15','có thể tháo rời','Andes Luxury 810B',1,2,5),
-(6,'Vải đen, có thể tháo rời','https://royalhelmet.com.vn/ckfinder/userfiles/images/products/FofRWKroyal-m139-v1-5.jpg','SP6','Mũ bảo hiểm nguyên đầu Andes 3S555 là dòng mũ bảo hiểm fullface cao cấp cải tiến mới của Andes. Nhờ thiết kế nguyên khối bền chắc, Andes 3S555 có thể bao bọc toàn bộ phần đầu như mặt, tai, gáy và cả cằm, bền bỉ bảo vệ người đội mũ trong suốt chặng đường dài.','2023-08-10','2023-07-25','có thể tháo rời','Andes 3S555',0,2,5),
-(7,'Vải nâu đất, có thể tháo rời','https://royalhelmet.com.vn/ckfinder/userfiles/images/products/5JoMl9royal-m139-v2-2.jpg','SP7','Mũ bảo hiểm Royal M138B do công ty Mafa sản xuất. Thương hiệu nón Royal ra đời năm 2008 do ông Mai Văn Thuận sáng lập. Với mục tiêu sản xuất ra những chiếc nón chất lượng nhất, đáp ứng nhu cầu ngày càng cao không chỉ của người dùng ở Việt Nam và cả ở thị trường thế giới.','2023-09-10','2023-09-05','có thể tháo rời','ROYAL M138B',1,2,9),
-(8,'Vải nâu đất, có thể tháo rời','https://royalhelmet.com.vn/ckfinder/userfiles/images/products/sN4zd1Royal-m139-v10.jpg','SP8','là dòng nón bảo hiểm fullface 1 kính cao cấp mới nhất.Với mức giá rất cạnh tranh và chất lượng cao vượt trội. Đây là mẫu fullface định hướng xuất khẩu nên chất lượng khá tốt','2023-09-10','2023-09-05','có thể tháo rời','ROYAL M141K',0,2,9),
-(10,'Vải lưới 3 lớp, có thể tháo rời','https://royalhelmet.com.vn/ckfinder/userfiles/images/products/4eOVB1royal-m139-v9.jpg','SP10','Royal M266 là dòng nón bảo hiểm fullface 2 kính mới ra mắt của nón Royal. Đây là nón fullface có thể nói rẻ nhất Việt Nam','2023-09-15','2023-09-10','có thể tháo rời','ROYAL M226 DESIGN',1,2,9),
-(11,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/AfmhwnIMG_5283.jpg','Vải nâu đất, có thể tháo rời','SP11','Mũ bảo hiểm nửa đầu có kính Andes 3S126 có thiết kế đơn giản, bắt mắt với bộ sưu tập màu, tem hơn 20 mẫu cho cả nhám lẫn bóng. Andes 3S126 còn được gọi là chiếc nón thanh xuân bởi sự đa dạng và trẻ trung ở thiết kế, đây chắc chắn là sản phẩm thú vị dành cho những quý khách hàng yêu thích sự nổi bật.','2023-09-15','2023-09-10',NULL,'Andes 3S126',1,3,5),
-(12,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/8MzEPqIMG_5454.jpg','Vải nâu đất, có thể tháo rời','SP12','Giữ nguyên những đặc điểm“đẳng cấp” làm nên thương hiệu Royal, Royal 152K vẫn biết làm nổi bật mình với hệ thống thông gió \"xịn sò\" thiết kế nổi bật với các đường nét góc cạnh, tinh tế được tính toán cẩn thận.','2023-09-15','2023-09-10',NULL,'ROYAL 152K',1,3,9),
-(13,'https://royalhelmet.com.vn/ckfinder/userfiles/images/products/PeCI1GIMG_3358.jpg','Vải đen , có thể tháo rời','SP13','Với vẻ ngoài thời trang, chất lượng hoàn hảo cùng những trải nghiệm thú vị, Mũ bảo hiểm Royal M153LT đang rất được mọi người ưa thích.','2023-09-15','2023-09-10',NULL,'ROYAL 153LT',0,3,9);
 /*!40000 ALTER TABLE `san_pham` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -565,27 +512,31 @@ DROP TABLE IF EXISTS `san_pham_chi_tiet`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `san_pham_chi_tiet` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `anh` varchar(255) DEFAULT NULL,
   `gia_ban` decimal(20,0) DEFAULT NULL,
   `gia_nhap` decimal(20,0) DEFAULT NULL,
+  `gia_sau_giam` decimal(20,0) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
   `so_luong_ton` int DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
- `gia_sau_giam` decimal(20,0) DEFAULT NULL,
-  `id_san_pham` int DEFAULT NULL,
-  `id_trong_luong` int DEFAULT NULL,
-  `id_vat_lieu` int DEFAULT NULL,
   `id_khuyen_mai` int DEFAULT NULL,
+  `id_mau_sac` int DEFAULT NULL,
+  `id_san_pham` int DEFAULT NULL,
+  `id_size` int DEFAULT NULL,
+  `id_trong_luong` int DEFAULT NULL,
   PRIMARY KEY (`id`),
+  KEY `FK1rjmi0xu7agob46sq32ns1587` (`id_khuyen_mai`),
+  KEY `FKdt9xxy835agedr1aa67p8vw0o` (`id_mau_sac`),
   KEY `FKmby561odp360b0sfqx4mmarja` (`id_san_pham`),
+  KEY `FK899rggxfp9dtblqirh75pme1` (`id_size`),
   KEY `FKdrjkavdharm2dd7tsh3wywlr1` (`id_trong_luong`),
-  KEY `FK4sre5v1q6gi2fhpeogsgd71bc` (`id_vat_lieu`),
-  KEY `FKe781xl7r1mbttpsw0k5tydfky` (`id_khuyen_mai`),
-  CONSTRAINT `FKe781xl7r1mbttpsw0k5tydfky` FOREIGN KEY (`id_khuyen_mai`) REFERENCES `khuyen_mai` (`id`),
-  CONSTRAINT `FK4sre5v1q6gi2fhpeogsgd71bc` FOREIGN KEY (`id_vat_lieu`) REFERENCES `vat_lieu` (`id`),
+  CONSTRAINT `FK1rjmi0xu7agob46sq32ns1587` FOREIGN KEY (`id_khuyen_mai`) REFERENCES `khuyen_mai` (`id`),
+  CONSTRAINT `FK899rggxfp9dtblqirh75pme1` FOREIGN KEY (`id_size`) REFERENCES `size` (`id`),
   CONSTRAINT `FKdrjkavdharm2dd7tsh3wywlr1` FOREIGN KEY (`id_trong_luong`) REFERENCES `trong_luong` (`id`),
+  CONSTRAINT `FKdt9xxy835agedr1aa67p8vw0o` FOREIGN KEY (`id_mau_sac`) REFERENCES `mau_sac` (`id`),
   CONSTRAINT `FKmby561odp360b0sfqx4mmarja` FOREIGN KEY (`id_san_pham`) REFERENCES `san_pham` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -594,12 +545,6 @@ CREATE TABLE `san_pham_chi_tiet` (
 
 LOCK TABLES `san_pham_chi_tiet` WRITE;
 /*!40000 ALTER TABLE `san_pham_chi_tiet` DISABLE KEYS */;
-INSERT INTO `san_pham_chi_tiet` VALUES 
-(1,780000,700000,'2023-05-05','2023-04-13',50,1,null,1,1,1,null),
-(2,730000,600000,'2023-05-05','2023-04-13',100,1,null,2,1,1,null),
-(3,6400000,500000,'2023-05-05','2023-04-13',25,1,null,3,1,1,null),
-(4,540000,400000,'2023-05-05','2023-04-13',30,1,null,4,2,1,null),
-(5,750000,600000,'2023-05-05','2023-04-13',120,1,null,5,1,1,null);
 /*!40000 ALTER TABLE `san_pham_chi_tiet` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -619,7 +564,7 @@ CREATE TABLE `size` (
   `ten` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -628,56 +573,7 @@ CREATE TABLE `size` (
 
 LOCK TABLES `size` WRITE;
 /*!40000 ALTER TABLE `size` DISABLE KEYS */;
-INSERT INTO `size` VALUES (1,'S1','56-57cm','2023-11-10','2023-10-24','L',1),(2,'S2','58-59cm','2023-11-10','2023-10-24','XL',1),(3,'S3','52-54cm','2023-11-10','2023-10-24','S',1),(4,'S4','54-55cm','2023-11-10','2023-10-24','M',1);
 /*!40000 ALTER TABLE `size` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `size_ctsp`
---
-
-DROP TABLE IF EXISTS `size_ctsp`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `size_ctsp` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `mo_ta` varchar(255) DEFAULT NULL,
-  `ngay_sua` varchar(255) DEFAULT NULL,
-  `ngay_tao` varchar(255) DEFAULT NULL,
-  `so_luong` int DEFAULT NULL,
-  `trang_thai` int DEFAULT NULL,
-  `id_ctsp` int DEFAULT NULL,
-  `id_size` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK7sx2xsvfe1gorvlkii0nw12q2` (`id_ctsp`),
-  KEY `FKkvjo22xxixaj9gu4dstu4q313` (`id_size`),
-  CONSTRAINT `FK7sx2xsvfe1gorvlkii0nw12q2` FOREIGN KEY (`id_ctsp`) REFERENCES `san_pham_chi_tiet` (`id`),
-  CONSTRAINT `FKkvjo22xxixaj9gu4dstu4q313` FOREIGN KEY (`id_size`) REFERENCES `size` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `size_ctsp`
---
-
-LOCK TABLES `size_ctsp` WRITE;
-/*!40000 ALTER TABLE `size_ctsp` DISABLE KEYS */;
-INSERT INTO `size_ctsp` VALUES (1,NULL,'2023-05-05',NULL,23,1,null,1),
-(2,NULL,'2023-05-05',NULL,10,1,null,4),
-(3,NULL,'2023-05-05',NULL,17,1,null,3),
-(4,NULL,'2023-05-05',NULL,55,1,null,1),
-(5,NULL,'2023-05-05',NULL,2,1,null,2),
-(6,NULL,'2023-05-05',NULL,3,1,null,4),
-(7,NULL,'2023-05-05',NULL,40,1,null,3),
-(8,NULL,'2023-05-05',NULL,20,1,null,1),
-(9,NULL,'2023-05-05',NULL,5,1,null,3),
-(10,NULL,'2023-05-05',NULL,10,1,null,1),
-(11,NULL,'2023-05-05',NULL,10,1,4,2),
-(12,NULL,'2023-05-05',NULL,10,1,4,4),
-(13,NULL,'2023-05-05',NULL,40,1,5,1),
-(14,NULL,'2023-05-05',NULL,20,1,5,2);
-
-/*!40000 ALTER TABLE `size_ctsp` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -695,7 +591,7 @@ CREATE TABLE `thuong_hieu` (
   `ten` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -704,7 +600,6 @@ CREATE TABLE `thuong_hieu` (
 
 LOCK TABLES `thuong_hieu` WRITE;
 /*!40000 ALTER TABLE `thuong_hieu` DISABLE KEYS */;
-INSERT INTO `thuong_hieu` VALUES (1,'1001','2023-09-10','2023-09-05','Amoro',1),(2,'1002','2023-09-15','2023-09-10','Protec',1),(3,'1003','2023-09-23','2023-09-19','HSL',0),(4,'1004','2023-09-24','2023-09-20','Hitech',0),(5,'1005','2023-08-10','2023-07-25','Andes',1),(6,'1006','2023-07-19','2023-07-15','Honda',1),(7,'1007','2023-05-20','2023-05-15','Sankyo',0),(8,'1008','2023-10-10','2023-10-05','Avex',0),(9,'1009','2023-07-10','2023-07-01','Royal',0);
 /*!40000 ALTER TABLE `thuong_hieu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -754,7 +649,7 @@ CREATE TABLE `trong_luong` (
   `trang_thai` int DEFAULT NULL,
   `value` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -763,7 +658,6 @@ CREATE TABLE `trong_luong` (
 
 LOCK TABLES `trong_luong` WRITE;
 /*!40000 ALTER TABLE `trong_luong` DISABLE KEYS */;
-INSERT INTO `trong_luong` VALUES (1,'gam','TL1','2023-09-10','2023-08-20',1,850),(2,'gam','TL2','2023-09-10','2023-08-20',1,1050),(3,'gam','TL3','2023-09-10','2023-08-20',1,1050),(4,'gam','TL4','2023-09-10','2023-08-20',1,752),(5,'gam','TL5','2023-09-10','2023-08-20',1,350);
 /*!40000 ALTER TABLE `trong_luong` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -778,7 +672,7 @@ CREATE TABLE `user` (
   `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(255) DEFAULT NULL,
   `gioi_tinh` int DEFAULT NULL,
-  `anh` varchar(50000) DEFAULT NULL,
+  `anh` varchar(255) DEFAULT NULL,
   `ma` varchar(255) DEFAULT NULL,
   `ngay_sinh` varchar(255) DEFAULT NULL,
   `ngay_sua` varchar(255) DEFAULT NULL,
@@ -793,7 +687,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   KEY `FKgpfbko0r45dpco2igftw1al9` (`id_chuc_vu`),
   CONSTRAINT `FKgpfbko0r45dpco2igftw1al9` FOREIGN KEY (`id_chuc_vu`) REFERENCES `chuc_vu` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -802,7 +696,6 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'levana@gmail.com',1,NULL,'U1','2002-10-07','2023-11-10','2023-10-24','12345','ADMIN','0987678987','Lê Văn A',1,'levana',NULL),(2,'levanb@gmail.com',1,NULL,'U2','2002-11-07','2023-11-10','2023-10-24','12345','NHANVIEN','0987678987','Lê Văn B',1,'levanb',1),(3,'levanc@gmail.com',1,NULL,'U3','2002-12-07','2023-11-10','2023-10-24','12345','USER','0987678987','Lê Văn C',1,'levanc',NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -851,7 +744,7 @@ CREATE TABLE `vat_lieu` (
   `ten` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -860,7 +753,6 @@ CREATE TABLE `vat_lieu` (
 
 LOCK TABLES `vat_lieu` WRITE;
 /*!40000 ALTER TABLE `vat_lieu` DISABLE KEYS */;
-INSERT INTO `vat_lieu` VALUES (1,'VL1','độ bền cao','2023-11-10','2023-10-24','nhựa ABS nguyên sinh',1),(2,'VL2','êm ái, thông thoáng bảo','2023-11-10','2023-10-24','xốp EPS ',1),(3,'VL3','không gỉ,độ bền cao','2023-11-10','2023-10-24','da simili',1);
 /*!40000 ALTER TABLE `vat_lieu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -875,21 +767,15 @@ CREATE TABLE `voucher` (
   `id` int NOT NULL AUTO_INCREMENT,
   `giam_toi_da` decimal(20,0) DEFAULT NULL,
   `mo_ta` varchar(10000) DEFAULT NULL,
+  `so_luong` int DEFAULT NULL,
   `ten` varchar(255) DEFAULT NULL,
-  `thoi_gian_bat_dau` datetime DEFAULT NULL,
-  `thoi_gian_ket_thuc` datetime DEFAULT NULL,
+  `thoi_gian_bat_dau` datetime(6) DEFAULT NULL,
+  `thoi_gian_ket_thuc` datetime(6) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
-   `so_luong` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-INSERT INTO `voucher`(`giam_toi_da`,`mo_ta`, `ten`, `thoi_gian_bat_dau`,`thoi_gian_ket_thuc`, `trang_thai`)
-     VALUES (15000,'ma giam gia zomot','zô mốt','2023/06/23','2023/06/25',1),
-                           (13000,'freeship','freeship','2023/06/23','2023/06/25',1),
-                           (16000,'thời trang','thời trang','2023/06/23','2023/06/25',1),
-                           (15000,'siêu voucher','siêu voucher','2023/06/23','2023/06/25',1),
-                           (11000,'06-06','06-06','2023/06/23','2023/06/25',1);
 --
 -- Dumping data for table `voucher`
 --
@@ -907,3 +793,5 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2023-11-07 23:03:43

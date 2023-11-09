@@ -47,12 +47,6 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
     private AdTrongLuongRepository adTrongLuongRepository;
 
     @Autowired
-    private AdMauSacChiTietReponsitory mauSacChiTietReponsitory;
-
-    @Autowired
-    private AdSizeChiTietReponsitory sizeChiTietReponsitory;
-
-    @Autowired
     private ImageToAzureUtil imageToAzureUtil;
 
     @Autowired
@@ -83,19 +77,19 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
     public void mutitheard(List<SanPhamChiTiet> saveSanPhamChiTiet, List<AdminCreatExcelSanPhamRequest> creatExcelSanPhamRequests) {
 
         // Tạo các luồng cho các công việc cần thực hiện đồng thời
-        Thread mauSacThread = new Thread(() -> this.saveAllMauSacChiTiet(creatExcelSanPhamRequests, saveSanPhamChiTiet));
-        Thread sizeThread = new Thread(() -> this.saveAllSizeChiTiet(creatExcelSanPhamRequests, saveSanPhamChiTiet));
+//        Thread mauSacThread = new Thread(() -> this.saveAllMauSacChiTiet(creatExcelSanPhamRequests, saveSanPhamChiTiet));
+//        Thread sizeThread = new Thread(() -> this.saveAllSizeChiTiet(creatExcelSanPhamRequests, saveSanPhamChiTiet));
         Thread imageThread = new Thread(() -> this.saveAllImage(creatExcelSanPhamRequests, saveSanPhamChiTiet));
 
         // Bắt đầu chạy các luồng
-        mauSacThread.start();
-        sizeThread.start();
+//        mauSacThread.start();
+//        sizeThread.start();
         imageThread.start();
 
         try {
             // Đợi cho tất cả các luồng hoàn thành
-            mauSacThread.join();
-            sizeThread.join();
+//            mauSacThread.join();
+//            sizeThread.join();
             imageThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -133,7 +127,7 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
                 // Thiết lập thông tin sản phẩm chi tiết mới
                 sanPhamChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
                 sanPhamChiTiet.setSanPham(newSanPham);
-                sanPhamChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(request.getVatLieu())).build());
+             //   sanPhamChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(request.getVatLieu())).build());
                 sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(Integer.parseInt(request.getTrongLuong())).build());
                 sanPhamChiTiet.setTrangThai(Integer.valueOf(request.getTrangThai()));
                 sanPhamChiTiet.setSoLuongTon(Integer.valueOf(request.getSoLuongTon()));
@@ -145,7 +139,7 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
                 SanPham sanPham = sanPhamReponsitory.findByTenSanPhamExcel(request.getSanPham());
                 existingChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
                 existingChiTiet.setSanPham(sanPham);
-                existingChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(request.getVatLieu())).build());
+              //  existingChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(request.getVatLieu())).build());
                 existingChiTiet.setTrongLuong(TrongLuong.builder().id(Integer.parseInt(request.getTrongLuong())).build());
                 existingChiTiet.setTrangThai(Integer.valueOf(request.getTrangThai()));
                 existingChiTiet.setSoLuongTon(Integer.valueOf(request.getSoLuongTon()));
@@ -159,91 +153,7 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
     }
 
     //
-//    // Lưu danh sách màu sắc chi tiết vào cơ sở dữ liệu
-    public List<MauSacChiTiet> saveAllMauSacChiTiet(List<AdminCreatExcelSanPhamRequest> sanPhamChiTietRequests, List<SanPhamChiTiet> savedSanPhamChiTiets) {
-        List<MauSacChiTiet> mauSacChiTiets = new ArrayList<>();
 
-        sanPhamChiTietRequests.forEach(request -> {
-            int index = sanPhamChiTietRequests.indexOf(request);
-            SanPhamChiTiet sanPhamChiTiet = savedSanPhamChiTiets.get(index);
-            request.getIdMauSac().forEach(mauSac -> {
-                List<MauSacChiTiet> mauSacChiTietList = mauSacChiTietReponsitory.findBySanPhamChiTietIdAndMauSacId(sanPhamChiTiet.getId(), Integer.valueOf(mauSac));
-                if (mauSacChiTietList.isEmpty()) {
-                    System.out.println("save mau sac");
-                    // Thiết lập thông tin màu sắc chi tiết mới và thêm vào danh sách
-                    MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
-                    mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
-                    mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                    mauSacChiTiet.setTrangThai(1);
-                    mauSacChiTiet.setAnh(request.getImgMauSac().get(Integer.parseInt(mauSac)));
-                    mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-                    mauSacChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
-                    mauSacChiTiets.add(mauSacChiTiet);
-
-                } else {
-                    // Xóa các phần tử cũ khỏi danh sách mauSacChiTiets
-                    mauSacChiTiets.removeAll(mauSacChiTietList);
-
-                    // Cập nhật thông tin màu sắc chi tiết cho danh sách đã tìm thấy
-                    mauSacChiTietList.stream().map(mauSacChiTiet -> {
-                        mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
-                        mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                        mauSacChiTiet.setTrangThai(1);
-                        mauSacChiTiet.setAnh(request.getImgMauSac().get(Integer.parseInt(mauSac)));
-                        mauSacChiTiet.setNgayTao(mauSacChiTiet.getNgayTao());
-                        mauSacChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
-                        mauSacChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
-                        return mauSacChiTiet;
-                    }).forEach(mauSacChiTiets::add);
-                }
-            });
-        });
-        return this.mauSacChiTietReponsitory.saveAll(mauSacChiTiets);
-    }
-
-    //
-//
-//    // Lưu danh sách size chi tiết vào cơ sở dữ liệu
-    public List<SizeChiTiet> saveAllSizeChiTiet(List<AdminCreatExcelSanPhamRequest> sanPhamChiTietRequests, List<SanPhamChiTiet> savedSanPhamChiTiets) {
-        List<SizeChiTiet> sizeChiTiets = new ArrayList<>();
-        sanPhamChiTietRequests.forEach(request -> {
-            int index = sanPhamChiTietRequests.indexOf(request);
-            SanPhamChiTiet sanPhamChiTiet = savedSanPhamChiTiets.get(index);
-
-            request.getIdSize().forEach(size -> {
-                SanPhamChiTiet existingChiTiet = this.findBySanPhamTen(request.getSanPham());
-                List<SizeChiTiet> sizeChiTietList = sizeChiTietReponsitory.findBySanPhamChiTietIdAndSizeId(existingChiTiet.getId(), Integer.valueOf(size));
-                if (!sizeChiTietList.isEmpty()) {
-                    // Cập nhật thông tin size chi tiết
-                    sizeChiTietList.stream().map(sizeChiTiet -> {
-                        sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(size)).build());
-                        sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                        sizeChiTiet.setTrangThai(1);
-                        sizeChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
-
-                        request.getSoLuongSize().forEach(i -> {
-                            sizeChiTiet.setSoLuong(Integer.valueOf(i));
-                        });
-                        sizeChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
-                        return sizeChiTiet;
-                    }).forEach(sizeChiTiets::add);
-                } else {
-                    // Thiết lập thông tin size  chi tiết mới
-                    SizeChiTiet sizeChiTiet = new SizeChiTiet();
-                    sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(size)).build());
-                    sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                    sizeChiTiet.setTrangThai(1);
-                    sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-                    sizeChiTiet.setMoTa(request.getMoTaMauSacChiTiet());
-                    request.getSoLuongSize().forEach(i -> {
-                        sizeChiTiet.setSoLuong(Integer.valueOf(i));
-                    });
-                    sizeChiTiets.add(sizeChiTiet);
-                }
-            });
-        });
-        return this.sizeChiTietReponsitory.saveAll(sizeChiTiets);
-    }
 
     public SanPhamChiTiet findBySanPhamTen(String ten) {
         return chiTietSanPhamReponsitory.findBySanPhamTen(ten);
@@ -263,7 +173,7 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
                 if (!list.isEmpty()) {
                     // Cập nhật thông tin image
                     list.stream().map(image -> {
-                        image.setSanPhamChiTiet(sanPhamChiTiet);
+                     //   image.setSanPhamChiTiet(sanPhamChiTiet);
                         image.setTrangThai(1);
                         image.setNgaySua(DatetimeUtil.getCurrentDate());
                         image.setAnh(images);
@@ -274,7 +184,7 @@ public class CreateExcelSanPhamServiceImpl implements AdSanPhamChiTietService {
                 } else {
                     // Thiết lập thông tin image mới
                     Image image = new Image();
-                    image.setSanPhamChiTiet(sanPhamChiTiet);
+                 //   image.setSanPhamChiTiet(sanPhamChiTiet);
                     image.setTrangThai(1);
                     image.setNgayTao(DatetimeUtil.getCurrentDate());
                     image.setAnh(images);

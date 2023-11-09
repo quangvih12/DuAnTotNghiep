@@ -44,12 +44,6 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
     private AdTrongLuongRepository adTrongLuongRepository;
 
     @Autowired
-    private AdMauSacChiTietReponsitory mauSacChiTietReponsitory;
-
-    @Autowired
-    private AdSizeChiTietReponsitory sizeChiTietReponsitory;
-
-    @Autowired
     private ImageToAzureUtil imageToAzureUtil;
 
     @Autowired
@@ -58,8 +52,6 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
     @Autowired
     private AdLoaiReponsitory loaiReponsitory;
 
-    @Autowired
-    private AdMauSacReponsitory adMauSacReponsitory;
 
     @Autowired
     private AdSizeReponsitory adSizeReponsitory;
@@ -259,13 +251,13 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
                 userDTO.setIdThuongHieu(thuongHieu.getId());
                 userDTO.setTenThuongHieu(tenThuongHieu);
                 userDTO.setImportMessageThuongHieu("SUCCESS");
-                idMauSac = listTenMauSac.stream()
-                        .map(tenMau -> {
-                            MauSac mauSac = adMauSacReponsitory.findByTenMauSacExcel(tenMau);
-                            return mauSac != null ? mauSac.getId().toString() : null;
-                        })
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList());
+//                idMauSac = listTenMauSac.stream()
+//                        .map(tenMau -> {
+//                            MauSac mauSac = adMauSacReponsitory.findByTenMauSacExcel(tenMau);
+//                            return mauSac != null ? mauSac.getId().toString() : null;
+//                        })
+//                        .filter(Objects::nonNull)
+//                        .collect(Collectors.toList());
 
                 if (idMauSac.isEmpty()) {
                     // Xử lý khi không tìm thấy idMauSac hợp lệ
@@ -373,7 +365,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
                 // Thiết lập thông tin sản phẩm chi tiết mới
                 sanPhamChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
                 sanPhamChiTiet.setSanPham(newSanPham);
-                sanPhamChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(BO.getIdVatLieu())).build());
+            //    sanPhamChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(BO.getIdVatLieu())).build());
                 sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(BO.getIdTrongLuong()).build());
                 sanPhamChiTiet.setTrangThai(1);
                 sanPhamChiTiet.setSoLuongTon(Integer.valueOf(BO.getSoLuong()));
@@ -393,7 +385,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
                 sanPham.setThuongHieu(ThuongHieu.builder().id(Integer.valueOf(BO.getIdThuongHieu())).build());
                 existingChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
                 existingChiTiet.setSanPham(sanPham);
-                existingChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(BO.getIdVatLieu())).build());
+             //   existingChiTiet.setVatLieu(VatLieu.builder().id(Integer.valueOf(BO.getIdVatLieu())).build());
                 existingChiTiet.setTrongLuong(TrongLuong.builder().id(BO.getIdTrongLuong()).build());
                 existingChiTiet.setTrangThai(1);
                 existingChiTiet.setSoLuongTon(Integer.valueOf(BO.getSoLuong()));
@@ -410,31 +402,6 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
     public void mutitheard(List<SanPhamChiTiet> saveSanPhamChiTiet, AdminExcelAddSanPhamBO adminExcelAddSanPhamBO) {
         ExecutorService executor = Executors.newFixedThreadPool(3);
 
-        Future<List<SizeChiTiet>> sizeFuture = executor.submit(() -> {
-            List<SizeChiTiet> result = new ArrayList<>();
-            for (AdminExcelAddSanPhamResponse o : adminExcelAddSanPhamBO.getResponseList()) {
-                if (o.getIdSize() != null && !o.getIdSize().isEmpty()) {
-                    result.addAll(saveAllSizeChiTiet(adminExcelAddSanPhamBO, saveSanPhamChiTiet));
-                    break;
-                } else {
-                    result.addAll(Collections.emptyList());
-                    break;
-                }
-            }
-            return result;
-        });
-
-
-        Future<Void> mauSacFuture = executor.submit(() -> {
-            try {
-                List<SizeChiTiet> sizes = sizeFuture.get();
-                saveAllMauSacChiTiet(sizes, adminExcelAddSanPhamBO, saveSanPhamChiTiet);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            return null;
-        });
-
         Future<Void> imageFuture = executor.submit(() -> {
             try {
                 saveAllImage(adminExcelAddSanPhamBO, saveSanPhamChiTiet);
@@ -445,7 +412,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         });
 
         try {
-            mauSacFuture.get();
+
             imageFuture.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
@@ -454,111 +421,6 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         executor.shutdown();
     }
 
-    @Override
-    public List<MauSacChiTiet> saveAllMauSacChiTiet(List<SizeChiTiet> sizes, AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets) {
-        List<MauSacChiTiet> mauSacChiTiets = new ArrayList<>();
-
-        adminExcelAddSanPhamBO.getResponseList().forEach(request -> {
-            int index = adminExcelAddSanPhamBO.getResponseList().indexOf(request);
-            SanPhamChiTiet sanPhamChiTiet = savedSanPhamChiTiets.get(index);
-
-            List<String> idMauSac = request.getIdMauSac();
-            List<String> imgMauSac = request.getImgMauSac();
-            List<String> soLuong = request.getSoLuongMauSac();
-
-            for (int i = 0; i < idMauSac.size(); i++) {
-                String mauSac = idMauSac.get(i);
-
-                List<MauSacChiTiet> mauSacChiTietList = mauSacChiTietReponsitory.findBySanPhamChiTietIdAndMauSacId(sanPhamChiTiet.getId(), Integer.valueOf(mauSac));
-                List<SizeChiTiet> applicableSizes = sizes.isEmpty() ? Collections.singletonList(null) : sizes;
-
-
-                if (mauSacChiTietList.isEmpty()) {
-                    // Thiết lập thông tin màu sắc chi tiết mới và thêm vào danh sách
-                    for (SizeChiTiet sizeChiTiet : applicableSizes) {
-                        if (sizeChiTiet.getSanPhamChiTiet().getId() == sanPhamChiTiet.getId()) {
-                            MauSacChiTiet mauSacChiTiet = new MauSacChiTiet();
-                            mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
-                            mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                            mauSacChiTiet.setTrangThai(1);
-                            mauSacChiTiet.setSizeChiTiet(sizeChiTiet);
-                            // Kiểm tra xem có ảnh tương ứng không
-                            if (i < imgMauSac.size()) {
-                                mauSacChiTiet.setAnh(imgMauSac.get(i));
-                            }
-                            if (i < soLuong.size()) {
-                                mauSacChiTiet.setSoLuong(Integer.valueOf(soLuong.get(i)));
-                            }
-                            mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-                            mauSacChiTiets.add(mauSacChiTiet);
-                        }
-                    }
-                } else {
-
-                    for (MauSacChiTiet mauSacChiTiet : mauSacChiTietList) {
-                        mauSacChiTiet.setMauSac(MauSac.builder().id(Integer.valueOf(mauSac)).build());
-                        mauSacChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                        mauSacChiTiet.setTrangThai(1);
-                        // Kiểm tra xem có ảnh tương ứng không
-                        if (i < imgMauSac.size()) {
-                            mauSacChiTiet.setAnh(imgMauSac.get(i));
-                        }
-                        if (i < soLuong.size()) {
-                            mauSacChiTiet.setSoLuong(Integer.valueOf(soLuong.get(i)));
-                        }
-                        mauSacChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-                        mauSacChiTiets.add(mauSacChiTiet);
-                    }
-
-                }
-            }
-        });
-
-        return this.mauSacChiTietReponsitory.saveAll(mauSacChiTiets);
-    }
-
-
-    @Override
-    public List<SizeChiTiet> saveAllSizeChiTiet(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets) {
-        List<SizeChiTiet> sizeChiTiets = new ArrayList<>();
-
-        adminExcelAddSanPhamBO.getResponseList().forEach(request -> {
-            int index = adminExcelAddSanPhamBO.getResponseList().indexOf(request);
-            SanPhamChiTiet sanPhamChiTiet = savedSanPhamChiTiets.get(index);
-
-
-            List<String> sizeId = request.getIdSize();
-            for (int sizeIndex = 0; sizeIndex < sizeId.size(); sizeIndex++) {
-                int idsize = Integer.valueOf(sizeId.get(sizeIndex));
-                SanPhamChiTiet existingChiTiet = chiTietSanPhamReponsitory.findBySanPhamTen(request.getTenSanPham());
-                List<SizeChiTiet> sizeChiTietList = sizeChiTietReponsitory.findBySanPhamChiTietIdAndSizeId(existingChiTiet.getId(), Integer.valueOf(request.getIdSize().get(sizeIndex)));
-
-                if (!sizeChiTietList.isEmpty()) {
-                    // Cập nhật thông tin size chi tiết cho từng size
-                    sizeChiTietList.forEach(sizeChiTiet -> {
-                        sizeChiTiet.setSize(Size.builder().id(idsize).build());
-                        sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                        sizeChiTiet.setTrangThai(1);
-                        sizeChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
-
-                        sizeChiTiets.add(sizeChiTiet);
-                    });
-                } else {
-                    // Thiết lập thông tin size chi tiết mới cho từng size
-                    SizeChiTiet sizeChiTiet = new SizeChiTiet();
-                    sizeChiTiet.setSize(Size.builder().id(Integer.valueOf(request.getIdSize().get(sizeIndex))).build());
-                    sizeChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                    sizeChiTiet.setTrangThai(1);
-                    //       sizeChiTiet.setSoLuong(Integer.valueOf(soLuong));
-                    sizeChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-
-                    sizeChiTiets.add(sizeChiTiet);
-                }
-            }
-        });
-
-        return this.sizeChiTietReponsitory.saveAll(sizeChiTiets);
-    }
 
     @Override
     public void saveAllImage(AdminExcelAddSanPhamBO adminExcelAddSanPhamBO, List<SanPhamChiTiet> savedSanPhamChiTiets) {
@@ -573,7 +435,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
             if (!list.isEmpty()) {
                 // Cập nhật thông tin image
                 list.forEach(image -> {
-                    image.setSanPhamChiTiet(sanPhamChiTiet);
+                 //   image.setSanPhamChiTiet(sanPhamChiTiet);
                     image.setTrangThai(1);
                     image.setNgaySua(DatetimeUtil.getCurrentDate());
                 });
@@ -583,7 +445,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
 
                 request.getImagesProduct().forEach(images -> {
                     Image image = new Image();
-                    image.setSanPhamChiTiet(sanPhamChiTiet);
+                //    image.setSanPhamChiTiet(sanPhamChiTiet);
                     image.setTrangThai(1);
                     image.setNgayTao(DatetimeUtil.getCurrentDate());
                     image.setAnh(images);
@@ -593,7 +455,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
                 // Thiết lập thông tin image mới
                 request.getImagesProduct().forEach(images -> {
                     Image image = new Image();
-                    image.setSanPhamChiTiet(sanPhamChiTiet);
+                //    image.setSanPhamChiTiet(sanPhamChiTiet);
                     image.setTrangThai(1);
                     image.setNgayTao(DatetimeUtil.getCurrentDate());
                     image.setAnh(images);

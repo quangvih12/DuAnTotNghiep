@@ -1,7 +1,6 @@
 package com.example.demo.reponsitory;
 
 import com.example.demo.entity.MauSac;
-import com.example.demo.entity.MauSacChiTiet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,6 +16,4 @@ public interface MauSacReponsitory extends JpaRepository<MauSac, Integer> {
     Page<MauSac> search(String keyword, Pageable pageable);
     List<MauSac> findAllByTrangThai(Integer trangThai, Sort sort);
 
-    @Query("select pt from MauSacChiTiet  pt where  pt.sanPhamChiTiet.id=:id")
-    List<MauSacChiTiet> findMauSacChiTiet(Integer id);
 }

@@ -1,9 +1,12 @@
 package com.example.demo.core.khachHang.repository;
 
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
+import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.reponsitory.ChiTietSanPhamReponsitory;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface KHchiTietSanPhamRepository extends ChiTietSanPhamReponsitory {
 
@@ -27,5 +30,8 @@ public interface KHchiTietSanPhamRepository extends ChiTietSanPhamReponsitory {
                          	WHERE spct.id =:id
             """, nativeQuery = true)
     AdminSanPhamChiTietResponse get(@Param("id") Integer id);
+
+    @Query("select spct from SanPhamChiTiet spct where spct.sanPham.id = :idSP")
+    List<SanPhamChiTiet> findByIdSp(Integer idSP);
 
 }
