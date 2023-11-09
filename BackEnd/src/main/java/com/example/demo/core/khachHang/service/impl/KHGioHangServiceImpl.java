@@ -2,6 +2,8 @@ package com.example.demo.core.khachHang.service.impl;
 
 import com.example.demo.core.Admin.repository.AdUserRepository;
 import com.example.demo.core.khachHang.model.request.GioHangCTRequest;
+import com.example.demo.core.khachHang.model.response.GioHangCTResponse;
+import com.example.demo.core.khachHang.model.response.KhVoucherResponse;
 import com.example.demo.core.khachHang.repository.ChiTietSanPhamRepository;
 import com.example.demo.core.khachHang.repository.KHGioHangChiTietRepository;
 import com.example.demo.core.khachHang.repository.KHGioHangRepository;
@@ -52,17 +54,17 @@ public class KHGioHangServiceImpl implements KHGiohangService {
         String userName = tokenService.getUserNameByToken(token);
         User user = userRepository.findByUserName(userName);
         idKh = user.getId();
-        GioHangChiTiet map = this.addCartDataBase(ghct,idKh);
+        GioHangChiTiet map = this.addCartDataBase(ghct, idKh);
         return DataUltil.setData("success", map);
     }
 
-    public GioHangChiTiet addCartDataBase(GioHangCTRequest ghct,Integer idKh) {
+    public GioHangChiTiet addCartDataBase(GioHangCTRequest ghct, Integer idKh) {
 
         SanPhamChiTiet sanPhamCT = productReponstory.findSanPhamChiTietsById(ghct.getSanPhamChiTiet());
         if (ghct.getSoLuong() > sanPhamCT.getSoLuongTon()) {
 //            HashMap<String, Object> map = DataUltil.setData("error", "số lượng sản phẩm không đủ");
 //            return map;
-            return  null;
+            return null;
         }
         if (ghct.getSoLuong() <= 0) {
             return null;
@@ -72,58 +74,48 @@ public class KHGioHangServiceImpl implements KHGiohangService {
         // tìm GHCT theo id user, id ctsp
         List<GioHangChiTiet> list = gioHangCTRespon.findById(kh.getId(), sanPhamCT.getId());
 
-        if(list.size() == 0){
-            createNewCart(kh, sanPhamCT, ghct);
-        }else{
+        if (list.size() == 0) {
+            createNewCart(kh, sanPhamCT, ghct, idKh);
+        } else {
             boolean createNewCartDetail = false;
             boolean isExistedCartDetail = false;
-
             for (GioHangChiTiet gioHangChiTiet : list) {
-
-//                if (gioHangChiTiet.getTenMauSac().equals(ghct.getTenMauSac()) && gioHangChiTiet.getTenSize().equals(ghct.getTenSize())) {
-//                    gioHangChiTiet.setSoLuong(ghct.getSoLuong() + gioHangChiTiet.getSoLuong());
-//                    gioHangChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
-//                    gioHangCTRespon.save(gioHangChiTiet);
-//                    createNewCartDetail = true;
-//                    break;
-//                }
-//                } else if (!gioHangChiTiet.getTenMauSac().equals(ghct.getTenMauSac()) || !gioHangChiTiet.getTenSize().equals(ghct.getTenSize())) {
-//                    createNewCart(kh, sanPhamCT, ghct);
-//                    createNewCartDetail = true;
-//                    break;
-//                }
+                gioHangChiTiet.setSoLuong(ghct.getSoLuong() + gioHangChiTiet.getSoLuong());
+                gioHangChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
+                gioHangCTRespon.save(gioHangChiTiet);
+                createNewCartDetail = true;
+                break;
             }
-
             if (!createNewCartDetail) {
                 // Nếu chưa tạo giỏ hàng chi tiết mới trong vòng lặp, thực hiện tạo ở đây
-                createNewCart(kh, sanPhamCT, ghct);
+                createNewCart(kh, sanPhamCT, ghct, idKh);
             }
         }
         return null;
     }
 
-    public GioHangChiTiet createNewCart(User kh,SanPhamChiTiet sanPhamCT,GioHangCTRequest  ghct){
-        GioHang _gioHang = GioHang.builder().user(kh).build();
-        GioHang gh = giohangRepo.save(_gioHang);
-        gh.setMa("GH" + gh.getId());
-        gh.setNgayTao(DatetimeUtil.getCurrentDate());
+    public GioHangChiTiet createNewCart(User kh, SanPhamChiTiet sanPhamCT, GioHangCTRequest ghct, Integer idKh) {
 
+        GioHang gioHang = giohangRepo.finbyIdKH(idKh);
+        if (gioHang == null) {
+            GioHang newGioHang = new GioHang();
+            newGioHang.setUser(User.builder().id(idKh).build());
+            gioHang = giohangRepo.save(newGioHang);
+        }
         // thêm mới vào GHCT
         Random random = new Random();
         int randomNumber = random.nextInt(9000) + 1000;
         GioHangChiTiet gioHangChiTiet = new GioHangChiTiet();
 
-        if(sanPhamCT.getGiaSauGiam() == null){
+        if (sanPhamCT.getGiaSauGiam() == null) {
             gioHangChiTiet.setDonGia(sanPhamCT.getGiaBan());
-        }else {
+        } else {
             gioHangChiTiet.setDonGia(sanPhamCT.getGiaSauGiam());
         }
 
-        gioHangChiTiet.setMa("GHCT"+ randomNumber);
+        gioHangChiTiet.setMa("GHCT" + randomNumber);
         gioHangChiTiet.setSoLuong(ghct.getSoLuong());
-//        gioHangChiTiet.setTenSize(ghct.getTenSize());
-//        gioHangChiTiet.setTenMauSac(ghct.getTenMauSac());
-        gioHangChiTiet.setGioHang(gh);
+        gioHangChiTiet.setGioHang(gioHang);
         gioHangChiTiet.setSanPhamChiTiet(sanPhamCT);
         gioHangChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
 
@@ -131,11 +123,19 @@ public class KHGioHangServiceImpl implements KHGiohangService {
         HashMap<String, Object> map = DataUltil.setData("success", gioHangCTRespon.save(gioHangChiTiet));
         return gioHangCTRespon.save(gioHangChiTiet);
 
+
     }
 
     @Override
-    public List<?> getAll(HttpSession httpSession) {
-        return null;
+    public List<GioHangCTResponse> getListGHCT(String token) {
+        Integer idUser;
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = userRepository.findByUserName(userName);
+        idUser = user.getId();
+        return gioHangCTRespon.getListGHCT(idUser);
     }
 
     @Override
@@ -161,24 +161,38 @@ public class KHGioHangServiceImpl implements KHGiohangService {
     }
 
     @Override
-    public HashMap<String, Object> updateCongSoLuong(Integer id) {
+    public GioHangCTResponse updateCongSoLuong(Integer id, String token) {
+        Integer idUser;
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = userRepository.findByUserName(userName);
+        idUser = user.getId();
         Optional<GioHangChiTiet> tutorialData = gioHangCTRespon.findById(id);
 
         if (tutorialData.isPresent()) {
             GioHangChiTiet _gioHangChiTiet = tutorialData.get();
-
+            int newSoLuong = _gioHangChiTiet.getSoLuong() + 1;
+            if (newSoLuong > _gioHangChiTiet.getSanPhamChiTiet().getSoLuongTon()) {
+                return null;
+            }
             _gioHangChiTiet.setSoLuong(_gioHangChiTiet.getSoLuong() + 1);
-            gioHangCTRespon.save(_gioHangChiTiet);
-            HashMap<String, Object> map = DataUltil.setData("warning", gioHangCTRespon.save(_gioHangChiTiet));
-            return map;
-        } else {
-            HashMap<String, Object> map = DataUltil.setData("warning", "lỗi");
-            return map;
+            GioHangChiTiet gioHang = gioHangCTRespon.save(_gioHangChiTiet);
+            return gioHangCTRespon.getGHCT(idUser, gioHang.getId());
         }
+        return null;
     }
 
     @Override
-    public HashMap<String, Object> updateTruSoLuong(Integer id) {
+    public GioHangCTResponse updateTruSoLuong(Integer id, String token) {
+        Integer idUser;
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = userRepository.findByUserName(userName);
+        idUser = user.getId();
         Optional<GioHangChiTiet> tutorialData = gioHangCTRespon.findById(id);
 
         if (tutorialData.isPresent()) {
@@ -187,38 +201,42 @@ public class KHGioHangServiceImpl implements KHGiohangService {
             if (_gioHangChiTiet.getSoLuong() <= 0) {
                 this.deleteGioHangCT(id);
                 HashMap<String, Object> map = DataUltil.setData("warning", "sản phẩm không được nhỏ bằng 0");
-                return map;
+                return null;
             } else {
-                gioHangCTRespon.save(_gioHangChiTiet);
-                HashMap<String, Object> map = DataUltil.setData("warning", gioHangCTRespon.save(_gioHangChiTiet));
-                return map;
+                GioHangChiTiet gioHang = gioHangCTRespon.save(_gioHangChiTiet);
+                return gioHangCTRespon.getGHCT(idUser, gioHang.getId());
             }
 
-        } else {
-            HashMap<String, Object> map = DataUltil.setData("warning", "lỗi");
-            return map;
         }
-
+        return null;
     }
 
     @Override
-    public HashMap<String, Object> updateMauSacSize(Integer idghct, Integer idMauSacCT, Integer idSizeCT) {
+    public HashMap<String, Object> updateMauSacSize(Integer idghct, Integer idSPCT) {
         Optional<GioHangChiTiet> ghct = gioHangCTRespon.findById(idghct);
 
         if (ghct.isPresent()) {
             GioHangChiTiet _gioHangChiTiet = ghct.get();
-//            _gioHangChiTiet.setTenMauSac(idMauSacCT);
-//            _gioHangChiTiet.setTenSize(idSizeCT);
-
+            _gioHangChiTiet.setSanPhamChiTiet(SanPhamChiTiet.builder().id(idSPCT).build());
             gioHangCTRespon.save(_gioHangChiTiet);
             HashMap<String, Object> map = DataUltil.setData("warning", gioHangCTRespon.save(_gioHangChiTiet));
             return map;
-
-
         } else {
             HashMap<String, Object> map = DataUltil.setData("warning", "lỗi");
             return map;
         }
+    }
+
+    @Override
+    public List<KhVoucherResponse> getListVoucher(String  token) {
+        Integer idUser;
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = userRepository.findByUserName(userName);
+        idUser = user.getId();
+        return gioHangCTRespon.getListVoucher(idUser);
     }
 
 }

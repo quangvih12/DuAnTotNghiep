@@ -16,10 +16,6 @@ public class GioHangCTRequest implements DtoToEntity<GioHangChiTiet> {
 
     private String ma;
 
-    private Integer tenMauSac;
-
-    private Integer tenSize;
-
     private Integer soLuong;
 
     private String ngayTao;
@@ -32,8 +28,6 @@ public class GioHangCTRequest implements DtoToEntity<GioHangChiTiet> {
     @Override
     public GioHangChiTiet dtoToEntity(GioHangChiTiet ghct) {
         ghct.setMa(this.ma);
-      //  ghct.setTenMauSac(this.tenMauSac);
-       // ghct.setTenSize(this.tenSize);
         ghct.setSoLuong(this.soLuong);
         ghct.setNgayTao(DatetimeUtil.getCurrentDate());
         ghct.setSanPhamChiTiet(SanPhamChiTiet.builder().id(this.getSanPhamChiTiet()).build());

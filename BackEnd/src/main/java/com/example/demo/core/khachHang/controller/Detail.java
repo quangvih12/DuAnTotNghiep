@@ -56,6 +56,11 @@ public class Detail {
         return ResponseEntity.ok(detaiService.findById(idctsp));
     }
 
+    @GetMapping("/find-spct-id")
+    public ResponseEntity<?> getSanPhamChiTietBySizeAndMauSac(@RequestParam Integer idMau,@RequestParam(required = false) String idSize,@RequestParam Integer idSP) {
+        return ResponseEntity.ok(detaiService.getSanPhamChiTietBySizeAndMauSac(idMau,idSize,idSP));
+    }
+
     @GetMapping("/find-spct-by-idSP/{id}")
     public ResponseEntity<?> getSpctByIdSp(@PathVariable("id") Integer idctsp) {
         return ResponseEntity.ok(detaiService.getAllByIdSp(idctsp));
@@ -67,29 +72,19 @@ public class Detail {
         return ResponseEntity.ok(sanPhamChiTiet);
     }
 
-//    @GetMapping("/findByMauSac/{idctsp}")
-//    public List<MauSacResponse> listMauSacCT(@PathVariable("idctsp") Integer idctsp){
-//        List<MauSacResponse> lisst =  mausacCTRepo.listMsctByIdctsp(idctsp);
-//        Set< Integer> set = new HashSet<>();
-//        Iterator<MauSacResponse> iterator = lisst.listIterator();
-//        while(iterator.hasNext()){
-//            MauSacResponse ms = iterator.next();
-//            Integer idMauSac = ms.getIdMS();
-//            if(!set.add(idMauSac)){
-//                iterator.remove();
-//            }
-//        }
-//        return lisst;
-//    };
+    @GetMapping("/find-Mau-Sac/{idctsp}")
+    public ResponseEntity<?> listMauSacCT(@PathVariable("idctsp") Integer idctsp){
+        return ResponseEntity.ok(detaiService.findMauSac(idctsp));
+    };
 //
-//    @GetMapping("/findBySize/{idctsp}")
-//    public ResponseEntity<?> findBySize(@PathVariable Integer idctsp){
-//        return ResponseEntity.ok(sizeCTRepo.listSizectByIdctsp(idctsp));
-//    }
+    @GetMapping("/find-size/{idctsp}")
+    public ResponseEntity<?> findBySize(@PathVariable Integer idctsp){
+        return ResponseEntity.ok(detaiService.findSize(idctsp));
+    }
 
     @GetMapping("/findByImage/{id}")
     public ResponseEntity<?> findByImage(@PathVariable Integer id) {
-        return ResponseEntity.ok(servie.findByIdCTSP(id));
+        return ResponseEntity.ok(detaiService.findImage(id));
     }
 
     @GetMapping("/getAll")
@@ -106,14 +101,14 @@ public class Detail {
     @GetMapping("/getSizeByMS/{idctsp}")
     public ResponseEntity<?> gettListSizeByMauSac(@PathVariable("idctsp") Integer idctsp, @RequestParam("idms") Integer idms) {
 
-        return ResponseEntity.ok(detailRepo.getListSizeByMauSac(idctsp, idms));
+        return ResponseEntity.ok(detaiService.findSizeByMauSac(idms, idctsp));
     }
 
 
     @GetMapping("/getMauSacBySize/{idctsp}")
-    public ResponseEntity<?> getListMauSacBySize(@PathVariable("idctsp") Integer idctsp, @RequestParam("idsizect") Integer idsizect) {
+    public ResponseEntity<?> getListMauSacBySize(@PathVariable("idctsp") Integer idctsp, @RequestParam("idsizect") String idsizect) {
 
-        return ResponseEntity.ok(detailRepo.getListMauSacBySize(idctsp, idsizect));
+        return ResponseEntity.ok(detaiService.findMauSacBySize(idsizect, idctsp));
     }
 
 
