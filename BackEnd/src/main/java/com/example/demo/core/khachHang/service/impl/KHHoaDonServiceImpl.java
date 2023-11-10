@@ -1,10 +1,10 @@
-package com.example.demo.core.Admin.service.impl.HoaDon;
+package com.example.demo.core.khachHang.service.impl;
 
-import com.example.demo.core.Admin.model.response.AdminHoaDonResponse;
-import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
-import com.example.demo.core.Admin.repository.AdHoaDonChiTietReponsitory;
-import com.example.demo.core.Admin.repository.AdHoaDonReponsitory;
-import com.example.demo.core.Admin.service.InterfaceHoaDon.AdHoaDonChoXacNhanService;
+import com.example.demo.core.khachHang.model.response.KHHoaDonResponse;
+import com.example.demo.core.khachHang.repository.KHHoaDonChiTietRepository;
+import com.example.demo.core.khachHang.repository.KHHoaDonRepository;
+import com.example.demo.core.khachHang.repository.KHchiTietSanPhamRepository;
+import com.example.demo.core.khachHang.service.KHHoaDonService;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.SanPhamChiTiet;
@@ -19,33 +19,37 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class AdminHoaDonChoXacNhanServiceImpl implements AdHoaDonChoXacNhanService {
+public class KHHoaDonServiceImpl implements KHHoaDonService {
 
     @Autowired
-    private AdHoaDonReponsitory hoaDonReponsitory;
+    private KHHoaDonRepository hdRepo;
 
     @Autowired
-    private AdHoaDonChiTietReponsitory hdctRepo;
+    private KHHoaDonChiTietRepository hdctRepo;
 
     @Autowired
-    private AdChiTietSanPhamReponsitory ctspRepo;
+    private KHchiTietSanPhamRepository ctspRepo;
 
     @Override
-    public List<AdminHoaDonResponse> getHoaDonChoXacNhan() {
-        return hoaDonReponsitory.getHoaDonTrangThai(HoaDonStatus.YEU_CAU_XAC_NHAN);
+    public List<KHHoaDonResponse> getAll(Integer id) {
+        return hdRepo.getHoaDonByIdUser(id);
     }
 
+    @Override
+    public List<KHHoaDonResponse> getHoaDonTrangThai(Integer id, Integer trangThai) {
+        return hdRepo.getHoaDonTrangThai(id, trangThai);
+    }
 
     @Override
-    public AdminHoaDonResponse huyHoaDonChoXacNhan(Integer idHD, String lyDo) {
-        HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
+    public KHHoaDonResponse huyHoaDonChoXacNhan(Integer idHD, String lyDo) {
+        HoaDon hoaDon = hdRepo.findById(idHD).get();
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         HashMap<Integer, Integer> quantityMap = new HashMap<>();
         if (hoaDon != null) {
             hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
             hoaDon.setTrangThai(HoaDonStatus.DA_HUY);
             hoaDon.setLyDo(lyDo);
-            HoaDon hd = hoaDonReponsitory.save(hoaDon);
+            HoaDon hd = hdRepo.save(hoaDon);
             List<HoaDonChiTiet> lstHDCT = hdctRepo.findByIdHoaDon(idHD, sort);
             for (HoaDonChiTiet hdct : lstHDCT) {
                 int idSP = hdct.getSanPhamChiTiet().getId();
@@ -59,26 +63,20 @@ public class AdminHoaDonChoXacNhanServiceImpl implements AdHoaDonChoXacNhanServi
             for (Map.Entry<Integer, Integer> entry : quantityMap.entrySet()) {
                 int idSP = entry.getKey();
                 int quantity = entry.getValue();
+                System.out.println("idSP: " + idSP);
+                System.out.println("số lượng: " + quantity);
                 SanPhamChiTiet spct = ctspRepo.findById(idSP).get();
                 spct.setSoLuongTon(spct.getSoLuongTon() + quantity);
                 ctspRepo.save(spct);
             }
-            return hoaDonReponsitory.getByIds(hd.getId());
+            return hdRepo.getByIds(hd.getId());
         } else {
             return null;
         }
     }
 
     @Override
-    public AdminHoaDonResponse xacNhanHoaDon(Integer idHD) {
-        HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
-        if (hoaDon != null) {
-            hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
-            hoaDon.setTrangThai(HoaDonStatus.DANG_CHUAN_BI_HANG);
-            HoaDon hd = hoaDonReponsitory.save(hoaDon);
-            return hoaDonReponsitory.getByIds(hd.getId());
-        } else {
-            return null;
-        }
+    public KHHoaDonResponse findById(Integer idHD) {
+        return hdRepo.getByIds(idHD);
     }
 }
