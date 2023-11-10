@@ -2,14 +2,18 @@ package com.example.demo.core.khachHang.controller;
 
 import com.example.demo.core.Admin.repository.AdUserRepository;
 import com.example.demo.core.khachHang.model.request.GioHangCTRequest;
+import com.example.demo.core.khachHang.model.request.KhGioHangChiTietSessionRequest;
 import com.example.demo.core.khachHang.model.response.GioHangCTResponse;
 import com.example.demo.core.khachHang.model.response.KhVoucherResponse;
 import com.example.demo.core.khachHang.repository.KHGioHangChiTietRepository;
 import com.example.demo.core.khachHang.service.impl.KHGioHangServiceImpl;
 import com.example.demo.core.token.service.TokenService;
+import com.example.demo.entity.GioHangChiTiet;
 import com.example.demo.entity.MauSac;
 import com.example.demo.entity.User;
+import com.example.demo.util.DataUltil;
 import com.microsoft.azure.storage.StorageException;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,11 +43,18 @@ public class GiopHangCTController {
     AdUserRepository userRepository;
 
     @PostMapping("/addGiohang")
-    public ResponseEntity<?> addGiohang(@RequestBody GioHangCTRequest ghctrequest, @RequestParam("token") String token
-    ) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
+    public ResponseEntity<?> addGiohang(@RequestBody GioHangCTRequest ghctrequest, @RequestParam(value = "token", required = false) String token
+          ) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
+            HashMap<String, Object> map = khGioHangService.addCart(ghctrequest, token);
+            return ResponseEntity.ok(map);
 
-        HashMap<String, Object> map = khGioHangService.addCart(ghctrequest, token);
-        return ResponseEntity.ok(map);
+    }
+
+    @PostMapping("/addGiohang-session")
+    public ResponseEntity<?> addGiohangSesion(@RequestBody GioHangCTRequest ghctrequest, @RequestParam(value = "token", required = false) String token
+            , HttpSession httpSession) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
+            return ResponseEntity.ok(khGioHangService.addCartSession(ghctrequest.getSanPhamChiTiet(),ghctrequest.getSoLuong(), httpSession));
+
     }
 
     @GetMapping("/{idghct}")
@@ -60,9 +71,9 @@ public class GiopHangCTController {
 
 
     @GetMapping("/getListGioHang")
-    public List<GioHangCTResponse> getList(@RequestParam("token") String token) {
-        List<GioHangCTResponse> list = khGioHangService.getListGHCT(token);
-        return list;
+    public List<?> getList(@RequestParam(value = "token") String token) {
+           List<GioHangCTResponse> list = khGioHangService.getListGHCT(token);
+           return list ;
     }
 
     @GetMapping("/get-voucher")
@@ -72,29 +83,28 @@ public class GiopHangCTController {
     }
 
     @PutMapping("/congSL/{idghct}")
-    public ResponseEntity<?> updateCongGHCT(@PathVariable("idghct") Integer idghct, @RequestParam String token) {
-
-        GioHangCTResponse map = khGioHangService.updateCongSoLuong(idghct, token);
-        return ResponseEntity.ok(map);
+    public ResponseEntity<?> updateCongGHCT(HttpSession httpSession, @PathVariable("idghct") Integer idghct, @RequestParam(required = false) String token) {
+            GioHangCTResponse map = khGioHangService.updateCongSoLuong(idghct, token);
+            return ResponseEntity.ok(map);
     }
 
     @PutMapping("/truSL/{idghct}")
-    public ResponseEntity<?> updateTruGHCT(@PathVariable("idghct") Integer idghct, @RequestParam String token) {
+    public ResponseEntity<?> updateTruGHCT(HttpSession httpSession, @PathVariable("idghct") Integer idghct, @RequestParam(required = false) String token) {
+            GioHangCTResponse map = khGioHangService.updateTruSoLuong(idghct, token);
+            return ResponseEntity.ok(map);
 
-        GioHangCTResponse map = khGioHangService.updateTruSoLuong(idghct, token);
-        return ResponseEntity.ok(map);
     }
 
     @PostMapping("/updateMauSacSize/{idghct}")
-    public ResponseEntity<?> updateMauSacSize(@PathVariable("idghct") Integer idghct, @RequestParam("idSPCT") Integer idSPCT) {
-        HashMap<String, Object> map = khGioHangService.updateMauSacSize(idghct, idSPCT);
-        return ResponseEntity.ok(map);
+    public ResponseEntity<?> updateMauSacSize(HttpSession httpSession, @PathVariable("idghct") Integer idghct, @RequestParam("idSPCT") Integer idSPCT, @RequestParam(required = false) String token) {
+            HashMap<String, Object> map = khGioHangService.updateMauSacSize(idghct, idSPCT);
+            return ResponseEntity.ok(map);
     }
 
     @DeleteMapping("/{idghct}")
-    public ResponseEntity<?> deleteGHCT(@PathVariable(value = "idghct") Integer idghct) {
-        khGioHangService.deleteGioHangCT(idghct);
-        return new ResponseEntity<>("Xoá thành công", HttpStatus.OK);
+    public ResponseEntity<?> deleteGHCT(@PathVariable(value = "idghct") Integer idghct, @RequestParam(required = false) String token, HttpSession httpSession) {
+
+            return ResponseEntity.ok(khGioHangService.deleteGioHangCT(idghct));
     }
 
 
