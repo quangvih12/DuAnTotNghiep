@@ -38,6 +38,8 @@ public interface KHGioHangChiTietRepository extends GioHangChiTietReponsitory {
     @Query("Select pt from GioHangChiTiet pt where pt.gioHang.user.id=:id and pt.sanPhamChiTiet.id=:idctsp")
     List<GioHangChiTiet> findById(Integer id, Integer idctsp);
 
+    @Query("Select pt from GioHangChiTiet pt where pt.gioHang.user.id=:id and pt.sanPhamChiTiet.id=:idctsp")
+    GioHangChiTiet findByIdByIdCTSP(Integer id, Integer idctsp);
 
     @Query(value = """
         select count(*) from gio_hang_chi_tiet ghct join gio_hang gh on  ghct.id_gio_hang = gh.id\s
