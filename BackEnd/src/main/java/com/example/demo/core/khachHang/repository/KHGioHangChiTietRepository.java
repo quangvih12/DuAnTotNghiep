@@ -2,6 +2,7 @@ package com.example.demo.core.khachHang.repository;
 
 
 import com.example.demo.core.khachHang.model.response.GioHangCTResponse;
+import com.example.demo.core.khachHang.model.response.KhVoucherResponse;
 import com.example.demo.entity.GioHangChiTiet;
 import com.example.demo.reponsitory.GioHangChiTietReponsitory;
 import org.springframework.data.jpa.repository.Query;
@@ -11,29 +12,28 @@ import java.util.List;
 
 @Repository
 public interface KHGioHangChiTietRepository extends GioHangChiTietReponsitory {
-    @Query("SELECT ghct FROM GioHangChiTiet ghct WHERE ghct.sanPhamChiTiet.id =:idsp and ghct.gioHang.user.id=:idKh")
-    GioHangChiTiet getChiTietSP(Integer idsp, Integer idKh);
-
-    @Query("DELETE FROM GioHangChiTiet ghct WHERE ghct.id=:idgh")
-    void deleteGhById(Integer idgh);
-
-    @Query("Select pt from GioHangChiTiet pt where pt.gioHang.user.id=:id")
-    List<GioHangChiTiet> findAllByTen(Integer id);
 
     @Query(value = """
-           select ghct.id as idGHCT, spct.id as idCTSP , sp.ten as tenSP, sp.anh, ghct.ten_mau_sac as tenMauSac, ghct.ten_size as tenSize, ghct.so_luong as soLuong, spct.gia_ban as giaBan, spct.gia_sau_giam as giaSPSauGiam
-           from gio_hang_chi_tiet ghct join san_pham_chi_tiet spct on ghct.id_san_pham_chi_tiet = spct.id
-           join san_pham sp on spct.id_san_pham = sp.id where ghct.id =:id
+          select ghct.id as idGHCT, spct.id as idCTSP ,spct.so_luong_ton as soLuongTon,sp.id as idSP, sp.ten as tenSP, sp.anh,spct.anh as anhSpct, ms.ten as tenMauSac, s.ten as tenSize, ghct.so_luong as soLuong, spct.gia_ban as giaBan, spct.gia_sau_giam as giaSPSauGiam
+                                                                  from gio_hang_chi_tiet ghct join san_pham_chi_tiet spct on ghct.id_san_pham_chi_tiet = spct.id
+                                                                 left join datn.size s on spct.id_size = s.id\s
+                                                                  join datn.mau_sac ms on spct.id_mau_sac = ms.id\s
+                                                                  join datn.gio_hang gh on  ghct.id_gio_hang = gh.id
+                                                                  join san_pham sp on spct.id_san_pham = sp.id
+                                                                  where gh.id_user =:idUser
              """, nativeQuery = true)
-    GioHangCTResponse getGHCTByID(Integer id);
-
+    List<GioHangCTResponse> getListGHCT(Integer idUser);
 
     @Query(value = """
-           select ghct.id as idGHCT, spct.id as idCTSP , sp.ten as tenSP, sp.anh, ghct.ten_mau_sac as tenMauSac, ghct.ten_size as tenSize, ghct.so_luong as soLuong, spct.gia_ban as giaBan, spct.gia_sau_giam as giaSPSauGiam
-           from gio_hang_chi_tiet ghct join san_pham_chi_tiet spct on ghct.id_san_pham_chi_tiet = spct.id
-           join san_pham sp on spct.id_san_pham = sp.id
+          select ghct.id as idGHCT, spct.id as idCTSP ,spct.so_luong_ton as soLuongTon,sp.id as idSP, sp.ten as tenSP, sp.anh,spct.anh as anhSpct, ms.ten as tenMauSac, s.ten as tenSize, ghct.so_luong as soLuong, spct.gia_ban as giaBan, spct.gia_sau_giam as giaSPSauGiam
+                                                                  from gio_hang_chi_tiet ghct join san_pham_chi_tiet spct on ghct.id_san_pham_chi_tiet = spct.id
+                                                                left     join datn.size s on spct.id_size = s.id\s
+                                                                  join datn.mau_sac ms on spct.id_mau_sac = ms.id\s
+                                                                  join datn.gio_hang gh on  ghct.id_gio_hang = gh.id
+                                                                  join san_pham sp on spct.id_san_pham = sp.id
+                                                                  where gh.id_user =:idUser and ghct.id=:idGH
              """, nativeQuery = true)
-    List<GioHangCTResponse> getListGHCT();
+    GioHangCTResponse getGHCT(Integer idUser,Integer idGH);
 
     @Query("Select pt from GioHangChiTiet pt where pt.gioHang.user.id=:id and pt.sanPhamChiTiet.id=:idctsp")
     List<GioHangChiTiet> findById(Integer id, Integer idctsp);
@@ -44,5 +44,15 @@ public interface KHGioHangChiTietRepository extends GioHangChiTietReponsitory {
         join user u on gh.id_user = u.id  where u.id = :userId
         """, nativeQuery = true)
     Integer countGHCTByUser(Integer userId);
+
+
+    @Query(value = """
+       SELECT uv.id as id, uv.dieu_kien as dieuKien, v.giam_toi_da as giamToiDa, v.mo_ta as moTa, v.so_luong as soLuong, v.ten as ten,v.thoi_gian_bat_dau as thoiGianBatDau
+              ,v.thoi_gian_ket_thuc as thoiGianKetThuc ,v.trang_thai as trangThai
+       FROM datn.user_voucher uv join datn.user u on uv.id_user = u.id
+                                 join datn.voucher v on uv.id_voucher = v.id
+       where   uv.id_user=:idUser  and v.so_luong >= 0
+        """, nativeQuery = true)
+    List<KhVoucherResponse> getListVoucher(Integer  idUser);
 
 }

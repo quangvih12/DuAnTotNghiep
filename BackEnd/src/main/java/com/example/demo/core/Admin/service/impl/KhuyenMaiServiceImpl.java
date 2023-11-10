@@ -152,7 +152,7 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
 
     }
 
-    @Scheduled(fixedRate = 20000)
+    @Scheduled(cron = "0 0 0 * * ?")
     public void updateGiaCTSP() {
         //Lấy danh sách CTSP theo trạng thái khuyến mại là  bắt đầu
         List<SanPhamChiTiet> listSPCT = khuyenMaiRepo.getCTSPByTrangThaiKhuyenMai(0);
@@ -171,7 +171,7 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
         }
     }
 
-    @Scheduled(fixedRate = 20000)
+    @Scheduled(cron = "0 0 0 * * ?")
     public void updateGiaCTSPHetHan() {
         //Lấy danh sách CTSP theo trạng thái khuyến mại là  hết hạn
         List<SanPhamChiTiet> listCTSPKM = khuyenMaiRepo.getCTSPByTrangThaiKhuyenMai(1);
@@ -185,16 +185,17 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
     }
 
 
-    @Scheduled(cron = "0 0 0 * * *") // Lịch chạy hàng ngày vào lúc 00:00:00
+    @Scheduled(cron = "0 0 0 * * ?") // Lịch chạy hàng ngày vào lúc 00:00:00
     public void updateNgayHetHan() {
         List<KhuyenMai> khuyenMais = khuyenMaiRepo.findKhuyenMaiByHetHan();
         for (KhuyenMai khuyenMai : khuyenMais) {
+            System.out.println(khuyenMai.getId());
             khuyenMai.setTrangThai(1);
             khuyenMaiRepo.save(khuyenMai);
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * *") // Lịch chạy hàng ngày vào lúc 00:00:00
+    @Scheduled(cron = "0 0 0 * * ?")// Lịch chạy hàng ngày vào lúc 00:00:00
     public void updateNgayChuaBatDau() {
         List<KhuyenMai> khuyenMais = khuyenMaiRepo.findKhuyenMaiByChuaBatDau();
         for (KhuyenMai khuyenMai : khuyenMais) {
