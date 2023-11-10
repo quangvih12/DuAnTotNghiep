@@ -4,6 +4,7 @@ import com.example.demo.core.Admin.repository.AdUserRepository;
 import com.example.demo.core.khachHang.model.request.GioHangCTRequest;
 import com.example.demo.core.khachHang.model.request.KhGioHangChiTietSessionRequest;
 import com.example.demo.core.khachHang.model.response.GioHangCTResponse;
+import com.example.demo.core.khachHang.model.response.KhCartBO;
 import com.example.demo.core.khachHang.model.response.KhVoucherResponse;
 import com.example.demo.core.khachHang.repository.KHGioHangChiTietRepository;
 import com.example.demo.core.khachHang.service.impl.KHGioHangServiceImpl;
@@ -55,6 +56,11 @@ public class GiopHangCTController {
             , HttpSession httpSession) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
             return ResponseEntity.ok(khGioHangService.addCartSession(ghctrequest.getSanPhamChiTiet(),ghctrequest.getSoLuong(), httpSession));
 
+    }
+
+    @PostMapping("/addGiohang-when-login")
+    public ResponseEntity<?> addGiohangWhenLogin(@RequestBody List<KhGioHangChiTietSessionRequest> lstRequest, @RequestParam(value = "token", required = false) String token)  {
+        return ResponseEntity.ok(khGioHangService.addCartWhenLogin(lstRequest,token));
     }
 
     @GetMapping("/{idghct}")

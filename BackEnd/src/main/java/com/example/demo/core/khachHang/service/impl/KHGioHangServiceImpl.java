@@ -186,6 +186,72 @@ public class KHGioHangServiceImpl implements KHGiohangService {
         return gioHangChiTiet;
     }
 
+
+
+    public GioHangChiTiet addCartWhenLogin(List<KhGioHangChiTietSessionRequest> lstRequest, String token){
+
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = userRepository.findByUserName(userName);
+
+        for (KhGioHangChiTietSessionRequest o: lstRequest) {
+            // tìm GHCT theo id user, id ctsp
+            GioHangChiTiet gioHangChiTiet = gioHangCTRespon.findByIdByIdCTSP(user.getId(), o.getIdCTSP());
+            SanPhamChiTiet sanPhamCT = productReponstory.findSanPhamChiTietsById(o.getIdCTSP());
+            if (gioHangChiTiet == null) {
+                this.createNewCartWhenLogin(sanPhamCT, o, user.getId());
+            } else {
+                boolean createNewCartDetail = false;
+                boolean isExistedCartDetail = false;
+
+                gioHangChiTiet.setSoLuong(o.getSoLuong() + gioHangChiTiet.getSoLuong());
+                gioHangChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
+                gioHangCTRespon.save(gioHangChiTiet);
+                createNewCartDetail = true;
+
+                if (!createNewCartDetail) {
+                    // Nếu chưa tạo giỏ hàng chi tiết mới trong vòng lặp, thực hiện tạo ở đây
+                    this.createNewCartWhenLogin(sanPhamCT, o, user.getId());
+                }
+            }
+        }
+        return null;
+    }
+
+    public GioHangChiTiet createNewCartWhenLogin( SanPhamChiTiet sanPhamCT, KhGioHangChiTietSessionRequest ghct, Integer idKh) {
+
+        GioHang gioHang = giohangRepo.finbyIdKH(idKh);
+        if (gioHang == null) {
+            GioHang newGioHang = new GioHang();
+            newGioHang.setUser(User.builder().id(idKh).build());
+            gioHang = giohangRepo.save(newGioHang);
+        }
+        // thêm mới vào GHCT
+        Random random = new Random();
+        int randomNumber = random.nextInt(9000) + 1000;
+        GioHangChiTiet gioHangChiTiet = new GioHangChiTiet();
+
+        if (sanPhamCT.getGiaSauGiam() == null) {
+            gioHangChiTiet.setDonGia(sanPhamCT.getGiaBan());
+        } else {
+            gioHangChiTiet.setDonGia(sanPhamCT.getGiaSauGiam());
+        }
+
+        gioHangChiTiet.setMa("GHCT" + randomNumber);
+        gioHangChiTiet.setSoLuong(ghct.getSoLuong());
+        gioHangChiTiet.setGioHang(gioHang);
+        gioHangChiTiet.setSanPhamChiTiet(sanPhamCT);
+        gioHangChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+
+        gioHangCTRespon.save(gioHangChiTiet);
+        HashMap<String, Object> map = DataUltil.setData("success", gioHangCTRespon.save(gioHangChiTiet));
+        return gioHangCTRespon.save(gioHangChiTiet);
+
+
+    }
+
     @Override
     public List<GioHangCTResponse> getListGHCT(String token) {
         Integer idUser;
