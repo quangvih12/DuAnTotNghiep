@@ -1,8 +1,8 @@
-package com.example.demo.core.Admin.model.response;
+package com.example.demo.core.khachHang.model.response;
 
 import org.springframework.beans.factory.annotation.Value;
 
-public interface AdminHoaDonChitietResponse {
+public interface KHHoaDonChiTietResponse {
     Integer getStt();
 
     @Value("#{target.idHD}")

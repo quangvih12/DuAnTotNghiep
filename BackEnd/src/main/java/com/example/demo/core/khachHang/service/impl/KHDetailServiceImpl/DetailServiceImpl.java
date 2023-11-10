@@ -1,7 +1,9 @@
 package com.example.demo.core.khachHang.service.impl.KHDetailServiceImpl;
 
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
+
 import com.example.demo.core.khachHang.model.response.*;
+
 import com.example.demo.core.khachHang.repository.KHSanPhamRepository;
 import com.example.demo.core.khachHang.repository.KHchiTietSanPhamRepository;
 import com.example.demo.core.khachHang.service.KHDetailService.DetaiService;
@@ -78,5 +80,6 @@ public class DetailServiceImpl implements DetaiService {
             return null;
         }else{
         return spRepo.findMauSacBySize(Integer.valueOf(idSize),idSP);}
+
     }
 }

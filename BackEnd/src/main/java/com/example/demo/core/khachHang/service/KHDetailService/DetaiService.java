@@ -1,7 +1,9 @@
 package com.example.demo.core.khachHang.service.KHDetailService;
 
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
+
 import com.example.demo.core.khachHang.model.response.*;
+
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +15,7 @@ public interface DetaiService {
     AdminSanPhamChiTietResponse get(Integer id);
 
     List<SanPhamChiTiet> getAlls();
+
 
     List<KHSanPhamChiTiet2Response> getAllByIdSp(Integer idSP) ;
 
@@ -29,5 +32,6 @@ public interface DetaiService {
     List<KhSizeResponse> findSizeByMauSac (Integer idMau,Integer idSP);
 
     List<KhMauSacResponse> findMauSacBySize (String idSize,Integer idSP);
+
 
 }

@@ -1,5 +1,6 @@
 package com.example.demo.core.khachHang.repository;
 
+
 import com.example.demo.core.khachHang.model.response.*;
 import com.example.demo.reponsitory.SanPhamReponsitory;
 import org.springframework.data.jpa.repository.Query;
@@ -118,4 +119,5 @@ public interface KHSanPhamRepository extends SanPhamReponsitory {
                            WHERE ms.id=:idMau  and sp.id=:idSP
             """, nativeQuery = true)
     KHSanPhamChiTiet2Response getSanPhamChiTietAndMauSac(Integer idMau, Integer idSP);
+
 }

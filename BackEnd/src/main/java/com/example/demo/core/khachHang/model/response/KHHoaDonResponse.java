@@ -1,8 +1,8 @@
-package com.example.demo.core.Admin.model.response;
+package com.example.demo.core.khachHang.model.response;
 
 import org.springframework.beans.factory.annotation.Value;
 
-public interface AdminHoaDonChitietResponse {
+public interface KHHoaDonResponse {
     Integer getStt();
 
     @Value("#{target.idHD}")
@@ -13,12 +13,6 @@ public interface AdminHoaDonChitietResponse {
 
     @Value("#{target.nguoiTao}")
     String getNguoiTao();
-
-    @Value("#{target.maSP}")
-    String getMaSP();
-
-    @Value("#{target.tenSP}")
-    String getTenSP();
 
     @Value("#{target.email}")
     String getEmail();
@@ -59,18 +53,6 @@ public interface AdminHoaDonChitietResponse {
     @Value("#{target.trangThai}")
     String getTrangThai();
 
-    @Value("#{target.giaBan}")
-    String getGiaBan();
-
-    @Value("#{target.donGia}")
-    String getDonGia();
-
-    @Value("#{target.soLuong}")
-    String getSoLuong();
-
-    @Value("#{target.giaSPSauGiam}")
-    String getGiaSPSauGiam();
-
     @Value("#{target.diaChiCuThe}")
     String getDiaChiCuThe();
 
@@ -97,17 +79,5 @@ public interface AdminHoaDonChitietResponse {
 
     @Value("#{target.tenPTTT}")
     String getTenPTTT();
-
-    @Value("#{target.mauSac}")
-    String getTenMauSac();
-
-    @Value("#{target.size}")
-    String getTenSize();
-
-    @Value("#{target.anh}")
-    String getAnh();
-
-    @Value("#{target.trongLuong}")
-    Integer getTrongLuong();
 
 }

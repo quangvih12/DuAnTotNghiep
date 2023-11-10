@@ -56,10 +56,12 @@ public class Detail {
         return ResponseEntity.ok(detaiService.findById(idctsp));
     }
 
+
     @GetMapping("/find-spct-id")
     public ResponseEntity<?> getSanPhamChiTietBySizeAndMauSac(@RequestParam Integer idMau,@RequestParam(required = false) String idSize,@RequestParam Integer idSP) {
         return ResponseEntity.ok(detaiService.getSanPhamChiTietBySizeAndMauSac(idMau,idSize,idSP));
     }
+
 
     @GetMapping("/find-spct-by-idSP/{id}")
     public ResponseEntity<?> getSpctByIdSp(@PathVariable("id") Integer idctsp) {
@@ -84,7 +86,9 @@ public class Detail {
 
     @GetMapping("/findByImage/{id}")
     public ResponseEntity<?> findByImage(@PathVariable Integer id) {
+
         return ResponseEntity.ok(detaiService.findImage(id));
+
     }
 
     @GetMapping("/getAll")
