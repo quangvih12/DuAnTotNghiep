@@ -59,7 +59,7 @@ public interface KHSanPhamRepository extends SanPhamReponsitory {
     @Query(value = """
                     select distinct  spct.id_mau_sac as idMauSac,s.ten as ten, spct.anh as anh \s
                                                                from datn.san_pham_chi_tiet spct join datn.mau_sac s on spct.id_mau_sac = s.id\s
-                                                                where spct.id_san_pham =:id
+                                                                where spct.id_san_pham =:id and spct.trang_thai=1
             """, nativeQuery = true)
     List<KhMauSacResponse> findMauSac(@Param("id") Integer id);
 
@@ -67,16 +67,16 @@ public interface KHSanPhamRepository extends SanPhamReponsitory {
     @Query(value = """
                     select distinct  spct.id_size as idSize, s.ten as ten\s
                     from datn.san_pham_chi_tiet spct join datn.size s on spct.id_size = s.id\s
-                    where spct.id_mau_sac =:idMau and spct.id_san_pham=:idSP
+                    where spct.id_mau_sac =:idMau and spct.id_san_pham=:idSP and spct.trang_thai=1
             """, nativeQuery = true)
-    List<KhSizeResponse> findSizeByMauSac (Integer idMau,Integer idSP);
+    List<KhSizeResponse> findSizeByMauSac(Integer idMau, Integer idSP);
 
     @Query(value = """
                    select distinct  spct.id_mau_sac as idMauSac,s.ten as ten, spct.anh as anh \s
                    from datn.san_pham_chi_tiet spct join datn.mau_sac s on spct.id_mau_sac = s.id\s
                    where spct.id_size=:idSize and spct.id_san_pham =:idSP
             """, nativeQuery = true)
-    List<KhMauSacResponse> findMauSacBySize (Integer idSize,Integer idSP);
+    List<KhMauSacResponse> findMauSacBySize(Integer idSize, Integer idSP);
 
     @Query(value = """ 
                            SELECT
@@ -120,4 +120,18 @@ public interface KHSanPhamRepository extends SanPhamReponsitory {
             """, nativeQuery = true)
     KHSanPhamChiTiet2Response getSanPhamChiTietAndMauSac(Integer idMau, Integer idSP);
 
+    @Query(value = """
+        SELECT sp.id as id, sp.anh as anh, sp.dem_lot as demLot, sp.ma as ma, sp.mo_ta as moTa, sp.quai_deo as quaiDeo, sp.ten as ten
+        , sp.trang_thai as trangThai, l.ten as tenLoai, t.ten as tenThuongHieu,
+        (select max(spct.gia_ban) as giaBan from datn.san_pham_chi_tiet spct where id_san_pham = sp.id) as giaBanMax,
+        (select min(spct.gia_ban) as giaBan from datn.san_pham_chi_tiet spct where id_san_pham = sp.id) as giaBanMin,
+        (select max(spct.gia_sau_giam) as giaSauGiam from datn.san_pham_chi_tiet spct where id_san_pham = sp.id and id_khuyen_mai is not null) as giaSauGiamMax,
+        (select min(spct.gia_sau_giam) as giaSauGiam from datn.san_pham_chi_tiet spct where id_san_pham = sp.id ) as giaSauGiamMin,
+        sp.ngay_tao as ngayTao
+        FROM datn.san_pham sp
+        join datn.loai l on l.id = sp.id_loai
+        join datn.thuong_hieu t on t.id = sp.id_thuong_hieu
+        ORDER BY sp.id DESC;
+        """, nativeQuery = true)
+    List<SanPhamResponse> getAllSP();
 }

@@ -22,11 +22,10 @@ public class AdminExcelAddSanPhamResponse {
 
     private Integer idTrongLuong;
 
-    private Integer giaBan;
+    private List<String> giaBan;
 
-    private Integer giaNhap;
+    private List<String> giaNhap;
 
-    private Integer soLuong;
 
     private List<String> tenMau;
 
@@ -70,7 +69,7 @@ public class AdminExcelAddSanPhamResponse {
 
     private String importMessageGiaNhap;
 
-    private String importMessageSoLuong;
+    private String importMessageImageMau;
 
     private String importMessageSoLuongMau;
 
@@ -96,10 +95,9 @@ public class AdminExcelAddSanPhamResponse {
     private ImportStatus importStatus;
 
     public ImportStatus getImportStatus() {
-        if(isError) {
+        if (isError) {
             importStatus = ImportStatus.FAIL;
-        }
-        else {
+        } else {
             importStatus = ImportStatus.SUCCESS;
         }
         return importStatus;

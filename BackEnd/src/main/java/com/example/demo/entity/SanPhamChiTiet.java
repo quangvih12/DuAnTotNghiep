@@ -23,6 +23,7 @@ import org.hibernate.annotations.FetchMode;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -81,7 +82,6 @@ public class SanPhamChiTiet {
     @ManyToOne
     @JoinColumn(name = "id_size")
     private Size size;
-
 
     @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)

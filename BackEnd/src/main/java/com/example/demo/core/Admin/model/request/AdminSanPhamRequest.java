@@ -1,12 +1,11 @@
 package com.example.demo.core.Admin.model.request;
 
-import com.example.demo.entity.VatLieu;
-import com.example.demo.infrastructure.adapter.DtoToEntity;
 import com.example.demo.entity.Loai;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.ThuongHieu;
+import com.example.demo.entity.VatLieu;
+import com.example.demo.infrastructure.adapter.DtoToEntity;
 import com.example.demo.util.DatetimeUtil;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @AllArgsConstructor
@@ -16,6 +15,8 @@ import lombok.*;
 @ToString
 @Setter
 public class AdminSanPhamRequest implements DtoToEntity<SanPham> {
+
+    private Integer id;
 
     private String ten;
 
