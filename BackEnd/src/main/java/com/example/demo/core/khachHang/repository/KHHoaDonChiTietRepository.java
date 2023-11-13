@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface KHHoaDonChiTietRepository extends HoaDonReponsitory {
     @Query(value = """
@@ -35,4 +36,6 @@ public interface KHHoaDonChiTietRepository extends HoaDonReponsitory {
 
     @Query(value = "select hdct from HoaDonChiTiet hdct where hdct.hoaDon.id = :idHd")
     List<HoaDonChiTiet> findByIdHoaDon(@Param("idHd") Integer idHd, Sort sort);
+
+
 }

@@ -57,4 +57,8 @@ public interface KHGioHangChiTietRepository extends GioHangChiTietReponsitory {
         """, nativeQuery = true)
     List<KhVoucherResponse> getListVoucher(Integer  idUser);
 
+
+    @Query("Select pt from GioHangChiTiet pt where pt.gioHang.user.id=:id and pt.sanPhamChiTiet.id=:idctsp")
+    List<GioHangChiTiet> listGHCTByID(Integer id, Integer idctsp);
+
 }
