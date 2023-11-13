@@ -1,5 +1,6 @@
 package com.example.demo.core.khachHang.service.impl;
 
+import com.example.demo.core.khachHang.model.request.hoadon.HoaDonRequest;
 import com.example.demo.core.khachHang.model.response.KHHoaDonResponse;
 import com.example.demo.core.khachHang.repository.KHHoaDonChiTietRepository;
 import com.example.demo.core.khachHang.repository.KHHoaDonRepository;
@@ -79,4 +80,6 @@ public class KHHoaDonServiceImpl implements KHHoaDonService {
     public KHHoaDonResponse findById(Integer idHD) {
         return hdRepo.getByIds(idHD);
     }
+
+
 }
