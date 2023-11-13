@@ -22,8 +22,7 @@ public class KhuyenMaiApi {
     @Autowired
     AdKhuyenMaiService khuyenMaiService;
 
-    @Autowired
-    private SanPhamChiTietServiceImpl sanPhamChiTietService;
+
 
     @GetMapping("/getAll")
     public List<AdminKhuyenMaiResponse> getAllKhuyenMai(){
