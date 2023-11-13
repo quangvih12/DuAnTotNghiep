@@ -24,11 +24,14 @@ public interface AdChiTietSanPhamReponsitory extends ChiTietSanPhamReponsitory {
     @Query(value = "select  pt  from  SanPhamChiTiet  pt where pt.sanPham.id =:id")
     SanPhamChiTiet findBySanPhamId(Integer id);
 
+    @Query(value = "select  pt  from  SanPhamChiTiet  pt where pt.sanPham.id =:id")
+    List<SanPhamChiTiet> findByListSanPhamId(Integer id);
+
     @Query(value = "select  pt  from  SanPhamChiTiet  pt where pt.sanPham.ten like :ten")
     SanPhamChiTiet findBySanPhamTen(String ten);
 
-    @Query(value = "select  pt  from  SanPhamChiTiet  pt where pt.sanPham.ten like :ten and (pt.trangThai=1 or pt.trangThai=2 or pt.trangThai=3)")
-    SanPhamChiTiet findBySanPhamTenAndTrangThai(String ten);
+    @Query(value = "select  pt  from  SanPhamChiTiet  pt where pt.size.id =:idSize and  pt.mauSac.id =:idMau and pt.sanPham.id =:idSP and pt.soLuongTon> 0")
+    SanPhamChiTiet check(Integer idSize, Integer idMau, Integer idSP);
 
     @Query(value = """ 
                            SELECT (SELECT COUNT(*) FROM datn.san_pham_chi_tiet spct

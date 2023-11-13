@@ -1,8 +1,13 @@
 package com.example.demo.core.Admin.service.AdSanPhamService;
 
+import com.example.demo.core.Admin.model.request.AdminAddImageRequest;
+import com.example.demo.core.Admin.model.request.AdminImageRequest;
 import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
 import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
+import com.example.demo.core.Admin.model.response.AdminImageResponse;
+import com.example.demo.core.Admin.model.response.AdminSanPhamChiTiet2Response;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
+import com.example.demo.core.Admin.model.response.AdminSanPhamResponse;
 import com.example.demo.entity.*;
 import com.microsoft.azure.storage.StorageException;
 
@@ -13,17 +18,23 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public interface AdUpdateSanPhamService {
-    AdminSanPhamChiTietResponse update(AdminSanPhamChiTietRequest dto, Integer id) throws URISyntaxException, StorageException, InvalidKeyException, IOException, ExecutionException, InterruptedException;
+    AdminSanPhamChiTiet2Response update(AdminSanPhamChiTietRequest dto, Integer id) throws URISyntaxException, StorageException, InvalidKeyException, IOException, ExecutionException, InterruptedException;
 
-    void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request) throws ExecutionException, InterruptedException;
+    AdminImageResponse updateImage(Integer id, AdminAddImageRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
 
-    List<Image> updateImage(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
-
-    SanPham updateSanPham(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
+    AdminSanPhamResponse updateSanPham(Integer id, AdminSanPhamRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
 
     SanPham saveSanPham(AdminSanPhamRequest request);
 
-    SanPhamChiTiet delete(Integer id);
+    AdminSanPhamChiTiet2Response delete(Integer id);
 
-    void deleteImg(Integer idSp, String img);
+    Boolean check(Integer idSize, Integer idMau,Integer idSP);
+
+    AdminSanPhamChiTiet2Response saveSanPhamChiTiet(AdminSanPhamChiTietRequest dto) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
+
+    AdminSanPhamChiTiet2Response khoiPhuc(Integer id);
+
+    AdminImageResponse deleteImg(Integer id);
+
+    AdminImageResponse saveImage(Integer idSP, AdminAddImageRequest adminAddImageRequest) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
 }
