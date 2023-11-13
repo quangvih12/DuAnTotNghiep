@@ -19,14 +19,14 @@ public class KHHoaDonApi {
     @Autowired
     private KHHoaDonService hdService;
 
-    @GetMapping("/find-all/{id}")
-    public ResponseEntity<?> getAll(@PathVariable Integer id) {
-        return ResponseEntity.ok(hdService.getAll(id));
+    @GetMapping("/find-all")
+    public ResponseEntity<?> getAll(@RequestParam("token") String token) {
+        return ResponseEntity.ok(hdService.getAll(token));
     }
 
-    @GetMapping("/find-all-by-trang-thai/{id}")
-    public ResponseEntity<?> getAllByTrangThai(@PathVariable Integer id, @RequestParam("trangThai") Integer trangThai) {
-        return ResponseEntity.ok(hdService.getHoaDonTrangThai(id, trangThai));
+    @GetMapping("/find-all-by-trang-thai")
+    public ResponseEntity<?> getAllByTrangThai(@RequestParam("token") String token, @RequestParam("trangThai") Integer trangThai) {
+        return ResponseEntity.ok(hdService.getHoaDonTrangThai(token, trangThai));
     }
 
     @PutMapping("/huy-hoa-don/{id}")

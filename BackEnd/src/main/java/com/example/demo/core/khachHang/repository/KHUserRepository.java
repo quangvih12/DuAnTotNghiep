@@ -4,5 +4,11 @@ import com.example.demo.entity.User;
 import com.example.demo.reponsitory.UserReponsitory;
 
 public interface KHUserRepository extends UserReponsitory {
+
     User findAllByUserName(String userName);
+
+    User findUserByEmail(String email);
+
+    User findAllByTen(String userName);
+
 }

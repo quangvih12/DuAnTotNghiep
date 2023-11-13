@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface KHHoaDonService {
 
-    List<KHHoaDonResponse> getAll(Integer id);
+    List<KHHoaDonResponse> getAll(String token);
 
-    List<KHHoaDonResponse> getHoaDonTrangThai(Integer id, Integer trangThai);
+    List<KHHoaDonResponse> getHoaDonTrangThai(String token, Integer trangThai);
 
     KHHoaDonResponse huyHoaDonChoXacNhan(Integer idHD, String lyDo);
 

@@ -1,15 +1,19 @@
 package com.example.demo.core.khachHang.service.impl;
 
+import com.example.demo.core.Admin.repository.AdUserRepository;
 import com.example.demo.core.khachHang.model.response.KHHoaDonResponse;
 import com.example.demo.core.khachHang.repository.KHHoaDonChiTietRepository;
 import com.example.demo.core.khachHang.repository.KHHoaDonRepository;
 import com.example.demo.core.khachHang.repository.KHchiTietSanPhamRepository;
 import com.example.demo.core.khachHang.service.KHHoaDonService;
+import com.example.demo.core.token.service.TokenService;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.entity.User;
 import com.example.demo.infrastructure.status.HoaDonStatus;
 import com.example.demo.util.DatetimeUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class KHHoaDonServiceImpl implements KHHoaDonService {
 
     @Autowired
@@ -30,14 +35,35 @@ public class KHHoaDonServiceImpl implements KHHoaDonService {
     @Autowired
     private KHchiTietSanPhamRepository ctspRepo;
 
+    @Autowired
+    TokenService tokenService;
+
+    @Autowired
+    AdUserRepository userRepository;
+
     @Override
-    public List<KHHoaDonResponse> getAll(Integer id) {
-        return hdRepo.getHoaDonByIdUser(id);
+    public List<KHHoaDonResponse> getAll(String token) {
+        Integer idKh;
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        log.info("aaaaaaaaaaaaaaaaaa{}",userName);
+        User user = userRepository.findByUserName(userName);
+        idKh = user.getId();
+        return hdRepo.getHoaDonByIdUser(idKh);
     }
 
     @Override
-    public List<KHHoaDonResponse> getHoaDonTrangThai(Integer id, Integer trangThai) {
-        return hdRepo.getHoaDonTrangThai(id, trangThai);
+    public List<KHHoaDonResponse> getHoaDonTrangThai(String token, Integer trangThai) {
+        Integer idKh;
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = userRepository.findByUserName(userName);
+        idKh = user.getId();
+        return hdRepo.getHoaDonTrangThai(idKh, trangThai);
     }
 
     @Override
@@ -63,8 +89,6 @@ public class KHHoaDonServiceImpl implements KHHoaDonService {
             for (Map.Entry<Integer, Integer> entry : quantityMap.entrySet()) {
                 int idSP = entry.getKey();
                 int quantity = entry.getValue();
-                System.out.println("idSP: " + idSP);
-                System.out.println("số lượng: " + quantity);
                 SanPhamChiTiet spct = ctspRepo.findById(idSP).get();
                 spct.setSoLuongTon(spct.getSoLuongTon() + quantity);
                 ctspRepo.save(spct);

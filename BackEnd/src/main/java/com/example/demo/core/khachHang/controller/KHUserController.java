@@ -1,9 +1,21 @@
 package com.example.demo.core.khachHang.controller;
 
 
+import com.example.demo.core.khachHang.model.request.LoginPayLoad;
+import com.example.demo.core.khachHang.model.response.LoginResponseDTO;
 import com.example.demo.core.khachHang.repository.KHUserRepository;
+import com.example.demo.core.khachHang.service.KHUserService;
+import com.example.demo.core.khachHang.service.LoginService;
 import com.example.demo.entity.User;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,10 +26,54 @@ public class KHUserController {
     @Autowired
     KHUserRepository khUserRepo;
 
+    @Autowired
+    private KHUserService khUserService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private LoginService loginService;
+
     @GetMapping()
     public User getUserByUsername(@RequestParam("username") String username) {
         User user = khUserRepo.findAllByUserName(username);
         return user;
     }
+
+    @GetMapping("/find-user-by-email/{email}")
+    public ResponseEntity<?> getUserByEmail(@PathVariable String email, @RequestParam("username") String username) {
+        User user = khUserService.dangNhapGoogle(email, username);
+        return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginPayLoad loginPayload) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginPayload.getUsernameOrEmail(), loginPayload.getPassword())
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = loginService.login(loginPayload);
+            String usernameOrEmail = loginPayload.getUsernameOrEmail();
+
+            LoginResponseDTO jwtAuthResponse = new LoginResponseDTO();
+            jwtAuthResponse.setAccessToken(token);
+            jwtAuthResponse.setUsernameOrEmail(usernameOrEmail);
+
+//            ResponseDTO response = new ResponseDTO(true, "Logged In Successfully!", jwtAuthResponse, null, HttpStatus.OK.value());
+            return ResponseEntity.ok(jwtAuthResponse);
+        } catch (AuthenticationException ex) {
+            // Lỗi xác thực, đăng nhập không thành công
+//            ResponseDTO response = new ResponseDTO(false, "Invalid Username or Password", null, ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex);
+        }
+    }
+
+    @GetMapping("/find-by-token")
+    public ResponseEntity<?> validate(@RequestParam("token") String token) {
+        return ResponseEntity.ok(khUserService.findByToken(token));
+    }
+
 
 }
