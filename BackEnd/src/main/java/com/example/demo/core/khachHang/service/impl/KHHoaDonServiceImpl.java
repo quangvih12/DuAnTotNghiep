@@ -13,6 +13,7 @@ import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.entity.User;
 import com.example.demo.infrastructure.status.HoaDonStatus;
 import com.example.demo.util.DatetimeUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class KHHoaDonServiceImpl implements KHHoaDonService {
 
     @Autowired
@@ -46,6 +48,7 @@ public class KHHoaDonServiceImpl implements KHHoaDonService {
             return null;
         }
         String userName = tokenService.getUserNameByToken(token);
+        log.info("aaaaaaaaaaaaaaaaaa{}",userName);
         User user = userRepository.findByUserName(userName);
         idKh = user.getId();
         return hdRepo.getHoaDonByIdUser(idKh);
@@ -86,8 +89,6 @@ public class KHHoaDonServiceImpl implements KHHoaDonService {
             for (Map.Entry<Integer, Integer> entry : quantityMap.entrySet()) {
                 int idSP = entry.getKey();
                 int quantity = entry.getValue();
-                System.out.println("idSP: " + idSP);
-                System.out.println("số lượng: " + quantity);
                 SanPhamChiTiet spct = ctspRepo.findById(idSP).get();
                 spct.setSoLuongTon(spct.getSoLuongTon() + quantity);
                 ctspRepo.save(spct);

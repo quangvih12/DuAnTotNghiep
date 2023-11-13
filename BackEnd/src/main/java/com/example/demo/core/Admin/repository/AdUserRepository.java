@@ -57,7 +57,7 @@ public interface AdUserRepository extends UserReponsitory {
     Optional<User> findUsersByUserNameOrEmail(String userNam, String enail);
 
 
-    User findByUserName( String username);
+    User findByUserName(String username);
 
     Optional<User>  findByEmail(String email);
 }
