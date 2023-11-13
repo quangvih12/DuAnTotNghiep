@@ -21,6 +21,9 @@ public interface AdminSanPhamResponse {
     @Value("#{target.trangThai}")
     Integer getTrangThai();
 
+    @Value("#{target.SoLuongTon}")
+    Integer getSoLuongTon();
+
     @Value("#{target.ngayTao}")
     String getNgayTao();
 

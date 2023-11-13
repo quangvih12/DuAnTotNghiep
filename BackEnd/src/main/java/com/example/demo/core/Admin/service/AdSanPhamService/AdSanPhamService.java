@@ -1,6 +1,7 @@
 package com.example.demo.core.Admin.service.AdSanPhamService;
 
 import com.example.demo.core.Admin.model.request.AdminSanPhamRepuest2;
+import com.example.demo.core.Admin.model.response.AdminImageResponse;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTiet2Response;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.core.Admin.model.response.AdminSanPhamResponse;
@@ -23,19 +24,20 @@ public interface AdSanPhamService {
 
     List<AdminSanPhamChiTiet2Response> findBySanPhamCT(Integer id);
 
-    List<Image> getProductImages(Integer idProduct);
+    List<AdminImageResponse> getProductImages(Integer idProduct);
 
-    Boolean findBySanPhamTen(String ten);
+    Boolean findBySanPhamTen(AdminSanPhamRepuest2 request);
 
     List<AdminSanPhamResponse> loc(String comboBoxValue);
 
     AdminSanPhamResponse save(AdminSanPhamRepuest2 adminSanPhamRepuest2) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
 
-    AdminSanPhamResponse update(Integer id);
 
     List<SanPhamChiTiet> saveSanPhamChiTiet(AdminSanPhamRepuest2 repuest2, SanPham sanPham) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
 
     AdminSanPhamResponse delete(Integer id);
 
     AdminSanPhamResponse khoiPhuc(Integer id);
+
+    List<AdminSanPhamChiTiet2Response> locCTSP(String comboBoxValue);
 }

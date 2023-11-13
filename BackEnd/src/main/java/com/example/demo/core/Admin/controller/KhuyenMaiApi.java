@@ -4,11 +4,8 @@ import com.example.demo.core.Admin.model.request.AdminKhuyenMaiRequest;
 import com.example.demo.core.Admin.model.response.AdminKhuyenMaiResponse;
 import com.example.demo.core.Admin.service.AdKhuyenMaiService;
 
-import com.example.demo.core.Admin.service.impl.SanPham.SanPhamChiTietServiceImpl;
 import com.example.demo.entity.KhuyenMai;
 import com.example.demo.entity.SanPhamChiTiet;
-
-import com.example.demo.entity.KhuyenMai;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

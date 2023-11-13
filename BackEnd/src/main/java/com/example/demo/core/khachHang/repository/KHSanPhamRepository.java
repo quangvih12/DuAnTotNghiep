@@ -58,7 +58,7 @@ public interface KHSanPhamRepository extends SanPhamReponsitory {
     @Query(value = """
                     select distinct  spct.id_mau_sac as idMauSac,s.ten as ten, spct.anh as anh \s
                                                                from datn.san_pham_chi_tiet spct join datn.mau_sac s on spct.id_mau_sac = s.id\s
-                                                                where spct.id_san_pham =:id
+                                                                where spct.id_san_pham =:id and spct.trang_thai=1
             """, nativeQuery = true)
     List<KhMauSacResponse> findMauSac(@Param("id") Integer id);
 
@@ -66,16 +66,16 @@ public interface KHSanPhamRepository extends SanPhamReponsitory {
     @Query(value = """
                     select distinct  spct.id_size as idSize, s.ten as ten\s
                     from datn.san_pham_chi_tiet spct join datn.size s on spct.id_size = s.id\s
-                    where spct.id_mau_sac =:idMau and spct.id_san_pham=:idSP
+                    where spct.id_mau_sac =:idMau and spct.id_san_pham=:idSP and spct.trang_thai=1
             """, nativeQuery = true)
-    List<KhSizeResponse> findSizeByMauSac (Integer idMau,Integer idSP);
+    List<KhSizeResponse> findSizeByMauSac(Integer idMau, Integer idSP);
 
     @Query(value = """
                    select distinct  spct.id_mau_sac as idMauSac,s.ten as ten, spct.anh as anh \s
                    from datn.san_pham_chi_tiet spct join datn.mau_sac s on spct.id_mau_sac = s.id\s
                    where spct.id_size=:idSize and spct.id_san_pham =:idSP
             """, nativeQuery = true)
-    List<KhMauSacResponse> findMauSacBySize (Integer idSize,Integer idSP);
+    List<KhMauSacResponse> findMauSacBySize(Integer idSize, Integer idSP);
 
     @Query(value = """ 
                            SELECT

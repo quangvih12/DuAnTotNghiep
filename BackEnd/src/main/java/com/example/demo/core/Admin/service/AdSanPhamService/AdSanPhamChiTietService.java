@@ -16,24 +16,5 @@ import java.util.List;
 
 public interface AdSanPhamChiTietService {
 
-    List<AdminSanPhamChiTietResponse> getList(AdminSearchRequest request);
 
-    List<AdminSanPhamChiTietResponse> loc(String comboBoxValue);
-
-    List<Image> getProductImages(Integer idProduct);
-
-    List<Image> getProductImages();
-
-    AdminSanPhamChiTietResponse get(Integer id);
-
-    Boolean findBySanPhamTen(String ten);
-
-    AdminSanPhamChiTietResponse add(AdminSanPhamChiTietRequest request) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
-
-    SanPham saveSanPham(AdminSanPhamRequest request);
-
-    void mutitheard(SanPhamChiTiet sanPhamChiTiet, AdminSanPhamChiTietRequest request);
-
-
-    List<Image> saveImage(SanPhamChiTiet sanPhamChiTiet, List<String> imgSanPham) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
 }
