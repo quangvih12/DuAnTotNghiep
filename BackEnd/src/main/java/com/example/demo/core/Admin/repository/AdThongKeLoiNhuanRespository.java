@@ -59,7 +59,7 @@ public interface AdThongKeLoiNhuanRespository extends HoaDonReponsitory {
              JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
              JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
              JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
-             join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt
+          left   join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt
              join datn.phuong_thuc_thanh_toan pt on hd.id_phuong_thuc_thanh_toan = pt.id
              WHERE hd.trang_thai IN (3)and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
              GROUP BY hd.id,hd.ma,hd.ngay_tao,hd.tong_tien,hd.tien_sau_khi_giam_gia, hd.trang_thai,pt.ten,hd.tien_ship

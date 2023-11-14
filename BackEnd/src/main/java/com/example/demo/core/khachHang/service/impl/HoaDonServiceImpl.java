@@ -101,8 +101,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         GioHang gioHang = khGioHangRepo.finbyIdKH(hoaDonRequest.getIdUser());
 
         for (KHHoaDonChiTietRequest x : hoaDonRequest.getListHDCT()) {
-            List<GioHangChiTiet> gioHangChiTiet = khghctRepo.listGHCTByID(gioHang.getId(), x.getIdCTSP());
-            gioHangChiTiet.forEach(detail -> khghctRepo.deleteById(detail.getId()));
+            GioHangChiTiet gioHangChiTiet = khghctRepo.listGHCTByID(hoaDonRequest.getIdUser(), x.getIdCTSP());
+             khghctRepo.deleteById(gioHangChiTiet.getId());
         }
 
         }
