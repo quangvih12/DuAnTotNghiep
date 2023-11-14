@@ -18,7 +18,7 @@ public interface KHHoaDonRepository extends HoaDonReponsitory {
                            dc.ten_tinh_thanh as tenTinhThanh, dc.id_quan_huyen as idQuanHuyen, dc.ten_quan_huyen as tenQuanHuyen,\s
                            dc.id_phuong_xa as idPhuongXa, dc.ten_phuong_xa as tenPhuongXa,
                            pttt.ten as tenPTTT, hd.ngay_thanh_toan  as ngayThanhToan
-                    FROM  datn.hoa_don hd    join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt\s
+                    FROM  datn.hoa_don hd    left join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt\s
                                              join datn.phuong_thuc_thanh_toan pttt on pttt.id = hd.id_phuong_thuc_thanh_toan\s
                                              join datn.user u on u.id = hd.id_user where u.id =:id
             """, nativeQuery = true)
@@ -35,7 +35,7 @@ public interface KHHoaDonRepository extends HoaDonReponsitory {
                            dc.ten_tinh_thanh as tenTinhThanh, dc.id_quan_huyen as idQuanHuyen, dc.ten_quan_huyen as tenQuanHuyen,\s
                            dc.id_phuong_xa as idPhuongXa, dc.ten_phuong_xa as tenPhuongXa,
                            pttt.ten as tenPTTT, hd.ngay_thanh_toan  as ngayThanhToan
-                    FROM  datn.hoa_don hd    join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt\s
+                    FROM  datn.hoa_don hd  left  join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt\s
                                              join datn.phuong_thuc_thanh_toan pttt on pttt.id = hd.id_phuong_thuc_thanh_toan\s
                                              join datn.user u on u.id = hd.id_user where u.id = :id and hd.trang_thai =:trangThai
             """, nativeQuery = true)
@@ -52,7 +52,7 @@ public interface KHHoaDonRepository extends HoaDonReponsitory {
                            dc.ten_tinh_thanh as tenTinhThanh, dc.id_quan_huyen as idQuanHuyen, dc.ten_quan_huyen as tenQuanHuyen,\s
                            dc.id_phuong_xa as idPhuongXa, dc.ten_phuong_xa as tenPhuongXa,
                            pttt.ten as tenPTTT, hd.ngay_thanh_toan  as ngayThanhToan
-                    FROM  datn.hoa_don hd    join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt\s
+                    FROM  datn.hoa_don hd    left join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt\s
                                              join datn.phuong_thuc_thanh_toan pttt on pttt.id = hd.id_phuong_thuc_thanh_toan\s
                                              join datn.user u on u.id = hd.id_user
             	   WHERE  hd.id=:id

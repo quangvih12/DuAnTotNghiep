@@ -15,7 +15,7 @@ public class KHVoucherServiceImpl implements KHVoucherService {
     @Autowired
     KHVoucherRepository khVoucherRepo;
     @Override
-    public List<VoucherResponse> listVoucher() {
-        return khVoucherRepo.listVoucher();
+    public List<VoucherResponse> listVoucher(Integer id) {
+        return khVoucherRepo.listVoucher(id);
     }
 }

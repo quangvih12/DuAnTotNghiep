@@ -25,7 +25,7 @@ public interface AdHoaDonChiTietReponsitory extends HoaDonChiTietReponsitory {
                    FROM datn.hoa_don_chi_tiet hdct join datn.hoa_don hd on hdct.id_hoa_don = hd.id 
             										join datn.san_pham_chi_tiet spct on hdct.id_san_pham_chi_tiet = spct.id
                                                     join datn.san_pham sp on sp.id = spct.id_san_pham
-            										join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt 
+            									left	join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt 
                                                     join datn.phuong_thuc_thanh_toan pttt on pttt.id = hd.id_phuong_thuc_thanh_toan 
             										join datn.user u on u.id = hd.id_user where hd.id =:id
             """, nativeQuery = true)
@@ -48,7 +48,7 @@ public interface AdHoaDonChiTietReponsitory extends HoaDonChiTietReponsitory {
                                    FROM datn.hoa_don_chi_tiet hdct join datn.hoa_don hd on hdct.id_hoa_don = hd.id\s
                             										join datn.san_pham_chi_tiet spct on hdct.id_san_pham_chi_tiet = spct.id
                                                                     join datn.san_pham sp on sp.id = spct.id_san_pham
-                            										join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt\s
+                            									left	join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt\s
                                                                     join datn.phuong_thuc_thanh_toan pttt on pttt.id = hd.id_phuong_thuc_thanh_toan\s
                             										join datn.user u on u.id = hd.id_user where hdct.trang_thai = :trangThai  
             """, nativeQuery = true)
@@ -70,7 +70,7 @@ public interface AdHoaDonChiTietReponsitory extends HoaDonChiTietReponsitory {
             	FROM datn.hoa_don_chi_tiet hdct join datn.hoa_don hd on hdct.id_hoa_don = hd.id
             		join datn.san_pham_chi_tiet spct on hdct.id_san_pham_chi_tiet = spct.id
             		join datn.san_pham sp on sp.id = spct.id_san_pham
-            		join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt
+            	left	join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt
             		join datn.phuong_thuc_thanh_toan pttt on pttt.id = hd.id_phuong_thuc_thanh_toan
             		join datn.user u on u.id = hd.id_user
             		join datn.trong_luong tl on tl.id = spct.id_trong_luong

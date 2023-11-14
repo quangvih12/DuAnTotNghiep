@@ -5,6 +5,7 @@ import com.example.demo.core.khachHang.model.response.VoucherResponse;
 import com.example.demo.core.khachHang.service.KHVoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,8 +18,8 @@ public class KHVoucherController {
     @Autowired
     KHVoucherService khVoucherService;
 
-    @GetMapping()
-    public List<VoucherResponse> getListVoucher(){
-        return khVoucherService.listVoucher();
+    @GetMapping("/{id}")
+    public List<VoucherResponse> getListVoucher(@PathVariable  Integer id){
+        return khVoucherService.listVoucher(id);
     }
 }

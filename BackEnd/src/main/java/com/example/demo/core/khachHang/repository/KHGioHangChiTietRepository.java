@@ -59,6 +59,6 @@ public interface KHGioHangChiTietRepository extends GioHangChiTietReponsitory {
 
 
     @Query("Select pt from GioHangChiTiet pt where pt.gioHang.user.id=:id and pt.sanPhamChiTiet.id=:idctsp")
-    List<GioHangChiTiet> listGHCTByID(Integer id, Integer idctsp);
+    GioHangChiTiet listGHCTByID(Integer id, Integer idctsp);
 
 }
