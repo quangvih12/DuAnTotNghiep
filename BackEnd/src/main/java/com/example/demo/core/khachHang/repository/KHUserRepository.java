@@ -11,4 +11,5 @@ public interface KHUserRepository extends UserReponsitory {
 
     Optional<User> findAllById(Integer id);
 
+    User findUserByEmail( String email);
 }
