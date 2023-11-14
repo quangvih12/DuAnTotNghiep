@@ -59,7 +59,7 @@ public class HoaDonApi {
         LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
 //        return null;
 
-        return ResponseEntity.ok(adminTatCaHoaDonService.searchDateByTrangThai(date, date2, comboBoxValue,trangThai));
+        return ResponseEntity.ok(adminTatCaHoaDonService.searchDateByTrangThai(date, date2, comboBoxValue, trangThai));
     }
 
     @GetMapping("/detail/{id}")
@@ -116,8 +116,10 @@ public class HoaDonApi {
 
     // chuẩn bị xong -> đang giao
     @PutMapping("/XacNhanGiaoHang/{id}")
-    public ResponseEntity<?> XacNhanGiaoHang(@PathVariable Integer id) {
-        return ResponseEntity.ok(adminTatCaHoaDonService.giaoHoaDonChoVanChuyen(id));
+    public ResponseEntity<?> XacNhanGiaoHang(@PathVariable Integer id, @RequestParam("ngayShip") String ngayShip) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime date = LocalDateTime.parse(ngayShip, formatter);
+        return ResponseEntity.ok(adminTatCaHoaDonService.giaoHoaDonChoVanChuyen(id,date));
     }
 
     // từ đang giao -> hoàn thành

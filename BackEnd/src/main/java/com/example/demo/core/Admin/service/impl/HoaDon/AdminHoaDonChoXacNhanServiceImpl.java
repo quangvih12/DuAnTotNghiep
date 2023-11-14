@@ -55,6 +55,7 @@ public class AdminHoaDonChoXacNhanServiceImpl implements AdHoaDonChoXacNhanServi
                 } else {
                     quantityMap.put(idSP, quantity);
                 }
+                hdct.setTrangThai(0);
             }
             for (Map.Entry<Integer, Integer> entry : quantityMap.entrySet()) {
                 int idSP = entry.getKey();

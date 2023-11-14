@@ -71,11 +71,12 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
         return hoaDonReponsitory.getHoaDonByDateByTrangThai(startDate, endDate,comboBoxValue,trangThai);
     }
 
-
-    public AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD) {
+    @Override
+    public AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD, LocalDateTime ngayShip) {
         HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
         if (hoaDon != null) {
             hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
+            hoaDon.setNgayShip(ngayShip);
             hoaDon.setTrangThai(HoaDonStatus.GIAO_CHO_DON_VI_VAN_CHUYEN);
             HoaDon hd = hoaDonReponsitory.save(hoaDon);
             return hoaDonReponsitory.getByIds(hd.getId());
