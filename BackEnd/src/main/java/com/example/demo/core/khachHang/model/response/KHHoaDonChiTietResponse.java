@@ -110,4 +110,23 @@ public interface KHHoaDonChiTietResponse {
     @Value("#{target.trongLuong}")
     Integer getTrongLuong();
 
+    @Value("#{target.idDiaChi}")
+    Integer getIdDiaChi();
+
+    @Value("#{target.idHoaDonCT}")
+    Integer getIdHDCT();
+
+    @Value("#{target.trangThaiHdct}")
+    Integer getTrangThaiHDCT();
+
+    @Value("#{target.idUser}")
+    Integer getIdUser();
+
+    @Value("#{target.soLuongTon}")
+    Integer getSoLuongTon();
+
+    @Value("#{target.idSPCT}")
+    Integer getIdSPCT();
+
+
 }

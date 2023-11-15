@@ -37,9 +37,9 @@ public interface KHHoaDonRepository extends HoaDonReponsitory {
                            pttt.ten as tenPTTT, hd.ngay_thanh_toan  as ngayThanhToan
                     FROM  datn.hoa_don hd  left  join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt\s
                                              join datn.phuong_thuc_thanh_toan pttt on pttt.id = hd.id_phuong_thuc_thanh_toan\s
-                                             join datn.user u on u.id = hd.id_user where u.id = :id and hd.trang_thai =:trangThai
+                                             join datn.user u on u.id = hd.id_user where u.id = :id and hd.trang_thai =:trangThai or hd.trang_thai =:trangThai2 or hd.trang_thai =:trangThai3
             """, nativeQuery = true)
-    List<KHHoaDonResponse> getHoaDonTrangThai(Integer id, Integer trangThai);
+    List<KHHoaDonResponse> getHoaDonTrangThai(Integer id, Integer trangThai,Integer trangThai2,Integer trangThai3);
 
     @Query(value = """
                      SELECT ROW_NUMBER() OVER(ORDER BY hd.id DESC) AS stt,
