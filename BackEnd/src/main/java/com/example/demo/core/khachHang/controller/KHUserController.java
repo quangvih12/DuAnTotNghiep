@@ -42,8 +42,8 @@ public class KHUserController {
     }
 
     @GetMapping("/find-user-by-email/{email}")
-    public ResponseEntity<?> getUserByEmail(@PathVariable String email, @RequestParam("username") String username) {
-        User user = khUserService.dangNhapGoogle(email, username);
+    public ResponseEntity<?> getUserByEmail(@PathVariable String email, @RequestParam("username") String username, @RequestParam("anh") String anh) {
+        User user = khUserService.dangNhapGoogle(email, username, anh);
         return ResponseEntity.ok(user);
     }
 

@@ -34,4 +34,10 @@ public class TrangChuApi {
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(trangChuService.getAll());
     }
+
+    //sp mới
+    @GetMapping("/get-san-pham-ban-chay")
+    public ResponseEntity<?> getSPBanChay() {
+        return ResponseEntity.ok(trangChuService.getSPBanChay());
+    }
 }
