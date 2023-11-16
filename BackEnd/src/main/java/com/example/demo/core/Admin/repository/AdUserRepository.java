@@ -4,6 +4,7 @@ import com.example.demo.core.Admin.model.response.AdminUserResponse;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.reponsitory.UserReponsitory;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -60,4 +61,6 @@ public interface AdUserRepository extends UserReponsitory {
     User findByUserName(String username);
 
     Optional<User>  findByEmail(String email);
+
+    List<User> getAllByTrangThai(Integer trangThai, Sort sort);
 }

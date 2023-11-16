@@ -1,0 +1,7 @@
+mailServer:
+  host: smtp.gmail.com
+  port: 587
+  email: mubaohiemvnk@gmail.com
+  password: ftrm ywog ooqk emqb
+  protocol: smtp
+  isSSL: false

@@ -19,6 +19,6 @@ public abstract class VNPayConstant {
     //    public static String vnp_IpAddr = "0:0:0:0:0:0:0:1";
     public static String vnp_Locale = "vn";
 //    public static String vnp_ReturnUrl = "http://localhost:5173/payment/payment-success";
-    public static String vnp_ReturnUrl = "localhost/success";
+    public static String vnp_ReturnUrl = "http://localhost:8080/api/payment-callback";
 
 }
