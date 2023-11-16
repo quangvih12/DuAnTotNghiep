@@ -19,6 +19,8 @@ public interface AdUserService {
 
     List<AdminUserResponse> getAdmin();
 
+    List<User> getAllByTrangThai(Integer trangThai);
+
     List<DiaChi> getUserByDiaChi(Integer idUser);
 
     AdminUserResponse add(AdminUserRequest user);

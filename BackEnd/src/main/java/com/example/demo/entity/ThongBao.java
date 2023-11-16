@@ -24,8 +24,8 @@ import java.math.BigDecimal;
 @Builder
 @ToString
 @Entity
-@Table(name = "danh_sach_yeu_thich")
-public class DanhSachYeuThich {
+@Table(name = "thong_bao")
+public class ThongBao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -37,8 +37,14 @@ public class DanhSachYeuThich {
     @Column(name = "ngay_tao")
     private String ngayTao;
 
+    @Column(name = "content")
+    private String content;
+
     @Column(name = "trang_thai")
     private Integer trangThai;
+
+    @Column(name = "type")
+    private Integer type;
 
     @ManyToOne
     @JoinColumn(name = "id_user")

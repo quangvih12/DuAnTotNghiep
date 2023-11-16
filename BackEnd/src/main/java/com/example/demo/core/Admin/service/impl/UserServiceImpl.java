@@ -13,6 +13,7 @@ import com.example.demo.entity.User;
 import com.example.demo.infrastructure.status.UserStatus;
 import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,6 +39,12 @@ public class UserServiceImpl implements AdUserService {
 
     public List<AdminUserResponse> getAdmin() {
         return userRepository.findUserByRole("ADMIN");
+    }
+
+    @Override
+    public List<User> getAllByTrangThai(Integer trangThai) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return userRepository.getAllByTrangThai(trangThai, sort);
     }
 
     @Override
