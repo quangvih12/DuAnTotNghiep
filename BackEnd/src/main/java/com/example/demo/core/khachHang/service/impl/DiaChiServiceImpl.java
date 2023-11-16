@@ -88,4 +88,35 @@ public class DiaChiServiceImpl implements DiaChiService {
         }
         return optional;
     }
+
+    public DiaChi thietLapMacDinh(Integer id, String token) {
+        DiaChi optional = DCrepository.findById(id).get();
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = repository.findAllByUserName(userName);
+
+        List<DiaChi> lstDiaChi = DCrepository.findDiaChiBy(user.getId());
+        for (DiaChi o : lstDiaChi) {
+            if (o.getId() == id) {
+                o.setTrangThai(1);
+                DCrepository.save(o);
+            } else {
+                o.setTrangThai(0);
+                DCrepository.save(o);
+            }
+        }
+        return optional;
+    }
+
+    public DiaChi findDiaChiByIdUserAndTrangThai(String token) {
+
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = repository.findAllByUserName(userName);
+        return DCrepository.findDiaChiByIdUserAndTrangThai(user.getId());
+    }
 }

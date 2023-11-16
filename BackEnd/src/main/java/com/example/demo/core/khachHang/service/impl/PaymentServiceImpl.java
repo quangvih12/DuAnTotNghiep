@@ -3,10 +3,8 @@ package com.example.demo.core.khachHang.service.impl;
 import com.example.demo.core.khachHang.model.request.paymentmethod.CreatePayMentMethodTransferRequest;
 import com.example.demo.core.khachHang.repository.KHChiTietSPRepository;
 import com.example.demo.core.khachHang.service.PaymentService;
-import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.infrastructure.config.PaymentConfig;
 import com.example.demo.infrastructure.constant.VNPayConstant;
-import com.example.demo.infrastructure.status.ChiTietSanPhamStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +17,17 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-public class PaymentServiceImpl  implements PaymentService {
+public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     KHChiTietSPRepository ctspRepo;
 
 
     private VNPayConstant VnPayConstant;
+
     @Override
     public String payWithVNPAYOnline(CreatePayMentMethodTransferRequest payModel, HttpServletRequest request) throws UnsupportedEncodingException {
-        payModel.getHdct().forEach(item -> {
-            SanPhamChiTiet sanPhamChiTiet = ctspRepo.findById(item.getIdCTSP()).get();
-            if (sanPhamChiTiet.getSoLuongTon() < item.getSoLuong()) {
-                throw new RuntimeException("So luong khong du");
-            }
-            sanPhamChiTiet.setSoLuongTon(sanPhamChiTiet.getSoLuongTon() - item.getSoLuong());
-            if (sanPhamChiTiet.getSoLuongTon() == 0) {
-                sanPhamChiTiet.setTrangThai(ChiTietSanPhamStatus.HET_HANG);
-            }
-            ctspRepo.save(sanPhamChiTiet);
-        });
+
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -61,7 +50,7 @@ public class PaymentServiceImpl  implements PaymentService {
         vnp_Params.put("vnp_OrderInfo", payModel.vnp_OrderInfo);
         vnp_Params.put("vnp_OrderType", payModel.vnp_OrderType);
         vnp_Params.put("vnp_ReturnUrl", VnPayConstant.vnp_ReturnUrl);
-        vnp_Params.put("vnp_TxnRef", "HD" + RandomStringUtils.randomNumeric(6) + "-"+ vnp_CreateDate);
+        vnp_Params.put("vnp_TxnRef", "HD" + RandomStringUtils.randomNumeric(6) + "-" + vnp_CreateDate);
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
         List fieldList = new ArrayList(vnp_Params.keySet());

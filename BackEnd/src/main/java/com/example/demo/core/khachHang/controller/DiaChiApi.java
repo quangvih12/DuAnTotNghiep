@@ -34,6 +34,11 @@ public class DiaChiApi {
         return ResponseEntity.ok(service.getAll(token));
     }
 
+    @GetMapping("/find-dia-chi-mac-dinh")
+    public ResponseEntity<?> findDiaChiByIdUserAndTrangThai(@RequestParam("token") String token) {
+        return ResponseEntity.ok(service.findDiaChiByIdUserAndTrangThai(token));
+    }
+
     @PutMapping("{id}/delete")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.delete(id));
@@ -49,5 +54,10 @@ public class DiaChiApi {
     public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody KHDiaChiRequest request) {
         HashMap<String, Object> map = service.updateDiaChi(request, id);
         return ResponseEntity.ok(map);
+    }
+
+    @PutMapping("/thiet-lap-mac-dinh/{id}")
+    public ResponseEntity<?> thietLapMacDinh(@PathVariable("id") Integer id, @RequestParam String token) {
+        return ResponseEntity.ok(service.thietLapMacDinh(id, token));
     }
 }

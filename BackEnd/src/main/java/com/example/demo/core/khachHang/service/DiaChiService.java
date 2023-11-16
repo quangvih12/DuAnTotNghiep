@@ -19,4 +19,8 @@ public interface DiaChiService {
     HashMap<String, Object> updateDiaChi(KHDiaChiRequest request, Integer id);
 
     Optional<DiaChi> delete(Integer id);
+
+    DiaChi thietLapMacDinh(Integer id, String token);
+
+    DiaChi findDiaChiByIdUserAndTrangThai(String token);
 }

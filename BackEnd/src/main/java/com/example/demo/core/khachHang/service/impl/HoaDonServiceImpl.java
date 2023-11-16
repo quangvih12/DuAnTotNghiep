@@ -2,20 +2,16 @@ package com.example.demo.core.khachHang.service.impl;
 
 import com.example.demo.core.khachHang.model.request.hoadon.HoaDonRequest;
 import com.example.demo.core.khachHang.model.request.hoadonchitiet.KHHoaDonChiTietRequest;
-import com.example.demo.core.khachHang.model.response.KHHoaDonResponse;
 import com.example.demo.core.khachHang.repository.*;
 import com.example.demo.core.khachHang.service.HoaDonService;
 import com.example.demo.entity.*;
-import com.example.demo.infrastructure.config.PaymentConfig;
 import com.example.demo.infrastructure.constant.VNPayConstant;
 import com.example.demo.infrastructure.status.ChiTietSanPhamStatus;
 import com.example.demo.infrastructure.status.HoaDonStatus;
-import com.example.demo.infrastructure.status.TrangThaiHoaDon;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Random;
 
 @Service
@@ -24,6 +20,9 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Autowired
     KHUserRepository khUserRepo;
+
+    @Autowired
+    KHDiaChiRepository khDiaChiRepo;
 
     @Autowired
     KHHoaDonRepository khHoaDonRepo;
@@ -45,31 +44,22 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     private VNPayConstant VnPayConstant;
 
+    @Autowired
+    private ThongBaoServiceImpl thongBaoService;
+
     @Override
     public HoaDon createHoaDon(HoaDonRequest hoaDonRequest) {
 
-//        if(hoaDonRequest.getIdPayMethod() !=  TrangThaiHoaDon.OFFLINE){
-//            log.info("test");
-//            if(!PaymentConfig.decodeHmacSha512(hoaDonRequest.getResponsePayment().toParamsString(), hoaDonRequest.getResponsePayment().getVnp_SecureHash(), VnPayConstant.vnp_HashSecret)){
-//                throw new RuntimeException("Loi");
-//            }
-////            List<String> findAllByVnpTransactionNo = paymentsMethodRepository.findAllByVnpTransactionNo(request.getResponsePayment().getVnp_TransactionNo());
-////            if (findAllByVnpTransactionNo.size() > 0) {
-////                throw new RestApiException(Message.PAYMENT_TRANSACTION);
-////            }
-//            if(!hoaDonRequest.getResponsePayment().getVnp_TransactionStatus().equals("00")){
-//                throw new RuntimeException("Loi");
-//            }
-//        }
-
-        User kh = User.builder().id(hoaDonRequest.getIdUser()).build();
+        User kh = this.khUserRepo.findById(hoaDonRequest.getIdUser()).get();
+        DiaChi diaChi = khDiaChiRepo.findDiaChiByIdUserAndTrangThai(kh.getId());
 
         Random random = new Random();
         int randomNumber = random.nextInt(9000) + 1000;
 
         HoaDon hoaDon = HoaDon.builder()
-                .ma("HD"+randomNumber)
+                .ma("HD" + randomNumber)
                 .user(kh)
+                .diaChi(diaChi)
                 .tongTien(hoaDonRequest.getTongTien())
                 .tienShip(hoaDonRequest.getTienShip())
                 .tienSauKhiGiam(hoaDonRequest.getTienSauGiam())
@@ -77,15 +67,7 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .phuongThucThanhToan(PhuongThucThanhToan.builder().id(hoaDonRequest.getIdPayMethod()).build())
                 .build();
 
-//        if(hoaDonRequest.getIdPayMethod() !=  TrangThaiHoaDon.OFFLINE){
-//            hoaDon.setMa(hoaDonRequest.getResponsePayment().getVnp_TxnRef().split("-")[0]);
-//        }
-//        if(hoaDonRequest.getIdPayMethod() !=  TrangThaiHoaDon.OFFLINE){
-//            log.info("chay vao day");
-//            hoaDon.setMa(hoaDonRequest.getResponsePayment().getVnp_TxnRef().split("-")[0]);
-//        }
-
-        khHoaDonRepo.save(hoaDon);
+        HoaDon saveHoaDon = khHoaDonRepo.save(hoaDon);
 
         for (KHHoaDonChiTietRequest request : hoaDonRequest.getListHDCT()) {
 
@@ -97,16 +79,16 @@ public class HoaDonServiceImpl implements HoaDonService {
 
             HoaDonChiTiet hdct = HoaDonChiTiet.builder()
                     .sanPhamChiTiet(spct)
-                    .ma("HDCT"+randomNumber)
+                    .ma("HDCT" + randomNumber)
                     .soLuong(request.getSoLuong())
-                    .donGia(request.getDonGia())
+                    .donGia(spct.getGiaSauGiam() == null ? spct.getGiaBan() : spct.getGiaSauGiam())
                     .trangThai(HoaDonStatus.YEU_CAU_XAC_NHAN)
                     .hoaDon(hoaDon)
                     .build();
 
-           hoaDonChiTietRepo.save(hdct);
+            hoaDonChiTietRepo.save(hdct);
 
-           spct.setSoLuongTon(spct.getSoLuongTon() - request.getSoLuong());
+            spct.setSoLuongTon(spct.getSoLuongTon() - request.getSoLuong());
 
             if (spct.getSoLuongTon() == 0) {
                 spct.setTrangThai(ChiTietSanPhamStatus.HET_HANG);
@@ -114,24 +96,16 @@ public class HoaDonServiceImpl implements HoaDonService {
 
             chiTietSPRepo.save(spct);
 
-//        PhuongThucThanhToan paymentsMethod = PhuongThucThanhToan.builder()
-//        paymentsMethodRepository.save(paymentsMethod);
+
+//            GioHang gioHang = khGioHangRepo.finbyIdKH(hoaDonRequest.getIdUser());
 
 
-//        if (hoaDonRequest.getIdVoucher() != null) {
-//
-//            Voucher voucher = voucherRepo.findById(hoaDonRequest.getIdVoucher()).get();
-//        }
-
-        GioHang gioHang = khGioHangRepo.finbyIdKH(hoaDonRequest.getIdUser());
-
+        }
         for (KHHoaDonChiTietRequest x : hoaDonRequest.getListHDCT()) {
             GioHangChiTiet gioHangChiTiet = khghctRepo.listGHCTByID(hoaDonRequest.getIdUser(), x.getIdCTSP());
-             khghctRepo.deleteById(gioHangChiTiet.getId());
+            khghctRepo.deleteById(gioHangChiTiet.getId());
         }
-
-        }
-
+        this.thongBaoService.thanhToan(saveHoaDon.getId());
         return hoaDon;
     }
 }
