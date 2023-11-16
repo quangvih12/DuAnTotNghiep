@@ -717,7 +717,8 @@ CREATE TABLE `user_voucher` (
   CONSTRAINT `FKm34eg0v242ck9tt3fw8yo0vko` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
+ALTER TABLE `user_voucher`
+DROP COLUMN `dieu_kien`;
 --
 -- Dumping data for table `user_voucher`
 --
@@ -767,6 +768,7 @@ CREATE TABLE `voucher` (
   `giam_toi_da` decimal(20,0) DEFAULT NULL,
   `mo_ta` varchar(10000) DEFAULT NULL,
   `so_luong` int DEFAULT NULL,
+  `gia_tri_giam` int DEFAULT NULL,
   `ten` varchar(255) DEFAULT NULL,
   `thoi_gian_bat_dau` datetime(6) DEFAULT NULL,
   `thoi_gian_ket_thuc` datetime(6) DEFAULT NULL,

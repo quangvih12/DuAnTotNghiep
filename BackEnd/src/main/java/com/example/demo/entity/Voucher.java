@@ -42,5 +42,8 @@ public class Voucher {
     @Column(name = "trang_thai")
     private Integer trangThai;
 
+    @Column(name = "gia_tri_giam")
+    private Integer giaTriGiam;
+
     private Integer soLuong;
 }
