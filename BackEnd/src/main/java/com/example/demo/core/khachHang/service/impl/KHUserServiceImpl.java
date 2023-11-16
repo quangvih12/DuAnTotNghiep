@@ -31,6 +31,7 @@ public class KHUserServiceImpl implements KHUserService {
             addUser.setNgayTao(DatetimeUtil.getCurrentDateAndTime());
             addUser.setPassword("$2a$12$Xcp214DEIsQr61KrINMt5egl.2Tqfcjwhu32Y9Y5TCEFzH5yiEOlS");
             addUser.setImage(anh);
+            addUser.setTrangThai(1);
             User user1 = khUserRepo.save(addUser);
             user1.setMa("US" + user1.getId());
             khUserRepo.save(user1);
