@@ -80,4 +80,7 @@ public interface KHHoaDonResponse {
     @Value("#{target.tenPTTT}")
     String getTenPTTT();
 
+    @Value("#{target.moTa}")
+    String getMoTa();
+
 }

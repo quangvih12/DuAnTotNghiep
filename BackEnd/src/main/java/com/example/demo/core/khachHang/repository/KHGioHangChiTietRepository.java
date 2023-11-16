@@ -53,7 +53,7 @@ public interface KHGioHangChiTietRepository extends GioHangChiTietReponsitory {
               ,v.thoi_gian_ket_thuc as thoiGianKetThuc ,v.trang_thai as trangThai
        FROM datn.user_voucher uv join datn.user u on uv.id_user = u.id
                                  join datn.voucher v on uv.id_voucher = v.id
-       where   uv.id_user=:idUser  and v.so_luong >= 0
+       where   uv.id_user=:idUser  and v.so_luong >= 0 and v.trang_thai = 0 
         """, nativeQuery = true)
     List<KhVoucherResponse> getListVoucher(Integer  idUser);
 

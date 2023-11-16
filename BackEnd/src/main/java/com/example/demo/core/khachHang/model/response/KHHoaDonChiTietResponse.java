@@ -11,6 +11,9 @@ public interface KHHoaDonChiTietResponse {
     @Value("#{target.maHD}")
     String getMaHD();
 
+    @Value("#{target.maHDCT}")
+    String getMaHDCT();
+
     @Value("#{target.nguoiTao}")
     String getNguoiTao();
 

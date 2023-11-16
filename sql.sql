@@ -87,6 +87,7 @@ CREATE TABLE `danh_sach_yeu_thich` (
   `ngay_tao` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
   `id_san_pham_chi_tiet` int DEFAULT NULL,
+  `content` varchar(255) DEFAULT NULL,
   `id_user` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK5dd115i50w4aw5s2ciyepw3gx` (`id_san_pham_chi_tiet`),

@@ -115,8 +115,13 @@ public class GiopHangCTController {
 
 
     @GetMapping("/countGHCT")
-    public Integer countGHCTByUser(@RequestParam("userId") Integer userId) {
-        return khGHCTRespon.countGHCTByUser(userId);
+    public Integer countGHCTByUser(@RequestParam("token") String token) {
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = userRepository.findByUserName(userName);
+        return khGHCTRespon.countGHCTByUser(user.getId());
     }
 
 }
