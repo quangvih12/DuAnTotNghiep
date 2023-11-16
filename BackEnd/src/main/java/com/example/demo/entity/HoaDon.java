@@ -17,8 +17,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -60,9 +62,11 @@ public class HoaDon {
     @Column(name = "ly_do")
     private String lyDo;
 
+//    @UpdateTimestamp
     @Column(name = "ngay_sua")
     private LocalDateTime ngaySua;
 
+//    @CreationTimestamp
     @Column(name = "ngay_tao")
     private LocalDateTime ngayTao;
 

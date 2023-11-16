@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 
@@ -40,9 +42,11 @@ public class HoaDonChiTiet {
     @Column(name = "so_luong")
     private Integer soLuong;
 
+//    @UpdateTimestamp
     @Column(name = "ngay_sua")
     private String ngaySua;
 
+//    @CreationTimestamp
     @Column(name = "ngay_tao")
     private String ngayTao;
 
