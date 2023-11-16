@@ -1,6 +1,7 @@
 package com.example.demo.core.Admin.repository;
 
 import com.example.demo.core.Admin.model.response.AdminUserResponse;
+import com.example.demo.core.Admin.model.response.AdminUserVoucherResponse;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.reponsitory.UserReponsitory;
@@ -55,12 +56,29 @@ public interface AdUserRepository extends UserReponsitory {
             """, nativeQuery = true)
     AdminUserResponse findUserById(@Param("id") Integer id);
 
-    Optional<User> findUsersByUserNameOrEmail(String userNam, String enail);
+    @Query(value = """
+             select u.id as id, u.anh as anh, u.ma as ma, u.ten as ten, u.sdt as sdt, u.email as email, u.ngay_sinh as ngaySinh,
+              sum(hd.tong_tien) as tongTienDaMua, u.role as role, u.trang_thai as trangThai, u.user_name as userName,
+              u.gioi_tinh as gioiTinh, COUNT(hd.id) AS soLuongHoaDon, u.password as pass 
+               from datn.user u\s
+                join datn.hoa_don hd on u.id = hd.id_user
+                 where u.role = 'USER'
+             	group by anh,ma,ten,sdt,email,ngaySinh,id
+             	having (CASE
+             				WHEN :comboBoxValue = 'duoi1Trieu' THEN  tongTienDaMua < 1000000
+             				WHEN :comboBoxValue = '1den3' THEN tongTienDaMua >= 1000000 and tongTienDaMua <= 3000000
+             				WHEN :comboBoxValue = '3den6' THEN  tongTienDaMua >= 3000000 and tongTienDaMua <= 6000000
+             				WHEN :comboBoxValue = '6den10' THEN  tongTienDaMua >= 6000000 and tongTienDaMua <= 10000000
+             			END)\s
+            """, nativeQuery = true)
+    List<AdminUserVoucherResponse> getAllUserByTongTien(@Param("comboBoxValue") String cbbValue);
 
+    Optional<User> findUsersByUserNameOrEmail(String userNam, String enail);
 
     User findByUserName(String username);
 
     Optional<User>  findByEmail(String email);
 
     List<User> getAllByTrangThai(Integer trangThai, Sort sort);
+
 }
