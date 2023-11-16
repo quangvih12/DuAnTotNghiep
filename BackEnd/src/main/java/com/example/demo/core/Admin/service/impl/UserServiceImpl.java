@@ -3,6 +3,7 @@ package com.example.demo.core.Admin.service.impl;
 import com.example.demo.core.Admin.model.request.AdminUserRequest;
 import com.example.demo.core.Admin.model.response.AdminHoaDonResponse;
 import com.example.demo.core.Admin.model.response.AdminUserResponse;
+import com.example.demo.core.Admin.model.response.AdminUserVoucherResponse;
 import com.example.demo.core.Admin.repository.AdDiaChiReponsitory;
 import com.example.demo.core.Admin.repository.AdHoaDonReponsitory;
 import com.example.demo.core.Admin.repository.AdUserRepository;
@@ -130,5 +131,10 @@ public class UserServiceImpl implements AdUserService {
     @Override
     public List<AdminUserResponse> getAllUser() {
         return userRepository.getAllUser();
+    }
+
+    @Override
+    public List<AdminUserVoucherResponse> getAllUserByTongTien(String cbbValue) {
+        return userRepository.getAllUserByTongTien(cbbValue);
     }
 }

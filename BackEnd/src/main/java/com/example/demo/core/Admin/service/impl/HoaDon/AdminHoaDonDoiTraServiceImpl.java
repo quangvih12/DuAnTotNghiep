@@ -90,7 +90,9 @@ public class AdminHoaDonDoiTraServiceImpl implements AdHoaDonDoiTraService {
                     quantityMap.put(idSP, quantity);
                 }
                 hdct.setTrangThai(HoaDonStatus.HOAN_THANH_DOI_TRA);
-                hdctRepo.save(hdct);
+                HoaDonChiTiet hdct2 = hdctRepo.save(hdct);
+                hdct2.setMa("HDCT" + hdct2.getId());
+                hdctRepo.save(hdct2);
             }
             for (Map.Entry<Integer, Integer> entry : quantityMap.entrySet()) {
                 int idSP = entry.getKey();
