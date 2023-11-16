@@ -23,7 +23,6 @@ import org.hibernate.annotations.FetchMode;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -96,7 +95,7 @@ public class SanPhamChiTiet {
     @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<DanhSachYeuThich> danhSachYeuThichList = new ArrayList<>();
+    private List<ThongBao> thongBaoList = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)

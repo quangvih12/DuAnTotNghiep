@@ -9,7 +9,7 @@ public interface KHHoaDonService {
 
     List<KHHoaDonResponse> getAll(String token);
 
-    List<KHHoaDonResponse> getHoaDonTrangThai(String token, Integer trangThai);
+    List<KHHoaDonResponse> getHoaDonTrangThai(String token, Integer trangThai,Integer trangThai2,Integer trangThai3,Integer trangThai4);
 
     KHHoaDonResponse huyHoaDonChoXacNhan(Integer idHD, String lyDo);
 
