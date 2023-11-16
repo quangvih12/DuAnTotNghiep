@@ -36,6 +36,11 @@ public class UserApi {
         return ResponseEntity.ok(adUserService.getHoaDonByIdUser(id));
     }
 
+    @GetMapping("/get-user-by-tong-tien")
+    public ResponseEntity<?> getUserByTongTien(@RequestParam("cbbValue") String cbbValue) {
+        return ResponseEntity.ok(adUserService.getAllUserByTongTien(cbbValue));
+    }
+
     @PostMapping()
     public ResponseEntity<?> add(@RequestBody AdminUserRequest request) {
         return ResponseEntity.ok(adUserService.add(request));
