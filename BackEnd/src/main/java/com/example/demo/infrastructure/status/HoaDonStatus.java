@@ -10,4 +10,6 @@ public class HoaDonStatus {
     public static final Integer DA_GIAO_CHO_DON_VI_VAN_CHUYEN = 6;  // xoa
     public static final Integer YEU_CAU_DOI_TRA = 7;                // Yêu cầu trả hàng
     public static final Integer XAC_NHAN_DOI_TRA = 8;               // Xác nhận trả hàng
+    public static final Integer HUY_DOI_TRA = 9;                // Huỷ đổi trả
+    public static final Integer HOAN_THANH_DOI_TRA = 10;               // Đổi trả Hoàn thành
 }
