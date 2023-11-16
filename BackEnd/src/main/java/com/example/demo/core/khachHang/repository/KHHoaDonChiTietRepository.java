@@ -19,7 +19,7 @@ public interface KHHoaDonChiTietRepository extends HoaDonReponsitory {
             hd.tien_ship as tienShip, hd.tong_tien as tongTien, hdct.trang_thai as trangThai,
             hd.id as idHD, spct.gia_ban as giaBan, spct.gia_sau_giam as giaSPSauGiam, sp.ma as maSP, hd.id_dia_chi_sdt as idDiaChi,hdct.id as idHoaDonCT,
             hd.id_user as idUser ,sp.ten as tenSP, dc.dia_chi as diaChiCuThe, dc.id_phuong_xa as idPhuongXa, dc.ten_phuong_xa as tenPhuongXa,
-            dc.id_quan_huyen as idQuanHuyen, dc.ten_quan_huyen as tenQuanHuyen, dc.id_tinh_thanh as idTinhThanh,
+            dc.id_quan_huyen as idQuanHuyen, dc.ten_quan_huyen as tenQuanHuyen, dc.id_tinh_thanh as idTinhThanh, hdct.ma as maHDCT,
             dc.ten_tinh_thanh as tenTinhThanh, pttt.ten as tenPTTT, hdct.don_gia as donGia, hdct.so_luong as soLuong,
             hdct.ly_do as lyDo, sp.anh as anh, (select ms.ten from datn.mau_sac ms where ms.id = spct.id_mau_sac) as mauSac,
             (select s.ten from datn.size s where s.id = spct.id_size) as size, hdct.trang_thai as trangThaiHdct,spct.so_luong_ton as soLuongTon,spct.id as idSPCT,

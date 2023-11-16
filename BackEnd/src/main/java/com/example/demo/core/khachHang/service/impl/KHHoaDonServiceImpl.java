@@ -55,7 +55,7 @@ public class KHHoaDonServiceImpl implements KHHoaDonService {
     }
 
     @Override
-    public List<KHHoaDonResponse> getHoaDonTrangThai(String token, Integer trangThai,Integer trangThai2,Integer trangThai3) {
+    public List<KHHoaDonResponse> getHoaDonTrangThai(String token, Integer trangThai,Integer trangThai2,Integer trangThai3,Integer trangThai4) {
         Integer idKh;
         if (tokenService.getUserNameByToken(token) == null) {
             return null;
@@ -63,7 +63,7 @@ public class KHHoaDonServiceImpl implements KHHoaDonService {
         String userName = tokenService.getUserNameByToken(token);
         User user = userRepository.findByUserName(userName);
         idKh = user.getId();
-        return hdRepo.getHoaDonTrangThai(idKh, trangThai,trangThai2,trangThai3);
+        return hdRepo.getHoaDonTrangThai(idKh, trangThai,trangThai2,trangThai3,trangThai4);
     }
 
     @Override

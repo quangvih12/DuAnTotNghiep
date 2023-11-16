@@ -40,6 +40,9 @@ public class KHDoiTraHoaDonServiceImpl {
     @Autowired
     private KHHoaDonChiTietRepository hdctRepo;
 
+    @Autowired
+    private ThongBaoServiceImpl thongBaoService;
+
     public HoaDon doiTra(String token, KhDoiTraRequest request) {
 
         if (tokenService.getUserNameByToken(token) == null) {
@@ -89,7 +92,7 @@ public class KHDoiTraHoaDonServiceImpl {
                 .build();
 
         hoaDonChiTietRepo.save(hoaDonChiTiet);
-
+        thongBaoService.yeuCauDoiTra(saveHoaDon.getId(),hdct.getSanPhamChiTiet().getSanPham().getMa());
         return hoaDon;
     }
 
