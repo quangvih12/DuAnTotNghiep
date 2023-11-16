@@ -10,4 +10,6 @@ public interface TrangChuService {
 
     List<TrangChuResponse> getAllByTenLoai(String tenLoai);
 
+    List<TrangChuResponse> getSPBanChay();
+
 }

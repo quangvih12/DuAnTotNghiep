@@ -28,4 +28,10 @@ public class TrangChuServiceImpl implements TrangChuService {
         return trangChuRepo.getAllByTenLoai(tenLoai, pageable);
     }
 
+    @Override
+    public List<TrangChuResponse> getSPBanChay() {
+        Pageable pageable = PageRequest.of(0, 10);
+        return trangChuRepo.getSPBanChay(pageable);
+    }
+
 }
