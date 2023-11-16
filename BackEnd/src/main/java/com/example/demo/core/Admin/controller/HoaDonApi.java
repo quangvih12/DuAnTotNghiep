@@ -3,6 +3,7 @@ package com.example.demo.core.Admin.controller;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdDetailHoaDonChiTietService;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdHoaDonChoXacNhanService;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdHoaDonDangGiaoService;
+import com.example.demo.core.Admin.service.InterfaceHoaDon.AdHoaDonDoiTraService;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdminTatCaHoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,9 @@ public class HoaDonApi {
 
     @Autowired
     private AdDetailHoaDonChiTietService adDetailHoaDonChiTietService;
+
+    @Autowired
+    private AdHoaDonDoiTraService doiTraService;
 
     @GetMapping()
     public ResponseEntity<?> getAll() {
@@ -104,7 +108,6 @@ public class HoaDonApi {
 
     @PutMapping("/huyXacNhan/{id}")
     public ResponseEntity<?> huyHoaDon(@PathVariable Integer id, @RequestParam("lyDo") String lyDo) {
-        System.out.println("haha");
         return ResponseEntity.ok(adHoaDonChoXacNhanService.huyHoaDonChoXacNhan(id, lyDo));
     }
 
@@ -119,7 +122,24 @@ public class HoaDonApi {
     public ResponseEntity<?> XacNhanGiaoHang(@PathVariable Integer id, @RequestParam("ngayShip") String ngayShip) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime date = LocalDateTime.parse(ngayShip, formatter);
-        return ResponseEntity.ok(adminTatCaHoaDonService.giaoHoaDonChoVanChuyen(id,date));
+        return ResponseEntity.ok(adminTatCaHoaDonService.giaoHoaDonChoVanChuyen(id, date));
+    }
+
+    // Trả hàng -> Xác nhận trả
+    @PutMapping("/xac-nhan-doi-tra/{id}")
+    public ResponseEntity<?> XacNhanDoiTra(@PathVariable Integer id) {
+        return ResponseEntity.ok(doiTraService.xacNhanHoaDonTraHang(id));
+    }
+
+    @PutMapping("/huy-doi-tra/{id}")
+    public ResponseEntity<?> huyHoaDonDoiTra(@PathVariable Integer id, @RequestParam("lyDo") String lyDo) {
+        return ResponseEntity.ok(doiTraService.huyHoaDonTrahang(id, lyDo));
+    }
+
+    //Xác nhận trả hàng => hoàn thành trả hang
+    @PutMapping("/hoan-thanh-doi-tra/{id}")
+    public ResponseEntity<?> hoanThanhDoiTra(@PathVariable Integer id) {
+        return ResponseEntity.ok(doiTraService.congSoLuongSP(id));
     }
 
     // từ đang giao -> hoàn thành
