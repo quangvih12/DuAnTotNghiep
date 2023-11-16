@@ -28,6 +28,8 @@ public class AdminSanPhamRequest implements DtoToEntity<SanPham> {
 
     private Integer thuongHieu;
 
+    private Integer trangThai;
+
     private Integer vatLieu;
 
     private Integer loai;
