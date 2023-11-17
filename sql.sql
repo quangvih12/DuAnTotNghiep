@@ -711,6 +711,7 @@ DROP TABLE IF EXISTS `user_voucher`;
 CREATE TABLE `user_voucher` (
   `id` int NOT NULL AUTO_INCREMENT,
   `id_user` int DEFAULT NULL,
+  `trang_thai` int DEFAULT NULL,
   `id_voucher` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKm34eg0v242ck9tt3fw8yo0vko` (`id_user`),
