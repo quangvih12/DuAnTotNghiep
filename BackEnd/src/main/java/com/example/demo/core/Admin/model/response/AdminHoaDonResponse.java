@@ -81,5 +81,8 @@ public interface AdminHoaDonResponse {
     @Value("#{target.tenPTTT}")
     String getTenPTTT();
 
+    @Value("#{target.moTa}")
+    String getMoTa();
+
 
 }

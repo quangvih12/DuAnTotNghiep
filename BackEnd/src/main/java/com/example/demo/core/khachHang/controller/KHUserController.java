@@ -70,6 +70,11 @@ public class KHUserController {
         }
     }
 
+    @GetMapping("/check-validate")
+    public ResponseEntity<?> checkValidate(@RequestBody LoginPayLoad loginPayload) {
+        return ResponseEntity.ok(khUserService.checkValiDate(loginPayload));
+    }
+
     @GetMapping("/find-by-token")
     public ResponseEntity<?> validate(@RequestParam("token") String token) {
         return ResponseEntity.ok(khUserService.findByToken(token));

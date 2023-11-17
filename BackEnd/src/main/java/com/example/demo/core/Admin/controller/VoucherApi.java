@@ -19,8 +19,13 @@ public class VoucherApi {
     private AdVoucherService voucherService;
 
     @GetMapping("/getAllVoucher")
-    public List<Voucher> getAllVoucher(){
+    public List<Voucher> getAllVoucher() {
         return voucherService.getAllVoucher();
+    }
+
+    @GetMapping("/get-user-by-voucher/{idVoucher}")
+    public ResponseEntity<?> getAllUserByVoucher(@PathVariable Integer idVoucher) {
+        return ResponseEntity.ok(voucherService.getUserByVoucher(idVoucher));
     }
 
     // thêm
