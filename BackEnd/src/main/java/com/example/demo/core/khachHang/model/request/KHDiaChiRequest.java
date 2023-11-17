@@ -24,7 +24,6 @@ public class KHDiaChiRequest implements DtoToEntity<DiaChi> {
 
     private String diaChi;
 
-    private Integer user;
 
     @Override
     public DiaChi dtoToEntity(DiaChi e) {
@@ -35,7 +34,6 @@ public class KHDiaChiRequest implements DtoToEntity<DiaChi> {
         e.setIdphuongXa(this.getIdPhuongXa());
         e.setTenphuongXa(this.getPhuongXa());
         e.setDiaChi(this.getDiaChi());
-        e.setUser(User.builder().id(this.getUser()).build());
         return e;
     }
 }

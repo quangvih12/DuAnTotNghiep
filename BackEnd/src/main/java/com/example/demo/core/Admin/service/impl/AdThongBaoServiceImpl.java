@@ -80,4 +80,24 @@ public class AdThongBaoServiceImpl {
         adminThongBaoRepository.save(thongBao);
     }
 
+    public void hoanThanhDoiTra(Integer idHD) {
+        HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
+        ThongBao thongBao = new ThongBao();
+        thongBao.setType(ThongBaoType.HOAN_THANH_DOI_TRA);
+        thongBao.setUser(User.builder().id(hoaDon.getUser().getId()).build());
+        thongBao.setContent("Hóa đơn mã " + hoaDon.getMa() + " đã hoàn thành đổi trả");
+        thongBao.setTrangThai(ThongBaoStatus.CHUA_XEM);
+        adminThongBaoRepository.save(thongBao);
+    }
+
+    public void hoanThanh(Integer idHD) {
+        HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
+        ThongBao thongBao = new ThongBao();
+        thongBao.setType(ThongBaoType.HOAN_THANH);
+        thongBao.setUser(User.builder().id(hoaDon.getUser().getId()).build());
+        thongBao.setContent("Hóa đơn mã " + hoaDon.getMa() + " đã hoàn thành");
+        thongBao.setTrangThai(ThongBaoStatus.CHUA_XEM);
+        adminThongBaoRepository.save(thongBao);
+    }
+
 }

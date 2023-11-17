@@ -120,6 +120,7 @@ public class GiopHangCTController {
             return null;
         }
         String userName = tokenService.getUserNameByToken(token);
+        System.out.println(userName);
         User user = userRepository.findByUserName(userName);
         return khGHCTRespon.countGHCTByUser(user.getId());
     }

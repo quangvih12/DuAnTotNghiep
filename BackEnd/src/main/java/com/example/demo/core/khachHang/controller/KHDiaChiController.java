@@ -16,4 +16,9 @@ public class KHDiaChiController {
     public DiaChi getDiaChiByUser(@PathVariable("userId") Integer userId){
         return khDiaChiService.findByUserID(userId);
     }
+
+    @GetMapping("/thanh-toan/{userId}")
+    public DiaChi getDiaChiByUseranhTrangThai(@PathVariable("userId") Integer userId){
+        return khDiaChiService.findByUserIDAnhTrangThai(userId);
+    }
 }
