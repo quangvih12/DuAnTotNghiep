@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/mau-sac")
+@RequestMapping("/api/admin/mau-sac")
 @CrossOrigin(origins = {"*"})
 public class MauSacApi {
 

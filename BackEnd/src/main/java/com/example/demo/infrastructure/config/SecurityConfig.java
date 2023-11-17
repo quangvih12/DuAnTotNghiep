@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -47,9 +48,18 @@ public class SecurityConfig {
                 .authorizeHttpRequests
                         (authorize -> authorize
                                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                                        .requestMatchers("/api/login").permitAll()
-                                        .requestMatchers("/api/**").permitAll()
-                                        .anyRequest().permitAll()
+                                        .requestMatchers("/api/khach-hang/**","/api/payment-vnpay","/api/payment-callback").permitAll()
+                                        .requestMatchers("/api/admin/thong-bao/**").permitAll()
+                                        .requestMatchers("/api/khach-hang/checkout").permitAll()
+                                        .requestMatchers("/api/getUseNameByToken/**").permitAll()
+                                         .requestMatchers("/api/khach-hang/user-voucher/**").permitAll()
+                                        .requestMatchers("/api/admin/hoaDon/**").hasAnyRole("ADMIN","NHANVIEN")
+                                         .requestMatchers("/api/admin/hoa-don-chi-tiet/**").hasAnyRole("ADMIN","NHANVIEN")
+                                        .requestMatchers(HttpMethod.GET,"/api/admin/**").hasAnyRole("ADMIN","NHANVIEN")
+                                        .requestMatchers(HttpMethod.POST,"/api/admin/**").hasAnyRole("ADMIN")
+                                        .requestMatchers(HttpMethod.PUT,"/api/admin/**").hasAnyRole("ADMIN")
+                                        .requestMatchers(HttpMethod.DELETE,"/api/admin/**").hasAnyRole("ADMIN")
+                                        .anyRequest().authenticated()
 
                         )
                 .exceptionHandling(exceptionHandling -> exceptionHandling

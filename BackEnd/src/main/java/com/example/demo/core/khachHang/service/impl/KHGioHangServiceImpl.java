@@ -369,4 +369,16 @@ public class KHGioHangServiceImpl implements KHGiohangService {
         return gioHangCTRespon.getListVoucher(idUser);
     }
 
+    @Override
+    public List<KhVoucherResponse> getListVoucherByUser(String token) {
+        Integer idUser;
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = userRepository.findByUserName(userName);
+        idUser = user.getId();
+        return gioHangCTRespon.getListVoucherByUser(idUser);
+    }
+
 }

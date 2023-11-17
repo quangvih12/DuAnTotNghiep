@@ -32,7 +32,6 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@ToString
 @Entity
 @Table(name = "hoa_don")
 public class HoaDon {

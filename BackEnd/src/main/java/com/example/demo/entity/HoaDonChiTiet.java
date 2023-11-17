@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 @Builder
-@ToString
 @Entity
 @Table(name = "hoa_don_chi_tiet")
 public class HoaDonChiTiet {

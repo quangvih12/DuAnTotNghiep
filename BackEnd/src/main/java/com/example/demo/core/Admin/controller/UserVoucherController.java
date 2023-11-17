@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/user-voucher")
+@RequestMapping("/api/admin/user-voucher")
 public class UserVoucherController {
 
     @Autowired

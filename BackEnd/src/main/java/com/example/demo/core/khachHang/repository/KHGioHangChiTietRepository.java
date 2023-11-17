@@ -61,4 +61,14 @@ public interface KHGioHangChiTietRepository extends GioHangChiTietReponsitory {
     @Query("Select pt from GioHangChiTiet pt where pt.gioHang.user.id=:id and pt.sanPhamChiTiet.id=:idctsp")
     GioHangChiTiet listGHCTByID(Integer id, Integer idctsp);
 
+
+    @Query(value = """
+       SELECT uv.id as id, v.gia_tri_giam as dieuKien, v.giam_toi_da as giamToiDa, v.mo_ta as moTa, v.so_luong as soLuong, v.ten as ten,v.thoi_gian_bat_dau as thoiGianBatDau
+              ,v.thoi_gian_ket_thuc as thoiGianKetThuc ,v.trang_thai as trangThai
+       FROM datn.user_voucher uv join datn.user u on uv.id_user = u.id
+                                 join datn.voucher v on uv.id_voucher = v.id
+       where   uv.id_user=:idUser  and v.so_luong >= 0 and uv.trang_thai = 0 
+        """, nativeQuery = true)
+    List<KhVoucherResponse> getListVoucherByUser(Integer  idUser);
+
 }
