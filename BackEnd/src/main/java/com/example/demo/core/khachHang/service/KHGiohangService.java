@@ -28,6 +28,8 @@ public interface KHGiohangService {
 
     List<KhVoucherResponse> getListVoucher(String  token);
 
+    List<KhVoucherResponse> getListVoucherByUser(String  token);
+
 
 
 

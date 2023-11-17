@@ -8,4 +8,6 @@ import java.util.List;
 public interface KHVoucherService {
 
     List<VoucherResponse> listVoucher(Integer id);
+
+
 }

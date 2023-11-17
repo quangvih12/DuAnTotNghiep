@@ -26,7 +26,6 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@ToString
 @Entity
 @Table(name = "phuong_thuc_thanh_toan")
 public class PhuongThucThanhToan {

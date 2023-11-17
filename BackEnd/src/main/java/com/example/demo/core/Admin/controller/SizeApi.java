@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/size")
+@RequestMapping("/api/admin/size")
 @CrossOrigin(origins = {"*"})
 public class SizeApi {
     @Autowired

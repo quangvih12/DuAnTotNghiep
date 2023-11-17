@@ -12,7 +12,7 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/voucher")
+@RequestMapping("/api/admin/voucher")
 public class VoucherApi {
 
     @Autowired

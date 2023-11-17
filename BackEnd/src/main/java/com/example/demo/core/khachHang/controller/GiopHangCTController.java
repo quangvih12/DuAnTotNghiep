@@ -15,6 +15,7 @@ import com.example.demo.entity.User;
 import com.example.demo.util.DataUltil;
 import com.microsoft.azure.storage.StorageException;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.HashMap;
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/api/khach-hang/giohang")
 public class GiopHangCTController {
@@ -88,6 +89,12 @@ public class GiopHangCTController {
         return ResponseEntity.ok(getList);
     }
 
+    @GetMapping("/get-voucher-user")
+    public ResponseEntity<?> getListVoucherByUser(@RequestParam("token") String token) {
+        List<KhVoucherResponse> getList = khGioHangService.getListVoucherByUser(token);
+        return ResponseEntity.ok(getList);
+    }
+
     @PutMapping("/congSL/{idghct}")
     public ResponseEntity<?> updateCongGHCT(HttpSession httpSession, @PathVariable("idghct") Integer idghct, @RequestParam(required = false) String token) {
             GioHangCTResponse map = khGioHangService.updateCongSoLuong(idghct, token);
@@ -121,6 +128,7 @@ public class GiopHangCTController {
         }
         String userName = tokenService.getUserNameByToken(token);
         System.out.println(userName);
+        log.info("usename {}", userName);
         User user = userRepository.findByUserName(userName);
         return khGHCTRespon.countGHCTByUser(user.getId());
     }

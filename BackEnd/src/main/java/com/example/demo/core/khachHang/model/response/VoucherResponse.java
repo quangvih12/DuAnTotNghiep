@@ -16,6 +16,8 @@ public interface VoucherResponse {
     @Value("#{target.giamToiDa}")
     Integer getGiamToiDa();
 
+    @Value("#{target.giaTriGiam}")
+    Integer getGiaTriGiam();
 
 
     @Value("#{target.soLuong}")

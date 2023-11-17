@@ -23,4 +23,7 @@ public interface KHDiaChiRepository extends DiaChiReponsitory {
     @Query("select u from DiaChi u where u.user.id =:id")
     List<DiaChi> findDiaChiBy(Integer id);
 
+    
+    DiaChi findAllById(Integer id);
+
 }

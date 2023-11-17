@@ -28,7 +28,6 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@ToString
 @Entity
 @Table(name = "dia_chi")
 public class DiaChi {

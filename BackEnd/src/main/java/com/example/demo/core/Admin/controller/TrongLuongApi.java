@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/trong-luong")
+@RequestMapping("/api/admin/trong-luong")
 @CrossOrigin(origins = {"*"})
 public class TrongLuongApi {
 

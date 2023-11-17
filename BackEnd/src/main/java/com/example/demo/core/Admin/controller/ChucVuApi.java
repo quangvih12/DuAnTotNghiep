@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/chuc-vu")
+@RequestMapping("/api/admin/chuc-vu")
 public class ChucVuApi {
 
     @Autowired

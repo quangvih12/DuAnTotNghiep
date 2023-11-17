@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 @Builder
-@ToString
+
 @Entity
 @Table(name = "thong_bao")
 public class ThongBao {

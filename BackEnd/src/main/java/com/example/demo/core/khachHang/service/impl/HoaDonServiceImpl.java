@@ -1,18 +1,26 @@
 package com.example.demo.core.khachHang.service.impl;
 
+import com.example.demo.core.Admin.service.EmailSenderService;
 import com.example.demo.core.khachHang.model.request.hoadon.HoaDonRequest;
 import com.example.demo.core.khachHang.model.request.hoadonchitiet.KHHoaDonChiTietRequest;
+
+import com.example.demo.core.khachHang.model.response.BienLaiHoaDon;
 import com.example.demo.core.khachHang.repository.*;
 import com.example.demo.core.khachHang.service.HoaDonService;
 import com.example.demo.entity.*;
 import com.example.demo.infrastructure.constant.VNPayConstant;
+import com.example.demo.infrastructure.exportPdf.ExportFilePdfFormHtml;
+
+import com.example.demo.infrastructure.sendmail.SendEmailService;
 import com.example.demo.infrastructure.status.ChiTietSanPhamStatus;
+import com.example.demo.infrastructure.status.HinhThucGiaoHangStatus;
 import com.example.demo.infrastructure.status.HoaDonStatus;
-import com.example.demo.util.DataUltil;
 import com.example.demo.util.DatetimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -45,7 +53,19 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Autowired
     KHGioHangChiTietRepository khghctRepo;
 
+    @Autowired
+    ExportFilePdfFormHtml exportFilePdfFormHtml;
+
+    @Autowired
+    private SpringTemplateEngine springTemplateEngine;
+
     private VNPayConstant VnPayConstant;
+
+    @Autowired
+    HoaDonRepository hoaDonRepo;
+
+    @Autowired
+    EmailSenderService sendEmailService;
 
     @Autowired
     private ThongBaoServiceImpl thongBaoService;
@@ -60,9 +80,9 @@ public class HoaDonServiceImpl implements HoaDonService {
         int randomNumber = random.nextInt(9000) + 1000;
 
         LocalDateTime ngayThanhToan;
-        if(hoaDonRequest.getIdPayMethod() == 1){
+        if (hoaDonRequest.getIdPayMethod() == 1) {
             ngayThanhToan = DatetimeUtil.getCurrentDateAndTimeLocal();
-        }else{
+        } else {
             ngayThanhToan = null;
         }
 
@@ -76,6 +96,7 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .tienShip(hoaDonRequest.getTienShip())
                 .ngayThanhToan(ngayThanhToan)
                 .tienSauKhiGiam(hoaDonRequest.getTienSauGiam())
+                .hinhThucGiaoHang(HinhThucGiaoHangStatus.GIAOHANG)
                 .trangThai(HoaDonStatus.YEU_CAU_XAC_NHAN)
                 .phuongThucThanhToan(PhuongThucThanhToan.builder().id(hoaDonRequest.getIdPayMethod()).build())
                 .build();
@@ -110,15 +131,35 @@ public class HoaDonServiceImpl implements HoaDonService {
             chiTietSPRepo.save(spct);
 
 
-//            GioHang gioHang = khGioHangRepo.finbyIdKH(hoaDonRequest.getIdUser());
-
-
         }
         for (KHHoaDonChiTietRequest x : hoaDonRequest.getListHDCT()) {
             GioHangChiTiet gioHangChiTiet = khghctRepo.listGHCTByID(hoaDonRequest.getIdUser(), x.getIdCTSP());
             khghctRepo.deleteById(gioHangChiTiet.getId());
         }
         this.thongBaoService.thanhToan(saveHoaDon.getId());
+        sendMailOnline(hoaDon.getId());
         return hoaDon;
+    }
+
+
+    public void sendMailOnline(Integer idHoaDon) {
+        String finalHtml = null;
+        HoaDon hoaDon = hoaDonRepo.findAllById(idHoaDon);
+        BienLaiHoaDon invoice = exportFilePdfFormHtml.getInvoiceResponse(hoaDon);
+
+        User user = khUserRepo.findAllById(hoaDon.getUser().getId()).get();
+
+        sendMail(invoice, "http://localhost:5173/success", "ngockhanh107a@gmail.com");
+        //}
+    }
+
+    public void sendMail(BienLaiHoaDon invoice, String url, String email) {
+
+        String finalHtmlSendMail = null;
+        Context dataContextSendMail = exportFilePdfFormHtml.setDataSendMail(invoice, url);
+        finalHtmlSendMail = springTemplateEngine.process("Bill", dataContextSendMail);
+        String subject = "Biên lai ";
+        sendEmailService.sendSimpleEmail(email, subject, finalHtmlSendMail);
+
     }
 }

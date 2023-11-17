@@ -26,7 +26,6 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@ToString
 @Entity
 @Table(name = "loai")
 public class Loai {

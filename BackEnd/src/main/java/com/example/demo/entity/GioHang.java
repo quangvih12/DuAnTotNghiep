@@ -28,7 +28,6 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@ToString
 @Entity
 @Table(name = "gio_hang")
 public class GioHang {

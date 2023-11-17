@@ -29,4 +29,6 @@ public interface KhVoucherResponse {
 
     @Value("#{target.ten}")
     String getTen();
+
+
 }

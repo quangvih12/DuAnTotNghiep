@@ -16,7 +16,7 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/khuyenMai")
+@RequestMapping("/api/admin/khuyenMai")
 public class KhuyenMaiApi {
 
     @Autowired
