@@ -28,6 +28,8 @@ public class AdminSanPhamRequest implements DtoToEntity<SanPham> {
 
     private Integer thuongHieu;
 
+    private Integer trangThai;
+
     private Integer vatLieu;
 
     private Integer loai;
@@ -38,7 +40,7 @@ public class AdminSanPhamRequest implements DtoToEntity<SanPham> {
     public SanPham dtoToEntity(SanPham sanPham) {
         sanPham.setTen(this.getTen());
         sanPham.setNgayTao(DatetimeUtil.getCurrentDate());
-        sanPham.setTrangThai(1);
+        sanPham.setTrangThai(3);
         sanPham.setMoTa(this.getMoTa());
         sanPham.setDemLot(this.getDemLot());
         sanPham.setQuaiDeo(this.getQuaiDeo());

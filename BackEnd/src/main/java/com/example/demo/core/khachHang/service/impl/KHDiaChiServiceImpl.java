@@ -1,5 +1,6 @@
 package com.example.demo.core.khachHang.service.impl;
 
+import com.example.demo.core.khachHang.model.response.DiaChiResponse;
 import com.example.demo.core.khachHang.repository.KHDiaChiRepository;
 import com.example.demo.core.khachHang.service.KHDiaChiService;
 import com.example.demo.entity.DiaChi;
@@ -14,5 +15,9 @@ public class KHDiaChiServiceImpl implements KHDiaChiService {
     @Override
     public DiaChi findByUserID(Integer id) {
         return khDiaChiRepo.findAllByUserId(id);
+
+    }
+    public DiaChi findByUserIDAnhTrangThai(Integer id) {
+        return khDiaChiRepo.findDiaChiByIdUserAndTrangThai(id);
     }
 }

@@ -62,14 +62,16 @@ public class KHDoiTraHoaDonServiceImpl {
             hoaDonChiTietRepo.save(hdct);
         }
 
-        BigDecimal donGia = new BigDecimal(hdct.getDonGia().toString());
+        BigDecimal donGia = hdct.getDonGia();
+        BigDecimal soLuong = new BigDecimal(hdct.getSoLuong());
+        BigDecimal tongTien = donGia.multiply(soLuong);
         BigDecimal tienShip = new BigDecimal(request.getTienShip());
-        BigDecimal sum = donGia.add(tienShip);
+
 
         HoaDon hoaDon = HoaDon.builder()
                 .ma("HDDT" + randomNumber)
                 .user(kh)
-                .tongTien(sum)
+                .tongTien(tongTien)
                 .lyDo(request.getLyDo())
                 .moTa(request.getMoTa())
                 .ngayTao(DatetimeUtil.getCurrentDateAndTimeLocal())

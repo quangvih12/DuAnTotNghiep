@@ -1,5 +1,6 @@
 package com.example.demo.core.khachHang.service.impl;
 
+import com.example.demo.core.Admin.repository.AdUserRepository;
 import com.example.demo.core.khachHang.model.request.KHDiaChiRequest;
 import com.example.demo.core.khachHang.model.response.DiaChiResponse;
 import com.example.demo.core.khachHang.repository.KHDiaChiRepository;
@@ -20,13 +21,17 @@ import java.util.Optional;
 public class DiaChiServiceImpl implements DiaChiService {
 
     @Autowired
+    TokenService tokenService;
+
+    @Autowired
+    AdUserRepository userRepository;
+
+    @Autowired
     private KHUserRepository repository;
 
     @Autowired
     private KHDiaChiRepository DCrepository;
 
-    @Autowired
-    TokenService tokenService;
 
     @Override
     public List<DiaChiResponse> getAll(String token) {
@@ -46,18 +51,35 @@ public class DiaChiServiceImpl implements DiaChiService {
 //    }
 
     @Override
-    public HashMap<String, Object> addDiaChi(KHDiaChiRequest request) {
-        DiaChi diaChi = request.dtoToEntity(new DiaChi());
-        try {
-            DiaChi diaChis = DCrepository.save(diaChi);
-            return DataUltil.setData("success", DCrepository.save(diaChis));
-        } catch (Exception e) {
-            return DataUltil.setData("error", "error");
+    public DiaChi addDiaChi(KHDiaChiRequest request,String token) {
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
         }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = userRepository.findByUserName(userName);
+
+          DiaChi diaChi = new DiaChi();
+        diaChi.setIdTinhThanh(request.getIdTinhThanh());
+        diaChi.setTenTinhThanh(request.getTinhThanh());
+        diaChi.setIdQuanHuyen(request.getIdQuanHuyen());
+        diaChi.setTenQuanHuyen(request.getQuanHuyen());
+        diaChi.setIdphuongXa(request.getIdPhuongXa());
+        diaChi.setTenphuongXa(request.getPhuongXa());
+        diaChi.setDiaChi(request.getDiaChi());
+        diaChi.setTrangThai(0);
+        diaChi.setUser(user);
+       DiaChi saveDiaChi =  DCrepository.save(diaChi);
+        return DCrepository.findById(saveDiaChi.getId()).get();
     }
 
     @Override
-    public HashMap<String, Object> updateDiaChi(KHDiaChiRequest request, Integer id) {
+    public DiaChi updateDiaChi(KHDiaChiRequest request, Integer id ,String token) {
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = userRepository.findByUserName(userName);
+
         Optional<DiaChi> optional = DCrepository.findById(id);
         if (optional.isPresent()) {
             DiaChi diaChi = optional.get();
@@ -68,16 +90,11 @@ public class DiaChiServiceImpl implements DiaChiService {
             diaChi.setIdphuongXa(request.getIdPhuongXa());
             diaChi.setTenphuongXa(request.getPhuongXa());
             diaChi.setDiaChi(request.getDiaChi());
-            diaChi.setUser(User.builder().id(request.getUser()).build());
-            try {
-                System.out.println(diaChi.toString());
-                return DataUltil.setData("success", DCrepository.save(diaChi));
-            } catch (Exception e) {
-                return DataUltil.setData("error", "error");
-            }
-        } else {
-            return DataUltil.setData("error", "không tìm thấy size để sửa");
+            diaChi.setUser(user);
+            DiaChi saveDiaChi =  DCrepository.save(diaChi);
+            return DCrepository.findById(saveDiaChi.getId()).get();
         }
+        return null;
     }
 
     @Override
@@ -87,5 +104,36 @@ public class DiaChiServiceImpl implements DiaChiService {
             DCrepository.deleteById(id);
         }
         return optional;
+    }
+
+    public DiaChi thietLapMacDinh(Integer id, String token) {
+        DiaChi optional = DCrepository.findById(id).get();
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = repository.findAllByUserName(userName);
+
+        List<DiaChi> lstDiaChi = DCrepository.findDiaChiBy(user.getId());
+        for (DiaChi o : lstDiaChi) {
+            if (o.getId() == id) {
+                o.setTrangThai(1);
+                DCrepository.save(o);
+            } else {
+                o.setTrangThai(0);
+                DCrepository.save(o);
+            }
+        }
+        return optional;
+    }
+
+    public DiaChi findDiaChiByIdUserAndTrangThai(String token) {
+
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = repository.findAllByUserName(userName);
+        return DCrepository.findDiaChiByIdUserAndTrangThai(user.getId());
     }
 }

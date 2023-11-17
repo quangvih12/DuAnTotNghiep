@@ -14,7 +14,7 @@ public interface AdThongKeLoiNhuanRespository extends HoaDonReponsitory {
             SELECT  SUM( hd.tong_tien-hdct.don_gia ) as loiNhuan\s
            FROM  datn.
             hoa_don hd  JOIN datn.hoa_don_chi_tiet hdct ON  hd.id = hdct.id_hoa_don
-           where hd.trang_thai in(3) and  YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate) group by hd.tong_tien;
+           where hd.trang_thai in(3,10) and  YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate) 
             """, nativeQuery = true)
     Integer tongLoiNhuan(String year, String startDate, String endDate );
 
@@ -33,7 +33,7 @@ public interface AdThongKeLoiNhuanRespository extends HoaDonReponsitory {
              JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
              JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
              JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
-             WHERE hd.trang_thai IN (3)  and  YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
+             WHERE hd.trang_thai IN (3,10)  and  YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
              GROUP BY sp.ma, sp.ten,spct.gia_ban,spct.gia_nhap,sp.anh, spct.trang_thai
            )
            SELECT * FROM DoanhThuSanPham order by loiNhuan desc
@@ -61,7 +61,7 @@ public interface AdThongKeLoiNhuanRespository extends HoaDonReponsitory {
              JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
           left   join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt
              join datn.phuong_thuc_thanh_toan pt on hd.id_phuong_thuc_thanh_toan = pt.id
-             WHERE hd.trang_thai IN (3)and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
+             WHERE hd.trang_thai IN (3,10)  and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
              GROUP BY hd.id,hd.ma,hd.ngay_tao,hd.tong_tien,hd.tien_sau_khi_giam_gia, hd.trang_thai,pt.ten,hd.tien_ship
            )
            SELECT * FROM DoanhThuSanPham

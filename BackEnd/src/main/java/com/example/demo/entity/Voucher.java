@@ -27,10 +27,13 @@ public class Voucher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "ten")
     private String ten;
 
+    @Column(name = "thoi_gian_bat_dau")
     private LocalDateTime thoiGianBatDau;
 
+    @Column(name = "thoi_gian_ket_thuc")
     private LocalDateTime thoiGianKetThuc;
 
     @Column(length = 10000)
@@ -42,8 +45,9 @@ public class Voucher {
     @Column(name = "trang_thai")
     private Integer trangThai;
 
+    @Column(name = "so_luong")
+    private Integer soLuong;
+
     @Column(name = "gia_tri_giam")
     private Integer giaTriGiam;
-
-    private Integer soLuong;
 }

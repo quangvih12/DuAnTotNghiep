@@ -34,20 +34,28 @@ public class DiaChiApi {
         return ResponseEntity.ok(service.getAll(token));
     }
 
+    @GetMapping("/find-dia-chi-mac-dinh")
+    public ResponseEntity<?> findDiaChiByIdUserAndTrangThai(@RequestParam("token") String token) {
+        return ResponseEntity.ok(service.findDiaChiByIdUserAndTrangThai(token));
+    }
+
     @PutMapping("{id}/delete")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.delete(id));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody KHDiaChiRequest request) {
-        HashMap<String, Object> map = service.addDiaChi(request);
-        return ResponseEntity.ok(map);
+    public ResponseEntity<?> add(@RequestBody KHDiaChiRequest request,@RequestParam String token) {
+        return ResponseEntity.ok(service.addDiaChi(request,token));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody KHDiaChiRequest request) {
-        HashMap<String, Object> map = service.updateDiaChi(request, id);
-        return ResponseEntity.ok(map);
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody KHDiaChiRequest request,@RequestParam String token) {
+        return ResponseEntity.ok(service.updateDiaChi(request, id,token));
+    }
+
+    @PutMapping("/thiet-lap-mac-dinh/{id}")
+    public ResponseEntity<?> thietLapMacDinh(@PathVariable("id") Integer id, @RequestParam String token) {
+        return ResponseEntity.ok(service.thietLapMacDinh(id, token));
     }
 }

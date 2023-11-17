@@ -60,6 +60,7 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
             sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(dto.getTrongLuong()).build());
             sanPhamChiTiet.setSize(Size.builder().id(dto.getSize()).build());
             sanPhamChiTiet.setMauSac(MauSac.builder().id(dto.getMauSac()).build());
+            sanPhamChiTiet.setTrangThai(dto.getTrangThai());
             if (sanPhamChiTiet.getAnh().equals(dto.getAnh())) {
                 sanPhamChiTiet.setAnh(dto.getAnh());
             } else {
@@ -95,7 +96,7 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
         sanPhamChiTiet.setSanPham(SanPham.builder().id(dto.getIdSP()).build());
         sanPhamChiTiet.setSize(Size.builder().id(dto.getSize()).build());
         sanPhamChiTiet.setMauSac(MauSac.builder().id(dto.getMauSac()).build());
-        sanPhamChiTiet.setTrangThai(ChiTietSanPhamStatus.CON_HANG);
+        sanPhamChiTiet.setTrangThai(dto.getTrangThai());
         sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(dto.getTrongLuong()).build());
         sanPhamChiTiet.setSoLuongTon(Integer.valueOf(dto.getSoLuongTon()));
         sanPhamChiTiet.setGiaBan(BigDecimal.valueOf(Long.valueOf(dto.getGiaBan())));
@@ -124,6 +125,7 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
             sanPham.setThuongHieu(ThuongHieu.builder().id(dto.getThuongHieu()).build());
             sanPham.setVatLieu(VatLieu.builder().id(dto.getVatLieu()).build());
             sanPham.setDemLot(dto.getDemLot());
+            sanPham.setTrangThai(dto.getTrangThai());
             sanPham.setMoTa(dto.getMoTa());
             if (sanPham.getAnh().equals(dto.getAnh())) {
                 sanPham.setAnh(dto.getAnh());

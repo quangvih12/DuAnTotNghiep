@@ -33,6 +33,8 @@ public class AdminSanPhamChiTietRequest implements DtoToEntity<SanPhamChiTiet> {
 
     private Integer size;
 
+    private Integer trangThai;
+
     @Override
     public SanPhamChiTiet dtoToEntity(SanPhamChiTiet sanPhamChiTiet) {
         sanPhamChiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
