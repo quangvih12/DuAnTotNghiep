@@ -711,6 +711,7 @@ DROP TABLE IF EXISTS `user_voucher`;
 CREATE TABLE `user_voucher` (
   `id` int NOT NULL AUTO_INCREMENT,
   `id_user` int DEFAULT NULL,
+  `trang_thai` int DEFAULT NULL,
   `id_voucher` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKm34eg0v242ck9tt3fw8yo0vko` (`id_user`),
@@ -719,7 +720,8 @@ CREATE TABLE `user_voucher` (
   CONSTRAINT `FKm34eg0v242ck9tt3fw8yo0vko` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
+ALTER TABLE `user_voucher`
+DROP COLUMN `dieu_kien`;
 --
 -- Dumping data for table `user_voucher`
 --

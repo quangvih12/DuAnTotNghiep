@@ -65,8 +65,6 @@ public class HoaDonApi {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime date = LocalDateTime.parse(startDate, formatter);
         LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
-//        return null;
-
         return ResponseEntity.ok(adminTatCaHoaDonService.searchDateByTrangThai(date, date2, comboBoxValue, trangThai));
     }
 

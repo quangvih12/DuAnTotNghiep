@@ -28,6 +28,9 @@ public class UserVoucher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "trang_thai")
+    private Integer trangThai;
+
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;

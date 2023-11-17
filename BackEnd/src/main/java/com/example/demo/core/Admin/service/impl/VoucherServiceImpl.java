@@ -2,6 +2,7 @@ package com.example.demo.core.Admin.service.impl;
 
 
 import com.example.demo.core.Admin.model.request.AdminVoucherRequest;
+import com.example.demo.core.Admin.model.response.AdminVoucherGetUserResponse;
 import com.example.demo.core.Admin.repository.AdVoucherReponsitory;
 import com.example.demo.core.Admin.service.AdVoucherService;
 import com.example.demo.entity.Voucher;
@@ -47,15 +48,15 @@ public class VoucherServiceImpl implements AdVoucherService {
         Voucher voucher = dto.dtoToEntity(new Voucher());
         LocalDateTime thoiGianHienTai = LocalDateTime.now();
         try {
-            if(voucher.getThoiGianKetThuc().isBefore(thoiGianHienTai)){
+            if (voucher.getThoiGianKetThuc().isBefore(thoiGianHienTai)) {
                 voucher.setTrangThai(1);
-            }else if(voucher.getThoiGianBatDau().isAfter(thoiGianHienTai)){
+            } else if (voucher.getThoiGianBatDau().isAfter(thoiGianHienTai)) {
                 voucher.setTrangThai(3);
-            }else{
+            } else {
                 voucher.setTrangThai(0);
             }
             Voucher vouchers = voucherReponsitory.save(voucher);
-            return DataUltil.setData("success",  vouchers);
+            return DataUltil.setData("success", vouchers);
         } catch (Exception e) {
             return DataUltil.setData("error", "error");
         }
@@ -63,7 +64,7 @@ public class VoucherServiceImpl implements AdVoucherService {
 
     @Override
     public HashMap<String, Object> update(AdminVoucherRequest dto, Integer id) {
-
+        LocalDateTime currentTime = LocalDateTime.now();
         Optional<Voucher> optional = voucherReponsitory.findById(id);
         if (optional.isPresent()) {
             Voucher voucher = optional.get();
@@ -73,7 +74,10 @@ public class VoucherServiceImpl implements AdVoucherService {
             voucher.setThoiGianKetThuc(dto.getThoiGianKetThuc());
             voucher.setSoLuong(dto.getSoLuong());
             voucher.setGiamToiDa(dto.getGiamToiDa());
-
+            voucher.setGiaTriGiam(dto.getGiaTriGiam());
+            if (currentTime.isBefore(voucher.getThoiGianKetThuc()) || currentTime.isEqual(voucher.getThoiGianKetThuc())) {
+                voucher.setTrangThai(0);
+            }
             try {
                 voucherReponsitory.save(voucher);
                 return DataUltil.setData("success", voucherReponsitory.save(voucher));
@@ -98,13 +102,18 @@ public class VoucherServiceImpl implements AdVoucherService {
             voucher.setTrangThai(4);
             try {
                 voucherReponsitory.save(voucher);
-                return DataUltil.setData("success",  voucherReponsitory.save(voucher));
+                return DataUltil.setData("success", voucherReponsitory.save(voucher));
             } catch (Exception e) {
                 return DataUltil.setData("error", "error");
             }
         } else {
             return DataUltil.setData("error", "không tìm thấy voucher để sửa");
         }
+    }
+
+    @Override
+    public List<AdminVoucherGetUserResponse> getUserByVoucher(Integer idVoucher) {
+        return voucherReponsitory.getUserByVoucher(idVoucher);
     }
 
     @Scheduled(cron = "0 0 0 * * *") // Lịch chạy hàng ngày vào lúc 00:00:00
@@ -126,6 +135,7 @@ public class VoucherServiceImpl implements AdVoucherService {
 
 
     }
+
     @Scheduled(cron = "0 0 0 * * *") // Lịch chạy hàng ngày vào lúc 00:00:00
     public void updateNgayConHan() {
         List<Voucher> vouchers = voucherReponsitory.findVoucherByConHan();
