@@ -36,6 +36,25 @@ public class AdminThongKeDoanhThuServiceImpl implements AdThongKeDoanhThuService
         return adminThongKeBO;
     }
 
+    public AdminThongKeBO getAllByPhuongThuc(Integer idPhuongThucThanhToan) {
+
+        // Lấy dữ liệu từ cơ sở dữ liệu
+        Integer tongDoanhThu = adThongKeResponsitory.tongDoanhThuByPhuongThuc(idPhuongThucThanhToan);
+        List<AdminThongKeSanPhamCaoResponse> lstSanPhamDoanhThuCao = adThongKeResponsitory.sanPhamDoanhThuCaoNhatByPhuongThuc(idPhuongThucThanhToan);
+        List<AdminThongKeSanPhamThapResponse> lstSanPhamDoanhThuThap = adThongKeResponsitory.sanPhamDoanhThuThapNhatByPhuongThuc(idPhuongThucThanhToan);
+        List<AdminThongKeLoaiResponse> lstLoai = adThongKeResponsitory.doanhThuTheoLoaiByPhuongThuc(idPhuongThucThanhToan);
+        List<AdminThongKeThuongHieuResponse> lstThuongHieu = adThongKeResponsitory.doanhThuTheoThuongHieuByPhuongThuc(idPhuongThucThanhToan);
+        List<AdminThongKeThangResponse> lstThang = adThongKeResponsitory.doanhThuTheoThangByPhuongThuc(idPhuongThucThanhToan);
+        List<AdminThongKeThangNamTruocResponse> lstThangNam = adThongKeResponsitory.doanhThuTheoThangNamTruocByPhuongThuc(idPhuongThucThanhToan);
+
+        // Tạo đối tượng AdminThongKeBO bằng constructor
+        AdminThongKeBO adminThongKeBO = new AdminThongKeBO(
+                tongDoanhThu, lstLoai, lstSanPhamDoanhThuCao, lstSanPhamDoanhThuThap, lstThuongHieu, lstThang, lstThangNam
+        );
+
+        return adminThongKeBO;
+    }
+
     @Override
     public AdminThongKeBO getAllBySanPham(Integer id,String year) {
         // Lấy dữ liệu từ cơ sở dữ liệu

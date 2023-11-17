@@ -14,9 +14,9 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
     @Query(value = """
             SELECT SUM(hd.tong_tien) as tongTien
             FROM  datn.hoa_don hd
-            where hd.trang_thai in (3,10);
+            where hd.trang_thai in (3,10) 
             """, nativeQuery = true)
-    Integer tongDoanhThu();
+    Integer tongDoanhThu(); //
 
 
     @Query(value = """
@@ -29,12 +29,12 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
-              WHERE hd.trang_thai IN (3,10)
+              WHERE hd.trang_thai IN (3,10) 
               GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
             )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien DESC LIMIT 5;
               """, nativeQuery = true)
-    List<AdminThongKeSanPhamCaoResponse> sanPhamDoanhThuCaoNhat();
+    List<AdminThongKeSanPhamCaoResponse> sanPhamDoanhThuCaoNhat(); //
 
     @Query(value = """
             WITH DoanhThuSanPham AS (
@@ -46,37 +46,28 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
-              WHERE hd.trang_thai IN  (3,10)
+              WHERE hd.trang_thai IN  (3,10) 
               GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
             )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien  LIMIT 5;
               """, nativeQuery = true)
-    List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhat();
+    List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhat();//
 
     @Query(value = """
             SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE()) as nam
-            FROM datn.hoa_don hd  where year(hd.ngay_tao)=YEAR(CURDATE()) and hd.trang_thai IN  (3,10)
+            FROM datn.hoa_don hd  where year(hd.ngay_tao)=YEAR(CURDATE()) and hd.trang_thai IN  (3,10) 
             GROUP BY MONTH(hd.ngay_tao) ORDER BY MONTH(hd.ngay_tao) ;
               """, nativeQuery = true)
-    List<AdminThongKeThangResponse> doanhThuTheoThang();
+    List<AdminThongKeThangResponse> doanhThuTheoThang();//
 
     @Query(value = """
             SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE()) -1 as nam
             FROM datn.hoa_don hd \s
-            WHERE YEAR(hd.ngay_tao) = YEAR(CURDATE()) -1  and hd.trang_thai IN  (3,10)
+            WHERE YEAR(hd.ngay_tao) = YEAR(CURDATE()) -1  and hd.trang_thai IN  (3,10) 
             GROUP BY MONTH(hd.ngay_tao)\s
             ORDER BY MONTH(hd.ngay_tao);
               """, nativeQuery = true)
-    List<AdminThongKeThangNamTruocResponse> doanhThuTheoThangNamTruoc();
-
-    @Query(value = """
-            SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE()) as nam
-            FROM datn.hoa_don hd \s
-            WHERE YEAR(hd.ngay_tao) = YEAR(CURDATE()) and hd.trang_thai IN  (3,10)
-            GROUP BY MONTH(hd.ngay_tao)\s
-            ORDER BY MONTH(hd.ngay_tao);
-              """, nativeQuery = true)
-    List<AdminThongKeThangNamTruocResponse> doanhThuTheoThangNamHienTai();
+    List<AdminThongKeThangNamTruocResponse> doanhThuTheoThangNamTruoc();//
 
     @Query(value = """
             WITH DoanhThuThuongHieu AS (
@@ -89,13 +80,13 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                JOIN datn.thuong_hieu th ON sp.id_thuong_hieu = th.id
                JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
                JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
-               WHERE hd.trang_thai IN  (3,10)
+               WHERE hd.trang_thai IN  (3,10) 
                GROUP BY   th.ten,  th.ma
             )
             SELECT ten,ma, SUM(tongTien) AS tongTien
             FROM DoanhThuThuongHieu GROUP BY ten,ma ORDER BY tongTien DESC;
               """, nativeQuery = true)
-    List<AdminThongKeThuongHieuResponse> doanhThuTheoThuongHieu();
+    List<AdminThongKeThuongHieuResponse> doanhThuTheoThuongHieu();//
 
     @Query(value = """
             WITH DoanhThuLoai AS (
@@ -108,13 +99,110 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.loai th ON sp.id_loai = th.id
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
-              WHERE hd.trang_thai IN  (3,10)
+              WHERE hd.trang_thai IN  (3,10) 
               GROUP BY   th.ten,  th.ma
             )
             SELECT ten,ma, SUM(tongTien) AS tongTien
             FROM DoanhThuLoai GROUP BY ten,ma ORDER BY tongTien DESC;
                 """, nativeQuery = true)
-    List<AdminThongKeLoaiResponse> doanhThuTheoLoai();
+    List<AdminThongKeLoaiResponse> doanhThuTheoLoai();//
+
+
+     @Query(value = """
+            SELECT SUM(hd.tong_tien) as tongTien
+            FROM  datn.hoa_don hd
+            where hd.trang_thai in (3,10)  and hd.hinh_thuc_giao_hang =:idPhuongThuc
+            """, nativeQuery = true)
+    Integer tongDoanhThuByPhuongThuc(Integer idPhuongThuc); //
+
+
+    @Query(value = """
+            WITH DoanhThuSanPham AS (
+              SELECT
+                sp.ma as ma,
+                sp.ten as ten,
+                SUM(hd.tong_tien) AS tongTien
+              FROM datn.san_pham_chi_tiet spct
+              JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+              JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+              JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+              WHERE hd.trang_thai IN (3,10) and hd.hinh_thuc_giao_hang =:idPhuongThuc
+              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
+            )
+            SELECT * FROM DoanhThuSanPham ORDER BY tongTien DESC LIMIT 5;
+              """, nativeQuery = true)
+    List<AdminThongKeSanPhamCaoResponse> sanPhamDoanhThuCaoNhatByPhuongThuc(Integer idPhuongThuc); //
+
+    @Query(value = """
+            WITH DoanhThuSanPham AS (
+              SELECT
+                sp.ma as ma,
+                sp.ten as ten,
+                SUM(hd.tong_tien) AS tongTien
+              FROM datn.san_pham_chi_tiet spct
+              JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+              JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+              JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+              WHERE hd.trang_thai IN  (3,10)  and hd.hinh_thuc_giao_hang =:idPhuongThuc
+              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
+            )
+            SELECT * FROM DoanhThuSanPham ORDER BY tongTien  LIMIT 5;
+              """, nativeQuery = true)
+    List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhatByPhuongThuc(Integer idPhuongThuc);//
+
+    @Query(value = """
+            SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE()) as nam
+            FROM datn.hoa_don hd  where year(hd.ngay_tao)=YEAR(CURDATE()) and hd.trang_thai IN  (3,10) and hd.hinh_thuc_giao_hang =:idPhuongThuc
+            GROUP BY MONTH(hd.ngay_tao) ORDER BY MONTH(hd.ngay_tao) ;
+              """, nativeQuery = true)
+    List<AdminThongKeThangResponse> doanhThuTheoThangByPhuongThuc(Integer idPhuongThuc);//
+
+    @Query(value = """
+            SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(CURDATE()) -1 as nam
+            FROM datn.hoa_don hd \s
+            WHERE YEAR(hd.ngay_tao) = YEAR(CURDATE()) -1  and hd.trang_thai IN  (3,10) and hd.hinh_thuc_giao_hang =:idPhuongThuc
+            GROUP BY MONTH(hd.ngay_tao)\s
+            ORDER BY MONTH(hd.ngay_tao);
+              """, nativeQuery = true)
+    List<AdminThongKeThangNamTruocResponse> doanhThuTheoThangNamTruocByPhuongThuc(Integer idPhuongThuc);//
+
+    @Query(value = """
+            WITH DoanhThuThuongHieu AS (
+               SELECT
+                  th.ten AS ten,
+                   th.ma as ma,
+                  SUM(hd.tong_tien) AS tongTien
+               FROM datn.san_pham_chi_tiet spct
+               JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+               JOIN datn.thuong_hieu th ON sp.id_thuong_hieu = th.id
+               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+               WHERE hd.trang_thai IN  (3,10) and hd.hinh_thuc_giao_hang =:idPhuongThuc
+               GROUP BY   th.ten,  th.ma
+            )
+            SELECT ten,ma, SUM(tongTien) AS tongTien
+            FROM DoanhThuThuongHieu GROUP BY ten,ma ORDER BY tongTien DESC;
+              """, nativeQuery = true)
+    List<AdminThongKeThuongHieuResponse> doanhThuTheoThuongHieuByPhuongThuc(Integer idPhuongThuc);//
+
+    @Query(value = """
+            WITH DoanhThuLoai AS (
+              SELECT
+                th.ten AS ten,
+                th.ma as ma,
+                SUM(hd.tong_tien) AS tongTien
+              FROM datn.san_pham_chi_tiet spct
+              JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+              JOIN datn.loai th ON sp.id_loai = th.id
+              JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+              JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+              WHERE hd.trang_thai IN  (3,10) and hd.hinh_thuc_giao_hang =:idPhuongThuc
+              GROUP BY   th.ten,  th.ma
+            )
+            SELECT ten,ma, SUM(tongTien) AS tongTien
+            FROM DoanhThuLoai GROUP BY ten,ma ORDER BY tongTien DESC;
+                """, nativeQuery = true)
+    List<AdminThongKeLoaiResponse> doanhThuTheoLoaiByPhuongThuc(Integer idPhuongThuc);//
 
 
     // tổng doanh thu theo sản phẩm
@@ -139,7 +227,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
-              WHERE hd.trang_thai IN  (3,10) AND spct.id =:id AND YEAR(hd.ngay_tao) =:year 
+              WHERE hd.trang_thai IN  (3,10) AND spct.id =:id AND YEAR(hd.ngay_tao) =:year  
               GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
             )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien DESC LIMIT 5;
@@ -156,7 +244,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
-              WHERE hd.trang_thai IN  (3,10)  AND spct.id =:id AND YEAR(hd.ngay_tao) =:year 
+              WHERE hd.trang_thai IN  (3,10)  AND spct.id =:id AND YEAR(hd.ngay_tao) =:year  
               GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
             )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien  LIMIT 5;
@@ -169,7 +257,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
             JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
             JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
             JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don\s
-             WHERE spct.id =:id and hd.trang_thai IN  (3,10) AND YEAR(hd.ngay_tao) =:year 
+             WHERE spct.id =:id and hd.trang_thai IN  (3,10) AND YEAR(hd.ngay_tao) =:year  
             GROUP BY MONTH(hd.ngay_tao),YEAR(hd.ngay_tao) ORDER BY MONTH(hd.ngay_tao)
                 """, nativeQuery = true)
     List<AdminThongKeThangResponse> doanhThuTheoThangBySanPham(Integer id, String year);
@@ -181,7 +269,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
             JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
             JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
             JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
-            WHERE spct.id =:id and YEAR(hd.ngay_tao) = YEAR(CURDATE()) -1  and hd.trang_thai IN  (3,10)
+            WHERE spct.id =:id and YEAR(hd.ngay_tao) = YEAR(CURDATE()) -1  and hd.trang_thai IN  (3,10) 
             GROUP BY MONTH(hd.ngay_tao) ORDER BY MONTH(hd.ngay_tao)
                 
               """, nativeQuery = true)
@@ -198,7 +286,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                JOIN datn.thuong_hieu th ON sp.id_thuong_hieu = th.id
                JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
                JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
-               WHERE hd.trang_thai IN  (3,10)  AND spct.id =:id AND YEAR(hd.ngay_tao) =:year 
+               WHERE hd.trang_thai IN  (3,10)  AND spct.id =:id AND YEAR(hd.ngay_tao) =:year  
                GROUP BY   th.ten,th.ma
             )
             SELECT ten,ma, SUM(tongTien) AS tongTien

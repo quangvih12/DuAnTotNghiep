@@ -5,4 +5,6 @@ import com.example.demo.core.Admin.model.response.AdminThongKeLoiNhuanBo;
 public interface AdThongKeLoiNhuanService {
 
     AdminThongKeLoiNhuanBo getAll(String year, String startDate, String endDate);
+
+    AdminThongKeLoiNhuanBo getAllByHinhThucGiaoHang(Integer idInteger);
 }
