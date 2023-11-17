@@ -8,10 +8,13 @@ import com.example.demo.entity.*;
 import com.example.demo.infrastructure.constant.VNPayConstant;
 import com.example.demo.infrastructure.status.ChiTietSanPhamStatus;
 import com.example.demo.infrastructure.status.HoaDonStatus;
+import com.example.demo.util.DataUltil;
+import com.example.demo.util.DatetimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
@@ -56,12 +59,22 @@ public class HoaDonServiceImpl implements HoaDonService {
         Random random = new Random();
         int randomNumber = random.nextInt(9000) + 1000;
 
+        LocalDateTime ngayThanhToan;
+        if(hoaDonRequest.getIdPayMethod() == 1){
+            ngayThanhToan = DatetimeUtil.getCurrentDateAndTimeLocal();
+        }else{
+            ngayThanhToan = null;
+        }
+
         HoaDon hoaDon = HoaDon.builder()
                 .ma("HD" + randomNumber)
                 .user(kh)
                 .diaChi(diaChi)
                 .tongTien(hoaDonRequest.getTongTien())
+                .tenNguoiNhan(kh.getTen())
+                .ngayTao(DatetimeUtil.getCurrentDateAndTimeLocal())
                 .tienShip(hoaDonRequest.getTienShip())
+                .ngayThanhToan(ngayThanhToan)
                 .tienSauKhiGiam(hoaDonRequest.getTienSauGiam())
                 .trangThai(HoaDonStatus.YEU_CAU_XAC_NHAN)
                 .phuongThucThanhToan(PhuongThucThanhToan.builder().id(hoaDonRequest.getIdPayMethod()).build())

@@ -14,9 +14,9 @@ public interface DiaChiService {
 
 //    List<DiaChi> getUserByDiaChi(Integer idUser);
 
-    HashMap<String, Object> addDiaChi(KHDiaChiRequest request);
+    DiaChi addDiaChi(KHDiaChiRequest request,String token);
 
-    HashMap<String, Object> updateDiaChi(KHDiaChiRequest request, Integer id);
+    DiaChi updateDiaChi(KHDiaChiRequest request, Integer id ,String token);
 
     Optional<DiaChi> delete(Integer id);
 

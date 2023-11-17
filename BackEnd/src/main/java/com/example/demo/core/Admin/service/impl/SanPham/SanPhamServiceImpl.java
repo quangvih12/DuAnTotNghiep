@@ -143,7 +143,7 @@ public class SanPhamServiceImpl implements AdSanPhamService {
             BigDecimal giaNhap = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaNhap().get(i)));
 
             SanPhamChiTiet chiTiet = new SanPhamChiTiet();
-            chiTiet.setTrangThai(ChiTietSanPhamStatus.CON_HANG);
+            chiTiet.setTrangThai(ChiTietSanPhamStatus.TON_KHO);
             chiTiet.setSanPham(sanPham);
             chiTiet.setGiaNhap(giaNhap);
             chiTiet.setGiaBan(giaBan);
@@ -183,7 +183,7 @@ public class SanPhamServiceImpl implements AdSanPhamService {
             String imgMauSacValue = repuest2.getImgMauSac().get(i);
             BigDecimal giaBan = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaBan().get(i)));
             BigDecimal giaNhap = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaNhap().get(i)));
-            sanPhamChiTiet.setTrangThai(ChiTietSanPhamStatus.CON_HANG);
+            sanPhamChiTiet.setTrangThai(ChiTietSanPhamStatus.TON_KHO);
             sanPhamChiTiet.setGiaNhap(giaNhap);
             sanPhamChiTiet.setGiaBan(giaBan);
             sanPhamChiTiet.setSoLuongTon(Integer.valueOf(repuest2.getSoLuongSize().get(i)));

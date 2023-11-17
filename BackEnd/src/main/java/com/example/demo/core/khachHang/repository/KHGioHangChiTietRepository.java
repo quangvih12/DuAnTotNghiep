@@ -49,7 +49,7 @@ public interface KHGioHangChiTietRepository extends GioHangChiTietReponsitory {
 
 
     @Query(value = """
-       SELECT uv.id as id, uv.dieu_kien as dieuKien, v.giam_toi_da as giamToiDa, v.mo_ta as moTa, v.so_luong as soLuong, v.ten as ten,v.thoi_gian_bat_dau as thoiGianBatDau
+       SELECT uv.id as id, v.gia_tri_giam as dieuKien, v.giam_toi_da as giamToiDa, v.mo_ta as moTa, v.so_luong as soLuong, v.ten as ten,v.thoi_gian_bat_dau as thoiGianBatDau
               ,v.thoi_gian_ket_thuc as thoiGianKetThuc ,v.trang_thai as trangThai
        FROM datn.user_voucher uv join datn.user u on uv.id_user = u.id
                                  join datn.voucher v on uv.id_voucher = v.id

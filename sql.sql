@@ -78,14 +78,15 @@ UNLOCK TABLES;
 -- Table structure for table `danh_sach_yeu_thich`
 --
 
-DROP TABLE IF EXISTS `danh_sach_yeu_thich`;
+DROP TABLE IF EXISTS `thong_bao`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `danh_sach_yeu_thich` (
+CREATE TABLE `thong_bao` (
   `id` int NOT NULL AUTO_INCREMENT,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
+  `type` int DEFAULT NULL,
   `id_san_pham_chi_tiet` int DEFAULT NULL,
   `content` varchar(255) DEFAULT NULL,
   `id_user` int DEFAULT NULL,
@@ -101,9 +102,9 @@ CREATE TABLE `danh_sach_yeu_thich` (
 -- Dumping data for table `danh_sach_yeu_thich`
 --
 
-LOCK TABLES `danh_sach_yeu_thich` WRITE;
-/*!40000 ALTER TABLE `danh_sach_yeu_thich` DISABLE KEYS */;
-/*!40000 ALTER TABLE `danh_sach_yeu_thich` ENABLE KEYS */;
+LOCK TABLES `thong_bao` WRITE;
+/*!40000 ALTER TABLE `thong_bao` DISABLE KEYS */;
+/*!40000 ALTER TABLE `thong_bao` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -768,6 +769,7 @@ CREATE TABLE `voucher` (
   `giam_toi_da` decimal(20,0) DEFAULT NULL,
   `mo_ta` varchar(10000) DEFAULT NULL,
   `so_luong` int DEFAULT NULL,
+  `gia_tri_giam` int DEFAULT NULL,
   `ten` varchar(255) DEFAULT NULL,
   `thoi_gian_bat_dau` datetime(6) DEFAULT NULL,
   `thoi_gian_ket_thuc` datetime(6) DEFAULT NULL,

@@ -45,15 +45,13 @@ public class DiaChiApi {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody KHDiaChiRequest request) {
-        HashMap<String, Object> map = service.addDiaChi(request);
-        return ResponseEntity.ok(map);
+    public ResponseEntity<?> add(@RequestBody KHDiaChiRequest request,@RequestParam String token) {
+        return ResponseEntity.ok(service.addDiaChi(request,token));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody KHDiaChiRequest request) {
-        HashMap<String, Object> map = service.updateDiaChi(request, id);
-        return ResponseEntity.ok(map);
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody KHDiaChiRequest request,@RequestParam String token) {
+        return ResponseEntity.ok(service.updateDiaChi(request, id,token));
     }
 
     @PutMapping("/thiet-lap-mac-dinh/{id}")

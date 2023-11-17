@@ -28,8 +28,11 @@ public class KHHoaDonApi {
     }
 
     @GetMapping("/find-all-by-trang-thai")
-    public ResponseEntity<?> getAllByTrangThai(@RequestParam("token") String token, @RequestParam("trangThai") Integer trangThai, @RequestParam(value = "trangThai2",required = false) Integer trangThai2 ,
-                                               @RequestParam(value = "trangThai3",required = false) Integer trangThai3, @RequestParam(value = "trangThai4",required = false) Integer trangThai4) {
+    public ResponseEntity<?> getAllByTrangThai(@RequestParam("token") String token,
+                                               @RequestParam("trangThai") Integer trangThai,
+                                               @RequestParam(value = "trangThai2",required = false) Integer trangThai2 ,
+                                               @RequestParam(value = "trangThai3",required = false) Integer trangThai3,
+                                               @RequestParam(value = "trangThai4",required = false) Integer trangThai4) {
         return ResponseEntity.ok(hdService.getHoaDonTrangThai(token, trangThai,trangThai2,trangThai3,trangThai4));
     }
 

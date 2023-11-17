@@ -410,6 +410,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
 
                         sanPhamChiTiet.setGiaNhap(giaNhap);
                         sanPhamChiTiet.setGiaBan(giaBan);
+                        sanPhamChiTiet.setTrangThai(3);
                         sanPhamChiTiet.setSoLuongTon(Integer.valueOf(BO.getSoLuongSize().get(i)));
                         sanPhamChiTiet.setAnh(imgMauSacValue);
                         chiTietSanPhamReponsitory.save(sanPhamChiTiet);
@@ -485,6 +486,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
             chiTiet.setSanPham(sanPham);
             chiTiet.setGiaNhap(giaNhap);
             chiTiet.setGiaBan(giaBan);
+            chiTiet.setTrangThai(3);
             chiTiet.setSoLuongTon(Integer.valueOf(soluong));
             chiTiet.setAnh(imgMauSacValue);
             chiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
@@ -520,7 +522,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
             String imgMauSacValue = repuest2.getImgMauSac().get(i);
             BigDecimal giaBan = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaBan().get(i)));
             BigDecimal giaNhap = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaNhap().get(i)));
-
+            sanPhamChiTiet.setTrangThai(3);
             sanPhamChiTiet.setGiaNhap(giaNhap);
             sanPhamChiTiet.setGiaBan(giaBan);
             sanPhamChiTiet.setSoLuongTon(Integer.valueOf(repuest2.getSoLuongSize().get(i)));
