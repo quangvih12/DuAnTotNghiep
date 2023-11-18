@@ -50,6 +50,8 @@ public class SecurityConfig {
                                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                         .requestMatchers("/api/khach-hang/**","/api/payment-vnpay","/api/payment-callback").permitAll()
                                         .requestMatchers("/api/admin/thong-bao/**").permitAll()
+                                       .requestMatchers("/api/admin/**").permitAll()
+                                        .requestMatchers("/api/khach-hang/user/**").permitAll()
                                         .requestMatchers("/api/khach-hang/checkout").permitAll()
                                         .requestMatchers("/api/getUseNameByToken/**").permitAll()
                                          .requestMatchers("/api/khach-hang/user-voucher/**").permitAll()

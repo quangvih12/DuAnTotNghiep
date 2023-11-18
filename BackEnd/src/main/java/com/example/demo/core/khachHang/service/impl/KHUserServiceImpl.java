@@ -10,6 +10,8 @@ import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class KHUserServiceImpl implements KHUserService {
 
@@ -49,6 +51,14 @@ public class KHUserServiceImpl implements KHUserService {
         String userName = tokenService.getUserNameByToken(token);
         User user = khUserRepo.findAllByUserName(userName);
         return user;
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        if (email == null) {
+            return Optional.empty();
+        }
+        return khUserRepo.findAllByEmail(email);
     }
 
 }

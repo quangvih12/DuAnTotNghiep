@@ -76,4 +76,12 @@ public class KHUserController {
     }
 
 
+    @GetMapping("/find-email")
+    public ResponseEntity<?> findUserByEmail(@RequestParam("email") String email) {
+        return ResponseEntity.ok(khUserService.findByEmail(email));
+    }
+
+
+
+
 }
