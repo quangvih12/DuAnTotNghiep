@@ -21,6 +21,7 @@ public interface TrangChuRepository extends SanPhamReponsitory {
 
             FROM datn.san_pham sp
             join datn.loai l on l.id = sp.id_loai
+             where sp.trang_thai = 1
             ORDER BY sp.id DESC;
             """, nativeQuery = true)
     List<TrangChuResponse> getAll(Pageable pageable);
@@ -36,7 +37,7 @@ public interface TrangChuRepository extends SanPhamReponsitory {
 
                                 FROM datn.san_pham sp
                                 join datn.loai l on l.id = sp.id_loai
-                                where l.ten like :tenLoai
+                                where l.ten like :tenLoai  and sp.trang_thai = 1
                                 ORDER BY sp.id DESC;
             """, nativeQuery = true)
     List<TrangChuResponse> getAllByTenLoai(@Param("tenLoai") String tenLoai, Pageable pageable);
@@ -54,7 +55,7 @@ public interface TrangChuRepository extends SanPhamReponsitory {
             left join datn.hoa_don_chi_tiet hdct on hdct.id_san_pham_chi_tiet = spct.id
             left join datn.hoa_don hd on hd.id = hdct.id_hoa_don
             left join datn.loai l on l.id = sp.id_loai
-            where hd.trang_thai = 10 or hd.trang_thai = 3
+            where hd.trang_thai = 10 or hd.trang_thai = 3 and   sp.trang_thai = 1
             group by id
             order by soLuong desc
                         """, nativeQuery = true)

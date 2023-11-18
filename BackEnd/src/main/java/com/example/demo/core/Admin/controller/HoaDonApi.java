@@ -149,6 +149,13 @@ public class HoaDonApi {
         return ResponseEntity.ok(doiTraService.congSoLuongSP(id));
     }
 
+    //Xác nhận trả hàng => hoàn thành trả hang không cộng lại số lượng
+    @PutMapping("/hoan-thanh-tra/{id}")
+    public ResponseEntity<?> hoanThanhDoiTraKhongCongSoLuong(@PathVariable Integer id) {
+        adThongBaoService.hoanThanhDoiTra(id);
+        return ResponseEntity.ok(doiTraService.khongCongSoLuongSP(id));
+    }
+
     // từ đang giao -> hoàn thành
     @PutMapping("/hoan-thanh/{id}")
     public ResponseEntity<?> hoanThanh(@PathVariable Integer id) {

@@ -53,6 +53,7 @@ public class SecurityConfig {
                                         .requestMatchers("/api/khach-hang/checkout").permitAll()
                                         .requestMatchers("/api/getUseNameByToken/**").permitAll()
                                          .requestMatchers("/api/khach-hang/user-voucher/**").permitAll()
+                                         .requestMatchers("/api/genToken/**").permitAll()
                                         .requestMatchers("/api/admin/hoaDon/**").hasAnyRole("ADMIN","NHANVIEN")
                                          .requestMatchers("/api/admin/hoa-don-chi-tiet/**").hasAnyRole("ADMIN","NHANVIEN")
                                         .requestMatchers(HttpMethod.GET,"/api/admin/**").hasAnyRole("ADMIN","NHANVIEN")
