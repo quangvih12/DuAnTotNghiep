@@ -10,4 +10,6 @@ public interface AdHoaDonDoiTraService {
 
     AdminHoaDonResponse congSoLuongSP(Integer idHD);
 
+    AdminHoaDonResponse khongCongSoLuongSP(Integer idHD);
+
 }

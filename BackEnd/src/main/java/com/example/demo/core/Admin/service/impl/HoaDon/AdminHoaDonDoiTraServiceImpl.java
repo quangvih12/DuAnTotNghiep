@@ -71,6 +71,25 @@ public class AdminHoaDonDoiTraServiceImpl implements AdHoaDonDoiTraService {
         }
     }
 
+    public AdminHoaDonResponse khongCongSoLuongSP(Integer idHD) {
+        HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        if (hoaDon != null) {
+            hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
+            hoaDon.setTrangThai(HoaDonStatus.HOAN_THANH_DOI_TRA);
+            HoaDon hd = hoaDonReponsitory.save(hoaDon);
+            List<HoaDonChiTiet> lstHDCT = hdctRepo.findByIdHoaDon(idHD, sort);
+            for (HoaDonChiTiet hdct : lstHDCT) {
+                hdct.setTrangThai(HoaDonStatus.HOAN_THANH_DOI_TRA);
+                HoaDonChiTiet hdct2 = hdctRepo.save(hdct);
+                hdct2.setMa("HDCT" + hdct2.getId());
+                hdctRepo.save(hdct2);
+            }
+            return hoaDonReponsitory.getByIds(hd.getId());
+        }
+        return null;
+    }
+
     @Override
     public AdminHoaDonResponse congSoLuongSP(Integer idHD) {
         HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
