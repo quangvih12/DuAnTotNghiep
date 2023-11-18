@@ -7,8 +7,14 @@ import com.example.demo.core.khachHang.service.ThongTinService;
 import com.example.demo.core.token.service.TokenService;
 import com.example.demo.entity.User;
 import com.example.demo.util.DatetimeUtil;
+import com.example.demo.util.ImageToAzureUtil;
+import com.microsoft.azure.storage.StorageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
 
 @Service
 public class ThongTinServiceImpl implements ThongTinService {
@@ -18,6 +24,9 @@ public class ThongTinServiceImpl implements ThongTinService {
 
     @Autowired
     TokenService tokenService;
+
+    @Autowired
+    ImageToAzureUtil getImageToAzureUtil;
 
     @Override
     public KHUserResponse getAll(String token) {
@@ -32,7 +41,7 @@ public class ThongTinServiceImpl implements ThongTinService {
     }
 
     @Override
-    public KHUserResponse update(KHUserRequest request, Integer id) {
+    public KHUserResponse update(KHUserRequest request, Integer id) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         User u = repository.findById(id).get();
         if (u != null) {
             u.setEmail(request.getEmail());
@@ -41,7 +50,12 @@ public class ThongTinServiceImpl implements ThongTinService {
             u.setNgaySinh(request.getNgaySinh());
             u.setSdt(request.getSdt());
             u.setGioiTinh(request.getGioiTinh());
-            u.setImage(request.getImage());
+            if (u.getImage().equals(request.getImage())) {
+                u.setImage(request.getImage());
+            } else {
+                String linkAnh = getImageToAzureUtil.uploadImageToAzure(request.getImage());
+                u.setImage(linkAnh);
+            }
             User updatedUser = repository.save(u);
             return repository.findUserById(updatedUser.getId());
         }

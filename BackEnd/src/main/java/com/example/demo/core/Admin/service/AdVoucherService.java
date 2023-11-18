@@ -1,6 +1,7 @@
 package com.example.demo.core.Admin.service;
 
 import com.example.demo.core.Admin.model.request.AdminVoucherRequest;
+import com.example.demo.core.Admin.model.response.AdminVoucherGetUserResponse;
 import com.example.demo.entity.Voucher;
 import org.springframework.data.domain.Page;
 
@@ -18,7 +19,10 @@ public interface AdVoucherService {
 
     HashMap<String, Object> add(AdminVoucherRequest Voucher);
 
-    HashMap<String,Object> update(AdminVoucherRequest voucherRequest, Integer id);
+    HashMap<String, Object> update(AdminVoucherRequest voucherRequest, Integer id);
 
-    HashMap<String,Object> delete(AdminVoucherRequest voucherRequestRequest, Integer id);
+    HashMap<String, Object> delete(AdminVoucherRequest voucherRequestRequest, Integer id);
+
+    List<AdminVoucherGetUserResponse> getUserByVoucher(Integer idVoucher);
+
 }

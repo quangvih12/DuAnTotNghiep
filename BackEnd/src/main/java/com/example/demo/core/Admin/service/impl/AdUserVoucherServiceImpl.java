@@ -18,7 +18,7 @@ public class AdUserVoucherServiceImpl implements AdUserVoucherService {
     public void addUserVoucher(Integer idVoucher, Integer idUser) {
         User u = User.builder().id(idUser).build();
         Voucher voucher = Voucher.builder().id(idVoucher).build();
-        UserVoucher userVoucher = UserVoucher.builder().user(u).voucher(voucher).build();
+        UserVoucher userVoucher = UserVoucher.builder().user(u).voucher(voucher).trangThai(0).build();
         userVoucherRepo.save(userVoucher);
     }
 }

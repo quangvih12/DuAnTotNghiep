@@ -62,13 +62,14 @@ public interface AdUserRepository extends UserReponsitory {
               u.gioi_tinh as gioiTinh, COUNT(hd.id) AS soLuongHoaDon, u.password as pass 
                from datn.user u\s
                 join datn.hoa_don hd on u.id = hd.id_user
-                 where u.role = 'USER'
+                 where u.role = 'USER' and (hd.trang_thai = 3 or hd.trang_thai = 10)
              	group by anh,ma,ten,sdt,email,ngaySinh,id
              	having (CASE
              				WHEN :comboBoxValue = 'duoi1Trieu' THEN  tongTienDaMua < 1000000
              				WHEN :comboBoxValue = '1den3' THEN tongTienDaMua >= 1000000 and tongTienDaMua <= 3000000
              				WHEN :comboBoxValue = '3den6' THEN  tongTienDaMua >= 3000000 and tongTienDaMua <= 6000000
              				WHEN :comboBoxValue = '6den10' THEN  tongTienDaMua >= 6000000 and tongTienDaMua <= 10000000
+             				WHEN :comboBoxValue = 'tren10trieu' THEN  tongTienDaMua >= 10000000
              			END)\s
             """, nativeQuery = true)
     List<AdminUserVoucherResponse> getAllUserByTongTien(@Param("comboBoxValue") String cbbValue);

@@ -1,5 +1,6 @@
 package com.example.demo.core.khachHang.service;
 
+import com.example.demo.core.khachHang.model.request.LoginPayLoad;
 import com.example.demo.entity.User;
 
 import java.util.Optional;
@@ -10,5 +11,10 @@ public interface KHUserService {
 
     User findByToken(String token);
 
+
     Optional<User> findByEmail(String email);
+
+    String checkValiDate(LoginPayLoad loginPayload);
+
+
 }

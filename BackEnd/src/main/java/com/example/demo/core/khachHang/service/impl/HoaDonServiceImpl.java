@@ -15,6 +15,7 @@ import com.example.demo.infrastructure.sendmail.SendEmailService;
 import com.example.demo.infrastructure.status.ChiTietSanPhamStatus;
 import com.example.demo.infrastructure.status.HinhThucGiaoHangStatus;
 import com.example.demo.infrastructure.status.HoaDonStatus;
+import com.example.demo.reponsitory.UserVoucherRepository;
 import com.example.demo.util.DatetimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Autowired
     KHVoucherRepository voucherRepo;
+
+    @Autowired
+    VoucherUserRepository userVoucherRepository;
 
     @Autowired
     KHGioHangRepository khGioHangRepo;
@@ -136,10 +140,20 @@ public class HoaDonServiceImpl implements HoaDonService {
             GioHangChiTiet gioHangChiTiet = khghctRepo.listGHCTByID(hoaDonRequest.getIdUser(), x.getIdCTSP());
             khghctRepo.deleteById(gioHangChiTiet.getId());
         }
+        this.updateVoucher(kh.getId(), hoaDonRequest.getIdVoucher());
         this.thongBaoService.thanhToan(saveHoaDon.getId());
         sendMailOnline(hoaDon.getId());
         return hoaDon;
     }
+
+    public  void updateVoucher(Integer idUser, Integer idVoucher){
+        UserVoucher userVoucher = userVoucherRepository.getVoucherByUser(idUser,idVoucher);
+        if(userVoucher != null){
+            userVoucher.setTrangThai(1);
+            userVoucherRepository.save(userVoucher);
+        }
+    }
+
 
 
     public void sendMailOnline(Integer idHoaDon) {
@@ -149,7 +163,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         User user = khUserRepo.findAllById(hoaDon.getUser().getId()).get();
 
-        sendMail(invoice, "http://localhost:5173/success", "ngockhanh107a@gmail.com");
+        sendMail(invoice, "http://localhost:5173/success", user.getEmail());
         //}
     }
 
