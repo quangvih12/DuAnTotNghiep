@@ -28,4 +28,16 @@ public class AdminThongKeLoiNhuanServiceIpml implements AdThongKeLoiNhuanService
         AdminThongKeLoiNhuanBo adminThongKeLoiNhuanBo = new AdminThongKeLoiNhuanBo(tongLoiNhuan,tongDonhangHoanThanh,tongDonhangDangGiao,tongDonhangHuy, lstSanPham, lstHoaDon);
         return adminThongKeLoiNhuanBo;
     }
+
+    public AdminThongKeLoiNhuanBo getAllByHinhThucGiaoHang(Integer idInteger) {
+        Integer tongLoiNhuan = adThongKeLoiNhuanRespository.tongLoiNhuanByHinhThuc(idInteger);
+        Integer tongDonhangHoanThanh = adThongKeLoiNhuanRespository.tongDonhangHoanThanhByHinhThuc(idInteger);
+        Integer tongDonhangDangGiao = adThongKeLoiNhuanRespository.tongDonhangDangGiaoByHinhThuc(idInteger);
+        Integer tongDonhangHuy = adThongKeLoiNhuanRespository.tongDonhangHuyByHinhThuc(idInteger);
+
+        List<AdminThongKeLoiNhuanSanPhamResponse> lstSanPham = adThongKeLoiNhuanRespository.lstSanPhamLoiNhuanByHinhThuc(idInteger);
+        List<AdminThongKeLoiNhuanHoaDonResponse> lstHoaDon = adThongKeLoiNhuanRespository.lstHoaDonLoiNhuanByHinhThuc(idInteger);
+        AdminThongKeLoiNhuanBo adminThongKeLoiNhuanBo = new AdminThongKeLoiNhuanBo(tongLoiNhuan,tongDonhangHoanThanh,tongDonhangDangGiao,tongDonhangHuy, lstSanPham, lstHoaDon);
+        return adminThongKeLoiNhuanBo;
+    }
 }

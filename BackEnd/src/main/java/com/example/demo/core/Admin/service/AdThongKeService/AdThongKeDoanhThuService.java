@@ -19,4 +19,6 @@ public interface AdThongKeDoanhThuService {
     AdminThongKeBO getAllByYear(String year);
 
     AdminThongKeBO getAllByMonth(LocalDateTime startDate, LocalDateTime endDate);
+
+    AdminThongKeBO getAllByPhuongThuc(Integer idPhuongThucThanhToan);
 }

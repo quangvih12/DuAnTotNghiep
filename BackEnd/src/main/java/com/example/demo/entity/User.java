@@ -30,7 +30,6 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@ToString
 @Entity
 @Table(name = "user")
 public class User {
@@ -85,7 +84,7 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<DanhSachYeuThich> danhSachYeuThichList = new ArrayList<>();
+    private List<ThongBao> thongBaoList = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)

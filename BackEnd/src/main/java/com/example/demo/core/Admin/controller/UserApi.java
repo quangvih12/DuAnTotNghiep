@@ -3,15 +3,18 @@ package com.example.demo.core.Admin.controller;
 import com.example.demo.core.Admin.model.request.AdminUserRequest;
 import com.example.demo.core.Admin.model.response.AdminUserResponse;
 import com.example.demo.core.Admin.service.AdUserService;
+import com.example.demo.entity.User;
+import com.example.demo.util.DataUltil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/admin/user")
 public class UserApi {
     @Autowired
     AdUserService adUserService;
@@ -26,6 +29,13 @@ public class UserApi {
         return adUserService.getAllUserByRole(role);
     }
 
+    @GetMapping("/trang-thai")
+    public ResponseEntity<?> getAllByTrangThai(@RequestParam("trangThai") Integer trangThai) {
+        List<User> page = adUserService.getAllByTrangThai(trangThai);
+        HashMap<String, Object> map = DataUltil.setData("ok", page);
+        return ResponseEntity.ok(map);
+    }
+
     @GetMapping("{id}/dia-chi")
     public ResponseEntity<?> getDiaChi(@PathVariable Integer id) {
         return ResponseEntity.ok(adUserService.getUserByDiaChi(id));
@@ -34,6 +44,11 @@ public class UserApi {
     @GetMapping("{id}/hoa-don")
     public ResponseEntity<?> getHodon(@PathVariable Integer id) {
         return ResponseEntity.ok(adUserService.getHoaDonByIdUser(id));
+    }
+
+    @GetMapping("/get-user-by-tong-tien")
+    public ResponseEntity<?> getUserByTongTien(@RequestParam("cbbValue") String cbbValue) {
+        return ResponseEntity.ok(adUserService.getAllUserByTongTien(cbbValue));
     }
 
     @PostMapping()

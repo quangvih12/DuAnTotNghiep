@@ -2,6 +2,7 @@ package com.example.demo.core.Admin.service.impl.SanPham;
 
 import com.example.demo.core.Admin.model.request.AdminSanPhamRepuest2;
 import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
+import com.example.demo.core.Admin.model.response.AdminImageResponse;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTiet2Response;
 import com.example.demo.core.Admin.model.response.AdminSanPhamResponse;
 import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
@@ -9,6 +10,7 @@ import com.example.demo.core.Admin.repository.AdImageReponsitory;
 import com.example.demo.core.Admin.repository.AdSanPhamReponsitory;
 import com.example.demo.core.Admin.service.AdSanPhamService.AdSanPhamService;
 import com.example.demo.entity.*;
+import com.example.demo.infrastructure.status.ChiTietSanPhamStatus;
 import com.example.demo.util.DatetimeUtil;
 import com.example.demo.util.ImageToAzureUtil;
 import com.microsoft.azure.storage.StorageException;
@@ -20,7 +22,10 @@ import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -55,23 +60,29 @@ public class SanPhamServiceImpl implements AdSanPhamService {
     }
 
     @Override
-    public List<Image> getProductImages(Integer idProduct) {
+    public List<AdminImageResponse> getProductImages(Integer idProduct) {
         return imageReponsitory.findBySanPhamIds(idProduct);
     }
 
     @Override
-    public Boolean findBySanPhamTen(String ten) {
-        SanPham chiTiet = sanPhamReponsitory.findBySanPhamTenAndTrangThai(ten);
-        if (chiTiet == null) {
-            return true;
-        } else {
-            return false;
+    public Boolean findBySanPhamTen(AdminSanPhamRepuest2 request) {
+        SanPham chiTiet = sanPhamReponsitory.findBySanPhamTenAndTrangThai(request.getTen());
+        if (chiTiet != null) {
+            if (chiTiet.getThuongHieu().getId() == request.getThuongHieu() && chiTiet.getLoai().getId() == request.getLoai()) {
+                return false;
+            }
         }
+        return true;
     }
 
     @Override
     public List<AdminSanPhamResponse> loc(String comboBoxValue) {
         return sanPhamReponsitory.loc(comboBoxValue);
+    }
+
+
+    public List<AdminSanPhamChiTiet2Response> locCTSP(String comboBoxValue) {
+        return sanPhamReponsitory.locSPCT(comboBoxValue);
     }
 
     @Override
@@ -109,75 +120,96 @@ public class SanPhamServiceImpl implements AdSanPhamService {
     }
 
     @Override
-    public AdminSanPhamResponse update(Integer id) {
-        return null;
-    }
-
-    @Override
     public List<SanPhamChiTiet> saveSanPhamChiTiet(AdminSanPhamRepuest2 repuest2, SanPham sanPham) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
 
         List<SanPhamChiTiet> lstsanPhamChiTiet = new ArrayList<>();
+        if (repuest2.getIdSize() == null || repuest2.getIdSize().isEmpty()) {
+            lstsanPhamChiTiet = this.saveSanPhamIfIdSizeNull(lstsanPhamChiTiet, repuest2, sanPham);
+        } else {
+            lstsanPhamChiTiet = this.saveSanPhamIfIdSizenotNull(lstsanPhamChiTiet, repuest2, sanPham);
+        }
+
+        List<SanPhamChiTiet> lstChiTiet = chiTietSanPhamReponsitory.saveAll(lstsanPhamChiTiet);
+        return lstsanPhamChiTiet;
+    }
 
 
+    public List<SanPhamChiTiet> saveSanPhamIfIdSizeNull(List<SanPhamChiTiet> lstsanPhamChiTiet, AdminSanPhamRepuest2 repuest2, SanPham sanPham) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         for (int i = 0; i < repuest2.getIdMauSac().size(); i++) {
             Integer idMau = Integer.valueOf(repuest2.getIdMauSac().get(i));
             String imgMauSacValue = repuest2.getImgMauSac().get(i);
             String soluong = repuest2.getSoLuongSize().get(i);
             BigDecimal giaBan = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaBan().get(i)));
             BigDecimal giaNhap = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaNhap().get(i)));
-            if (repuest2.getIdSize() == null || repuest2.getIdSize().isEmpty()) {
-                SanPhamChiTiet chiTiet = new SanPhamChiTiet();
 
-                chiTiet.setAnh(repuest2.getAnh());
-                chiTiet.setSanPham(sanPham);
-                chiTiet.setGiaNhap(giaNhap);
-                chiTiet.setGiaBan(giaBan);
-                chiTiet.setSoLuongTon(Integer.valueOf(soluong));
-                String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
-                chiTiet.setAnh(linkAnh);
-                chiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-                chiTiet.setSize(null);
-                chiTiet.setMauSac(MauSac.builder().id(idMau).build());
-                chiTiet.setTrongLuong(TrongLuong.builder().id(repuest2.getTrongLuong()).build());
-                lstsanPhamChiTiet.add(chiTiet);
-            } else {
-                for (String idSize : repuest2.getIdSize()) {
-                    SanPhamChiTiet chiTiet = new SanPhamChiTiet();
-
-                    chiTiet.setAnh(repuest2.getAnh());
-                    chiTiet.setSanPham(sanPham);
-                    chiTiet.setGiaNhap(giaNhap);
-                    chiTiet.setGiaBan(giaBan);
-                    chiTiet.setSoLuongTon(Integer.valueOf(soluong));
-                    String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
-                    chiTiet.setAnh(linkAnh);
-                    chiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
-                    chiTiet.setSize(Size.builder().id(Integer.valueOf(idSize)).build());
-                    chiTiet.setMauSac(MauSac.builder().id(idMau).build());
-                    chiTiet.setTrongLuong(TrongLuong.builder().id(repuest2.getTrongLuong()).build());
-                    lstsanPhamChiTiet.add(chiTiet);
-                }
-            }
+            SanPhamChiTiet chiTiet = new SanPhamChiTiet();
+            chiTiet.setTrangThai(ChiTietSanPhamStatus.TON_KHO);
+            chiTiet.setSanPham(sanPham);
+            chiTiet.setGiaNhap(giaNhap);
+            chiTiet.setGiaBan(giaBan);
+            chiTiet.setSoLuongTon(Integer.valueOf(soluong));
+            String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
+            chiTiet.setAnh(linkAnh);
+            chiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+            chiTiet.setSize(null);
+            chiTiet.setMauSac(MauSac.builder().id(idMau).build());
+            chiTiet.setTrongLuong(TrongLuong.builder().id(repuest2.getTrongLuong()).build());
+            lstsanPhamChiTiet.add(chiTiet);
         }
-
         List<SanPhamChiTiet> lstChiTiet = chiTietSanPhamReponsitory.saveAll(lstsanPhamChiTiet);
         return lstChiTiet;
     }
 
+    public List<SanPhamChiTiet> saveSanPhamIfIdSizenotNull(List<SanPhamChiTiet> lstsanPhamChiTiet, AdminSanPhamRepuest2 repuest2, SanPham sanPham) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
+        Set<String> uniqueMauSacIds = new HashSet<>(repuest2.getIdMauSac());
+        List<String> sortedMauSacIds = uniqueMauSacIds.stream()
+                .sorted((o1, o2) -> Integer.valueOf(o2).compareTo(Integer.valueOf(o1)))
+                .collect(Collectors.toList());
+        for (String idSize : repuest2.getIdSize()) {
+            for (String idMauSac : sortedMauSacIds) {
+                Integer idMau = Integer.valueOf(idMauSac);
+                SanPhamChiTiet chiTiet = new SanPhamChiTiet();
+                chiTiet.setSanPham(sanPham);
+                chiTiet.setNgayTao(DatetimeUtil.getCurrentDate());
+                chiTiet.setSize(Size.builder().id(Integer.valueOf(idSize)).build());
+                chiTiet.setMauSac(MauSac.builder().id(idMau).build());
+                chiTiet.setTrongLuong(TrongLuong.builder().id(repuest2.getTrongLuong()).build());
+                lstsanPhamChiTiet.add(chiTiet);
+            }
+        }
+        List<SanPhamChiTiet> lstChiTiet = chiTietSanPhamReponsitory.saveAll(lstsanPhamChiTiet);
+        for (int i = 0; i < lstChiTiet.size(); i++) {
+            SanPhamChiTiet sanPhamChiTiet = lstChiTiet.get(i);
+            String imgMauSacValue = repuest2.getImgMauSac().get(i);
+            BigDecimal giaBan = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaBan().get(i)));
+            BigDecimal giaNhap = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaNhap().get(i)));
+            sanPhamChiTiet.setTrangThai(ChiTietSanPhamStatus.TON_KHO);
+            sanPhamChiTiet.setGiaNhap(giaNhap);
+            sanPhamChiTiet.setGiaBan(giaBan);
+            sanPhamChiTiet.setSoLuongTon(Integer.valueOf(repuest2.getSoLuongSize().get(i)));
+            String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);
+            sanPhamChiTiet.setAnh(linkAnh);
+            chiTietSanPhamReponsitory.save(sanPhamChiTiet);
+        }
+
+        return lstChiTiet;
+    }
+
+
     @Override
     public AdminSanPhamResponse delete(Integer id) {
         SanPham sanPham = sanPhamReponsitory.findById(id).get();
-        if(sanPham != null){
+        if (sanPham != null) {
             sanPham.setTrangThai(0);
             sanPhamReponsitory.save(sanPham);
         }
-        return this.findByIdSP(sanPham.getId());
+        return this.findByIdSP(id);
     }
 
     @Override
     public AdminSanPhamResponse khoiPhuc(Integer id) {
         SanPham sanPham = sanPhamReponsitory.findById(id).get();
-        if(sanPham != null){
+        if (sanPham != null) {
             sanPham.setTrangThai(3);
             sanPhamReponsitory.save(sanPham);
         }
@@ -185,8 +217,9 @@ public class SanPhamServiceImpl implements AdSanPhamService {
     }
 
     public List<Image> saveImage(SanPham sanPham, List<String> imgSanPham) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
+        HashSet<String> uniqueImgLinks = new HashSet<>(imgSanPham);
         List<Image> imageList = new ArrayList<>();
-        for (String img : imgSanPham) {
+        for (String img : uniqueImgLinks) {
             Image image = new Image();
             String linkAnh = getImageToAzureUtil.uploadImageToAzure(img);
             image.setAnh(linkAnh);
@@ -200,6 +233,6 @@ public class SanPhamServiceImpl implements AdSanPhamService {
             Image image = images.get(i);
             image.setMa("IM" + images.get(i).getId());
         }
-        return this.imageReponsitory.saveAll(imageList);
+        return this.imageReponsitory.saveAll(images);
     }
 }

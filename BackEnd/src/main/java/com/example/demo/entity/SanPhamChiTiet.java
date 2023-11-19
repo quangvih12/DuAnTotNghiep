@@ -29,7 +29,6 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@ToString
 @Entity
 @Table(name = "san_pham_chi_tiet")
 public class SanPhamChiTiet {
@@ -82,7 +81,6 @@ public class SanPhamChiTiet {
     @JoinColumn(name = "id_size")
     private Size size;
 
-
     @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
@@ -96,7 +94,7 @@ public class SanPhamChiTiet {
     @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<DanhSachYeuThich> danhSachYeuThichList = new ArrayList<>();
+    private List<ThongBao> thongBaoList = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)

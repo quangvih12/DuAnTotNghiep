@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,13 +22,14 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_voucher")
+@Builder
 public class UserVoucher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(precision = 20, scale = 0)
-    private BigDecimal dieuKien;
+    @Column(name = "trang_thai")
+    private Integer trangThai;
 
     @ManyToOne
     @JoinColumn(name = "id_user")

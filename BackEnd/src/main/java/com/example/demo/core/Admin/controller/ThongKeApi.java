@@ -25,6 +25,11 @@ public class ThongKeApi {
         return ResponseEntity.ok(adminThongKeDoanhThuService.getAll());
     }
 
+    @GetMapping("/by-phuong-thuc")
+    public ResponseEntity<?> getAllByPhuongThuc(@RequestParam(required = false) Integer idPhuongThuc) {
+        return ResponseEntity.ok(adminThongKeDoanhThuService.getAllByPhuongThuc(idPhuongThuc));
+    }
+
     @GetMapping("/loi-nhuan")
     public ResponseEntity<?> getAllLoiNhuan(@RequestParam(required = false) String year,@RequestParam(required = false) String startDate,@RequestParam(required = false) String endDate ) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
@@ -38,6 +43,12 @@ public class ThongKeApi {
             date2 = LocalDateTime.parse(endDate, formatter);
         }
         return ResponseEntity.ok(adThongKeLoiNhuanService.getAll(year, date != null ? date.toString() : null, date2 != null ? date2.toString() : null));
+    }
+
+    @GetMapping("/loi-nhuan-hinh-thuc-giao-hang")
+    public ResponseEntity<?> getAllLoiNhuanByHinhThucGiaoHang(@RequestParam(required = false) Integer idHinhThuc ) {
+
+        return ResponseEntity.ok(adThongKeLoiNhuanService.getAllByHinhThucGiaoHang(idHinhThuc));
     }
 
 

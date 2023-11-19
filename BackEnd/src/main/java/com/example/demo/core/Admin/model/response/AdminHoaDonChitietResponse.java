@@ -14,6 +14,9 @@ public interface AdminHoaDonChitietResponse {
     @Value("#{target.nguoiTao}")
     String getNguoiTao();
 
+    @Value("#{target.maSP}")
+    String getMaSP();
+
     @Value("#{target.tenSP}")
     String getTenSP();
 
@@ -96,18 +99,15 @@ public interface AdminHoaDonChitietResponse {
     String getTenPTTT();
 
     @Value("#{target.mauSac}")
-    String getMauSac();
+    String getTenMauSac();
 
     @Value("#{target.size}")
-    String getSize();
-
-    @Value("#{target.tenSize}")
     String getTenSize();
-
-    @Value("#{target.tenMS}")
-    String getTenMS();
 
     @Value("#{target.anh}")
     String getAnh();
+
+    @Value("#{target.trongLuong}")
+    Integer getTrongLuong();
 
 }

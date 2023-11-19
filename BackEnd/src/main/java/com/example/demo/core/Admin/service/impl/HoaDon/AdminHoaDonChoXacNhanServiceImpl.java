@@ -48,9 +48,6 @@ public class AdminHoaDonChoXacNhanServiceImpl implements AdHoaDonChoXacNhanServi
             HoaDon hd = hoaDonReponsitory.save(hoaDon);
             List<HoaDonChiTiet> lstHDCT = hdctRepo.findByIdHoaDon(idHD, sort);
             for (HoaDonChiTiet hdct : lstHDCT) {
-//                MauSacChiTiet msct = mauSacRepo.findById(Integer.valueOf(hdct.getTenMauSac())).get();
-//                msct.setSoLuong(msct.getSoLuong() + hdct.getSoLuong());
-//                mauSacRepo.save(msct);
                 int idSP = hdct.getSanPhamChiTiet().getId();
                 int quantity = hdct.getSoLuong();
                 if (quantityMap.containsKey(idSP)) {
@@ -58,6 +55,8 @@ public class AdminHoaDonChoXacNhanServiceImpl implements AdHoaDonChoXacNhanServi
                 } else {
                     quantityMap.put(idSP, quantity);
                 }
+                hdct.setTrangThai(0);
+                hdctRepo.save(hdct);
             }
             for (Map.Entry<Integer, Integer> entry : quantityMap.entrySet()) {
                 int idSP = entry.getKey();

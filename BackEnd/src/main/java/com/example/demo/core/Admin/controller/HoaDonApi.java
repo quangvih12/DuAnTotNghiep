@@ -3,7 +3,9 @@ package com.example.demo.core.Admin.controller;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdDetailHoaDonChiTietService;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdHoaDonChoXacNhanService;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdHoaDonDangGiaoService;
+import com.example.demo.core.Admin.service.InterfaceHoaDon.AdHoaDonDoiTraService;
 import com.example.demo.core.Admin.service.InterfaceHoaDon.AdminTatCaHoaDonService;
+import com.example.demo.core.Admin.service.impl.AdThongBaoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,12 @@ public class HoaDonApi {
     @Autowired
     private AdDetailHoaDonChiTietService adDetailHoaDonChiTietService;
 
+    @Autowired
+    private AdHoaDonDoiTraService doiTraService;
+
+    @Autowired
+    private AdThongBaoServiceImpl adThongBaoService;
+
     @GetMapping()
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(adminTatCaHoaDonService.getAll());
@@ -57,9 +65,7 @@ public class HoaDonApi {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime date = LocalDateTime.parse(startDate, formatter);
         LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
-//        return null;
-
-        return ResponseEntity.ok(adminTatCaHoaDonService.searchDateByTrangThai(date, date2, comboBoxValue,trangThai));
+        return ResponseEntity.ok(adminTatCaHoaDonService.searchDateByTrangThai(date, date2, comboBoxValue, trangThai));
     }
 
     @GetMapping("/detail/{id}")
@@ -104,7 +110,7 @@ public class HoaDonApi {
 
     @PutMapping("/huyXacNhan/{id}")
     public ResponseEntity<?> huyHoaDon(@PathVariable Integer id, @RequestParam("lyDo") String lyDo) {
-        System.out.println("haha");
+        adThongBaoService.huyHoaDon(id);
         return ResponseEntity.ok(adHoaDonChoXacNhanService.huyHoaDonChoXacNhan(id, lyDo));
     }
 
@@ -116,13 +122,44 @@ public class HoaDonApi {
 
     // chuẩn bị xong -> đang giao
     @PutMapping("/XacNhanGiaoHang/{id}")
-    public ResponseEntity<?> XacNhanGiaoHang(@PathVariable Integer id) {
-        return ResponseEntity.ok(adminTatCaHoaDonService.giaoHoaDonChoVanChuyen(id));
+    public ResponseEntity<?> XacNhanGiaoHang(@PathVariable Integer id, @RequestParam("ngayShip") String ngayShip) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime date = LocalDateTime.parse(ngayShip, formatter);
+        adThongBaoService.xacNhanHoaDon(id);
+        return ResponseEntity.ok(adminTatCaHoaDonService.giaoHoaDonChoVanChuyen(id, date));
+    }
+
+    // Trả hàng -> Xác nhận trả
+    @PutMapping("/xac-nhan-doi-tra/{id}")
+    public ResponseEntity<?> XacNhanDoiTra(@PathVariable Integer id) {
+        adThongBaoService.xacNhanDoiTra(id);
+        return ResponseEntity.ok(doiTraService.xacNhanHoaDonTraHang(id));
+    }
+
+    @PutMapping("/huy-doi-tra/{id}")
+    public ResponseEntity<?> huyHoaDonDoiTra(@PathVariable Integer id, @RequestParam("lyDo") String lyDo) {
+        adThongBaoService.HuyDoiTra(id);
+        return ResponseEntity.ok(doiTraService.huyHoaDonTrahang(id, lyDo));
+    }
+
+    //Xác nhận trả hàng => hoàn thành trả hang
+    @PutMapping("/hoan-thanh-doi-tra/{id}")
+    public ResponseEntity<?> hoanThanhDoiTra(@PathVariable Integer id) {
+        adThongBaoService.hoanThanhDoiTra(id);
+        return ResponseEntity.ok(doiTraService.congSoLuongSP(id));
+    }
+
+    //Xác nhận trả hàng => hoàn thành trả hang không cộng lại số lượng
+    @PutMapping("/hoan-thanh-tra/{id}")
+    public ResponseEntity<?> hoanThanhDoiTraKhongCongSoLuong(@PathVariable Integer id) {
+        adThongBaoService.hoanThanhDoiTra(id);
+        return ResponseEntity.ok(doiTraService.khongCongSoLuongSP(id));
     }
 
     // từ đang giao -> hoàn thành
     @PutMapping("/hoan-thanh/{id}")
     public ResponseEntity<?> hoanThanh(@PathVariable Integer id) {
+        adThongBaoService.hoanThanh(id);
         return ResponseEntity.ok(adHoaDonDangGiaoService.xacNhanHoaDon(id));
     }
 }

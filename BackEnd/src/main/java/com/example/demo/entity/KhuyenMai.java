@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Builder
-@ToString
 @Entity
 @Table(name = "Khuyen_mai")
 public class KhuyenMai {

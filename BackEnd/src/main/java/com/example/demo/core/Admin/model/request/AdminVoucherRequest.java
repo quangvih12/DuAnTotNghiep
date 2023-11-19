@@ -35,6 +35,8 @@ public class AdminVoucherRequest implements DtoToEntity<Voucher> {
 
     private Integer soLuong;
 
+    private Integer giaTriGiam;
+
     @Override
     public Voucher dtoToEntity(Voucher voucher) {
 
@@ -45,6 +47,7 @@ public class AdminVoucherRequest implements DtoToEntity<Voucher> {
         voucher.setGiamToiDa(this.giamToiDa);
         voucher.setTrangThai(this.trangThai);
         voucher.setSoLuong(this.soLuong);
+        voucher.setGiaTriGiam(this.giaTriGiam);
         return voucher;
     }
 }

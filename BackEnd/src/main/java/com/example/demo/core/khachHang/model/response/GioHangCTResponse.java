@@ -13,17 +13,23 @@ public interface GioHangCTResponse {
     @Value("#{target.idCTSP}")
     Integer getIdCTSP();
 
+    @Value("#{target.idSP}")
+    Integer getIdSP();
+
     @Value("#{target.tenSP}")
     String getTenSP();
+
+    @Value("#{target.anhSpct}")
+    String getAnhMau();
 
     @Value("#{target.anh}")
     String getAnh();
 
     @Value("#{target.tenMauSac}")
-    Integer getTenMauSac();
+    String getTenMauSac();
 
     @Value("#{target.tenSize}")
-    Integer getTenSize();
+    String getTenSize();
 
     @Value("#{target.giaBan}")
     BigDecimal getGiaBan();
@@ -33,5 +39,8 @@ public interface GioHangCTResponse {
 
     @Value("#{target.soLuong}")
     Integer getSoLuong();
+
+    @Value("#{target.soLuongTon}")
+    Integer getSoLuongTon();
 
 }

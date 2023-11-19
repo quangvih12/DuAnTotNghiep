@@ -20,7 +20,6 @@ import lombok.ToString;
 @Setter
 @Getter
 @Builder
-@ToString
 @Entity
 @Table(name = "image")
 public class Image {

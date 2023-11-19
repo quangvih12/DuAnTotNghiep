@@ -78,15 +78,17 @@ UNLOCK TABLES;
 -- Table structure for table `danh_sach_yeu_thich`
 --
 
-DROP TABLE IF EXISTS `danh_sach_yeu_thich`;
+DROP TABLE IF EXISTS `thong_bao`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `danh_sach_yeu_thich` (
+CREATE TABLE `thong_bao` (
   `id` int NOT NULL AUTO_INCREMENT,
   `ngay_sua` varchar(255) DEFAULT NULL,
   `ngay_tao` varchar(255) DEFAULT NULL,
   `trang_thai` int DEFAULT NULL,
+  `type` int DEFAULT NULL,
   `id_san_pham_chi_tiet` int DEFAULT NULL,
+  `content` varchar(255) DEFAULT NULL,
   `id_user` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK5dd115i50w4aw5s2ciyepw3gx` (`id_san_pham_chi_tiet`),
@@ -100,9 +102,9 @@ CREATE TABLE `danh_sach_yeu_thich` (
 -- Dumping data for table `danh_sach_yeu_thich`
 --
 
-LOCK TABLES `danh_sach_yeu_thich` WRITE;
-/*!40000 ALTER TABLE `danh_sach_yeu_thich` DISABLE KEYS */;
-/*!40000 ALTER TABLE `danh_sach_yeu_thich` ENABLE KEYS */;
+LOCK TABLES `thong_bao` WRITE;
+/*!40000 ALTER TABLE `thong_bao` DISABLE KEYS */;
+/*!40000 ALTER TABLE `thong_bao` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -708,8 +710,8 @@ DROP TABLE IF EXISTS `user_voucher`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_voucher` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `dieu_kien` decimal(20,0) DEFAULT NULL,
   `id_user` int DEFAULT NULL,
+  `trang_thai` int DEFAULT NULL,
   `id_voucher` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKm34eg0v242ck9tt3fw8yo0vko` (`id_user`),
@@ -718,7 +720,8 @@ CREATE TABLE `user_voucher` (
   CONSTRAINT `FKm34eg0v242ck9tt3fw8yo0vko` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
+ALTER TABLE `user_voucher`
+DROP COLUMN `dieu_kien`;
 --
 -- Dumping data for table `user_voucher`
 --
@@ -768,6 +771,7 @@ CREATE TABLE `voucher` (
   `giam_toi_da` decimal(20,0) DEFAULT NULL,
   `mo_ta` varchar(10000) DEFAULT NULL,
   `so_luong` int DEFAULT NULL,
+  `gia_tri_giam` int DEFAULT NULL,
   `ten` varchar(255) DEFAULT NULL,
   `thoi_gian_bat_dau` datetime(6) DEFAULT NULL,
   `thoi_gian_ket_thuc` datetime(6) DEFAULT NULL,
