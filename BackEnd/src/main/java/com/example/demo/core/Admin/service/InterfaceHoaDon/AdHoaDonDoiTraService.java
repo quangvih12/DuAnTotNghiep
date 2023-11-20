@@ -7,7 +7,7 @@ public interface AdHoaDonDoiTraService {
 
     AdminHoaDonChitietResponse huyHoaDonTrahang(Integer idHD, String lyDo, Integer idSPCT);
 
-    AdminHoaDonResponse xacNhanHoaDonTraHang(Integer idHD,Integer idSPCT);
+    AdminHoaDonChitietResponse xacNhanHoaDonTraHang(Integer idHD,Integer idSPCT);
 
     AdminHoaDonResponse congSoLuongSP(Integer idHD);
 

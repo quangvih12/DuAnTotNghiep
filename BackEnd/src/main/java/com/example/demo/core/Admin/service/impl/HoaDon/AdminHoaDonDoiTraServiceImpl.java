@@ -45,16 +45,25 @@ public class AdminHoaDonDoiTraServiceImpl implements AdHoaDonDoiTraService {
             List<HoaDonChiTiet> lstHDCT = hdctRepo.findByIdHoaDon(idHD, sort);
             HoaDonChiTiet hdctRespone = new HoaDonChiTiet();
             for (HoaDonChiTiet hdct : lstHDCT) {
-                if (hdct.getSanPhamChiTiet().getId() == spct.getId() && hdct.getTrangThai() != HoaDonStatus.YEU_CAU_DOI_TRA) {
+                if (hdct.getSanPhamChiTiet().getId() == spct.getId() && hdct.getTrangThai() == HoaDonStatus.YEU_CAU_DOI_TRA) {
+                    int count = 0;
                     for (HoaDonChiTiet hdct1 : lstHDCT) {
-                        if (hdct1.getSanPhamChiTiet().getId() == spct.getId() && hdct1.getTrangThai() == HoaDonStatus.YEU_CAU_DOI_TRA) {
-                            hdct.setSoLuong(hdct.getSoLuong() + hdct1.getSoLuong());
-                            hdct1.setTrangThai(HoaDonStatus.HUY_DOI_TRA);
+                        if (hdct1.getSanPhamChiTiet().getId() == spct.getId() && hdct1.getTrangThai() != HoaDonStatus.YEU_CAU_DOI_TRA) {
+                            count = 1;
+                            hdct1.setSoLuong(hdct1.getSoLuong() + hdct.getSoLuong());
                             hdctRepo.save(hdct1);
                         }
                     }
-                    hdctRespone = hdctRepo.save(hdct);
+                    if (count == 0){
+                        hdct.setTrangThai(HoaDonStatus.HUY_DOI_TRA);
+                        hdctRespone = hdctRepo.save(hdct);
+                    }else{
+                        hdct.setTrangThai(HoaDonStatus.HUY_DOI_TRA);
+                        hdctRespone = hdctRepo.save(hdct);
+                    }
+
                 }
+
             }
             return hdctRepo.findByIdHDCT(hdctRespone.getId());
         } else {
@@ -63,7 +72,7 @@ public class AdminHoaDonDoiTraServiceImpl implements AdHoaDonDoiTraService {
     }
 
     @Override
-    public AdminHoaDonResponse xacNhanHoaDonTraHang(Integer idHD, Integer idSPCT) {
+    public AdminHoaDonChitietResponse xacNhanHoaDonTraHang(Integer idHD, Integer idSPCT) {
         HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         HashMap<Integer, Integer> quantityMap = new HashMap<>();
@@ -72,13 +81,14 @@ public class AdminHoaDonDoiTraServiceImpl implements AdHoaDonDoiTraService {
             hoaDon.setTrangThai(HoaDonStatus.XAC_NHAN_DOI_TRA);
             HoaDon hd = hoaDonReponsitory.save(hoaDon);
             List<HoaDonChiTiet> lstHDCT = hdctRepo.findByIdHoaDon(hd.getId(), sort);
+            HoaDonChiTiet hdctRespone = new HoaDonChiTiet();
             for (HoaDonChiTiet hdct : lstHDCT) {
                 if (hdct.getSanPhamChiTiet().getId() == idSPCT && hdct.getTrangThai() == 7) {
                     hdct.setTrangThai(HoaDonStatus.XAC_NHAN_DOI_TRA);
-                    hdctRepo.save(hdct);
+                    hdctRespone = hdctRepo.save(hdct);
                 }
             }
-            return hoaDonReponsitory.getByIds(hd.getId());
+            return hdctRepo.findByIdHDCT(hdctRespone.getId());
         } else {
             return null;
         }
