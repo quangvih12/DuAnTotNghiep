@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface KHThongBaoRepository extends ThongBaoRepository {
-    @Query("select  pot from  ThongBao  pot where (pot.type =1 or  pot.type =2 or  pot.type =4 or  pot.type =5) and pot.user.id=:id")
+    @Query("select  pot from  ThongBao  pot where (pot.type =1 or  pot.type =2 or  pot.type =4 or  pot.type =5 or  pot.type =7 or  pot.type =8) and pot.user.id=:id")
     List<ThongBao> findAll(Integer id);
 
     @Query(value = """

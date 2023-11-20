@@ -51,6 +51,9 @@ public class ExportFilePdfFormHtml {
         NumberFormat formatter = formatCurrency();
         DiaChi diaChi = khDiaChiRepo.findAllById(hoaDon.getDiaChi().getId());
 
+        if(hoaDon.getTienSauKhiGiam() == null || hoaDon.getTienSauKhiGiam().equals("")){
+            hoaDon.setTienSauKhiGiam(hoaDon.getTienShip().add(hoaDon.getTongTien()));
+        }
 
         BienLaiHoaDon invoice = BienLaiHoaDon.builder()
                 .sdt(hoaDon.getUser().getSdt())
