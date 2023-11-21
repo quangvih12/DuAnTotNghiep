@@ -41,7 +41,8 @@ public interface KHHoaDonRepository extends HoaDonReponsitory {
                                                or hd.trang_thai =:trangThai2
                                               or hd.trang_thai =:trangThai3 or hd.trang_thai =:trangThai4)
             """, nativeQuery = true)
-    List<KHHoaDonResponse> getHoaDonTrangThai(Integer id, Integer trangThai,Integer trangThai2,Integer trangThai3,Integer trangThai4);
+    List<KHHoaDonResponse> getHoaDonTrangThai(Integer id, Integer trangThai, Integer trangThai2, Integer trangThai3, Integer trangThai4);
+
 
     @Query(value = """
                      SELECT ROW_NUMBER() OVER(ORDER BY hd.id DESC) AS stt,
