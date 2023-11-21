@@ -20,6 +20,7 @@ public class BienLaiHoaDon {
     private String tongTien;
     private String ghiChu;
     private String phiShip;
+
     private String tongThanhToan;
     private LocalDateTime date;
     private Integer soLuong;

@@ -62,7 +62,7 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.POST,"/api/admin/**").hasAnyRole("ADMIN")
                                         .requestMatchers(HttpMethod.PUT,"/api/admin/**").hasAnyRole("ADMIN")
                                         .requestMatchers(HttpMethod.DELETE,"/api/admin/**").hasAnyRole("ADMIN")
-                                        .anyRequest().authenticated()
+                                        .anyRequest().permitAll()
 
                         )
                 .exceptionHandling(exceptionHandling -> exceptionHandling

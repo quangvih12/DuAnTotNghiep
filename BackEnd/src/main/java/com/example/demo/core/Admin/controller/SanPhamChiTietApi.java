@@ -1,41 +1,23 @@
-//package com.example.demo.core.Admin.controller;
+package com.example.demo.core.Admin.controller;
+
+
+import com.example.demo.core.Admin.model.response.AdminSPCTResponse;
+import com.example.demo.core.Admin.service.AdSanPhamChiTietService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@CrossOrigin("*")
+@RestController
+@RequestMapping("/api/admin/ctsp")
 //
-//import com.example.demo.core.Admin.model.request.AdminMauSacChiTietRequest;
-//import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
-//import com.example.demo.core.Admin.model.request.AdminSearchRequest;
-//import com.example.demo.core.Admin.model.request.AdminSizeChiTietRequest;
-//import com.example.demo.core.Admin.model.response.AdminMauSacChiTietResponse;
-//import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
-//import com.example.demo.core.Admin.model.response.AdminSizeChiTietResponse;
-//import com.example.demo.core.Admin.service.AdSanPhamService.AdExcelAddSanPhamService;
-//import com.example.demo.core.Admin.service.AdSanPhamService.AdSanPhamChiTietService;
-//import com.example.demo.core.Admin.service.AdSanPhamService.AdUpdateSanPhamService;
-//import com.example.demo.core.Admin.service.AdminMauSacChiTietService;
-//import com.example.demo.entity.Image;
-//import com.example.demo.util.DataUltil;
-//import com.microsoft.azure.storage.StorageException;
-//import jakarta.validation.Valid;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.validation.BindingResult;
-//import org.springframework.validation.ObjectError;
-//import org.springframework.web.bind.annotation.*;
-//import org.springframework.web.multipart.MultipartFile;
-//
-//import java.io.IOException;
-//import java.net.URISyntaxException;
-//import java.security.InvalidKeyException;
-//import java.util.List;
-//import java.util.concurrent.ExecutionException;
-//
-//@CrossOrigin("*")
-//@RestController
-//@RequestMapping("/api/products")
-//
-//public class SanPhamChiTietApi {
-//    @Autowired
-//    private AdSanPhamChiTietService sanPhamChiTietService;
-//
+public class SanPhamChiTietApi {
+
+    @Autowired
+    private AdSanPhamChiTietService sanPhamChiTietService;
+
 //    @Autowired
 //    private AdUpdateSanPhamService updateSanPhamServiceIpml;
 //
@@ -49,11 +31,11 @@
 //    private AdminSizeChiTietService adminSizeChiTietService;
 //
 //
-//    @GetMapping("/lisst")
-//    public ResponseEntity<?> getList(final AdminSearchRequest request) {
-//        List<AdminSanPhamChiTietResponse> lisst = sanPhamChiTietService.getList(request);
-//        return ResponseEntity.ok(lisst);
-//    }
+    @GetMapping()
+    public ResponseEntity<?> getList(@RequestParam("idsp") Integer idsp) {
+        List<AdminSPCTResponse> lisst = sanPhamChiTietService.listCTSPBySanPham(idsp);
+        return ResponseEntity.ok(lisst);
+    }
 //
 //    @GetMapping("/loc")
 //    public ResponseEntity<?> loc(@RequestParam String comboBoxValue) {
@@ -189,5 +171,5 @@
 //        adminSizeChiTietService.delete(id);
 //        return ResponseEntity.ok("");
 //    }
-//
-//}
+
+}

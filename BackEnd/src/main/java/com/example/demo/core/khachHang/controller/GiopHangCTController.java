@@ -83,9 +83,21 @@ public class GiopHangCTController {
            return list ;
     }
 
+    @GetMapping("/getGioHangCTByIdctsp")
+    public GioHangCTResponse getGioHangCTByIdctsp(@RequestParam(value = "token") String token, @RequestParam(value = "idctsp") Integer idctsp) {
+
+        return khGioHangService.getGHCTByIdCTSP(token,idctsp);
+    }
+
     @GetMapping("/get-voucher")
     public ResponseEntity<?> getListVoucher(@RequestParam("token") String token) {
         List<KhVoucherResponse> getList = khGioHangService.getListVoucher(token);
+        return ResponseEntity.ok(getList);
+    }
+
+    @GetMapping("/get-voucher-trang-thai")
+    public ResponseEntity<?> getListVoucherByTrangThai() {
+        List<KhVoucherResponse> getList = khGioHangService.getListVoucherByTrangThai();
         return ResponseEntity.ok(getList);
     }
 
@@ -99,6 +111,13 @@ public class GiopHangCTController {
     public ResponseEntity<?> updateCongGHCT(HttpSession httpSession, @PathVariable("idghct") Integer idghct, @RequestParam(required = false) String token) {
             GioHangCTResponse map = khGioHangService.updateCongSoLuong(idghct, token);
             return ResponseEntity.ok(map);
+    }
+
+    @PutMapping("/updateSL/{idghct}")
+    public ResponseEntity<?> updateSLGHCT(HttpSession httpSession, @PathVariable("idghct") Integer idghct, @RequestParam(required = false) String token, @RequestParam("sl") Integer sl) {
+        GioHangCTResponse map = khGioHangService.updateSLGH(idghct, token, sl);
+        log.info("chay vao day");
+        return ResponseEntity.ok(map);
     }
 
     @PutMapping("/truSL/{idghct}")

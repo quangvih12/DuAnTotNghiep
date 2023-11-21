@@ -80,15 +80,19 @@ public class HoaDonServiceImpl implements HoaDonService {
         User kh = this.khUserRepo.findById(hoaDonRequest.getIdUser()).get();
         DiaChi diaChi = khDiaChiRepo.findDiaChiByIdUserAndTrangThai(kh.getId());
 
+
+
         Random random = new Random();
         int randomNumber = random.nextInt(9000) + 1000;
 
         LocalDateTime ngayThanhToan;
+
         if (hoaDonRequest.getIdPayMethod() == 1) {
             ngayThanhToan = DatetimeUtil.getCurrentDateAndTimeLocal();
         } else {
             ngayThanhToan = null;
         }
+
 
         HoaDon hoaDon = HoaDon.builder()
                 .ma("HD" + randomNumber)
@@ -102,10 +106,21 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .tienSauKhiGiam(hoaDonRequest.getTienSauGiam())
                 .hinhThucGiaoHang(HinhThucGiaoHangStatus.GIAOHANG)
                 .trangThai(HoaDonStatus.YEU_CAU_XAC_NHAN)
+
                 .phuongThucThanhToan(PhuongThucThanhToan.builder().id(hoaDonRequest.getIdPayMethod()).build())
                 .build();
 
+        if(hoaDonRequest.getIdVoucher() != null) {
+            Voucher voucher = voucherRepo.findAllById(hoaDonRequest.getIdVoucher()).get();
+            hoaDon.setVoucher(voucher);
+        }
+
         HoaDon saveHoaDon = khHoaDonRepo.save(hoaDon);
+        if(hoaDonRequest.getIdVoucher() != null) {
+            Voucher voucher = voucherRepo.findAllById(hoaDonRequest.getIdVoucher()).get();
+            voucher.setSoLuong(voucher.getSoLuong() - 1);
+            voucherRepo.save(voucher);
+        }
 
         for (KHHoaDonChiTietRequest request : hoaDonRequest.getListHDCT()) {
 
@@ -140,7 +155,7 @@ public class HoaDonServiceImpl implements HoaDonService {
             GioHangChiTiet gioHangChiTiet = khghctRepo.listGHCTByID(hoaDonRequest.getIdUser(), x.getIdCTSP());
             khghctRepo.deleteById(gioHangChiTiet.getId());
         }
-        this.updateVoucher(kh.getId(), hoaDonRequest.getIdVoucher());
+//        this.updateVoucher(kh.getId(), hoaDonRequest.getIdVoucher());
         this.thongBaoService.thanhToan(saveHoaDon.getId());
         sendMailOnline(hoaDon.getId());
         return hoaDon;
