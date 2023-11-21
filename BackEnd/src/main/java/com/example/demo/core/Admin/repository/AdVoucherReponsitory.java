@@ -42,4 +42,7 @@ public interface AdVoucherReponsitory extends VoucherReponsitory {
             group by ma,ten,email,sdt
             """, nativeQuery = true)
     List<AdminVoucherGetUserResponse> getUserByVoucher(@Param("idVoucher") Integer idVoucher);
+
+    @Query("select i from Voucher  i where i.ten=:ten and not i.trangThai=4")
+    Voucher getVoucherByTen(String ten);
 }

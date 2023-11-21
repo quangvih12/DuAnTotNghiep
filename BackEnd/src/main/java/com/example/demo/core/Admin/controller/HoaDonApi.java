@@ -131,15 +131,15 @@ public class HoaDonApi {
 
     // Trả hàng -> Xác nhận trả
     @PutMapping("/xac-nhan-doi-tra/{id}")
-    public ResponseEntity<?> XacNhanDoiTra(@PathVariable Integer id) {
+    public ResponseEntity<?> XacNhanDoiTra(@PathVariable Integer id, @RequestParam("idSPCT") Integer idSPCT) {
         adThongBaoService.xacNhanDoiTra(id);
-        return ResponseEntity.ok(doiTraService.xacNhanHoaDonTraHang(id));
+        return ResponseEntity.ok(doiTraService.xacNhanHoaDonTraHang(id, idSPCT));
     }
 
     @PutMapping("/huy-doi-tra/{id}")
-    public ResponseEntity<?> huyHoaDonDoiTra(@PathVariable Integer id, @RequestParam("lyDo") String lyDo) {
+    public ResponseEntity<?> huyHoaDonDoiTra(@PathVariable Integer id, @RequestParam("lyDo") String lyDo, @RequestParam("idSPCT") Integer idSPCT) {
         adThongBaoService.HuyDoiTra(id);
-        return ResponseEntity.ok(doiTraService.huyHoaDonTrahang(id, lyDo));
+        return ResponseEntity.ok(doiTraService.huyHoaDonTrahang(id, lyDo, idSPCT));
     }
 
     //Xác nhận trả hàng => hoàn thành trả hang
