@@ -11,6 +11,8 @@ import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class KHUserServiceImpl implements KHUserService {
 
@@ -52,6 +54,15 @@ public class KHUserServiceImpl implements KHUserService {
     }
 
     @Override
+    public Optional<User> findByEmail(String email) {
+        if (email == null) {
+            return Optional.empty();
+        }
+        return khUserRepo.findAllByEmail(email);
+    }
+
+
+    @Override
     public String checkValiDate(LoginPayLoad loginPayload) {
         User u = khUserRepo.findUserByEmail(loginPayload.getUsernameOrEmail());
         if (u == null || u.getPassword() != loginPayload.getPassword()) {
@@ -59,6 +70,7 @@ public class KHUserServiceImpl implements KHUserService {
         } else {
             return "Ok";
         }
+
     }
 
 }

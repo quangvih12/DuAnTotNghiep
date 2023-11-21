@@ -7,8 +7,6 @@ import com.example.demo.core.Admin.model.response.AdminSanPhamResponse;
 import com.example.demo.core.Admin.service.AdSanPhamService.AdExcelAddSanPhamService;
 import com.example.demo.core.Admin.service.AdSanPhamService.AdSanPhamService;
 import com.example.demo.core.Admin.service.AdSanPhamService.AdUpdateSanPhamService;
-import com.example.demo.entity.Image;
-import com.example.demo.entity.SanPham;
 import com.microsoft.azure.storage.StorageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +35,19 @@ public class SanPhamApi {
     @GetMapping()
     public ResponseEntity<?> getAll() {
         List<AdminSanPhamResponse> page = sanPhamService.getAll();
+        return ResponseEntity.ok(page);
+    }
+
+
+    @GetMapping("/by-loai")
+    public ResponseEntity<?> getSPByLoai(@RequestParam("idloai") Integer idloai) {
+        List<AdminSanPhamResponse> page = sanPhamService.getSanPhamByIdLoai(idloai);
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/by-thuong-hieu")
+    public ResponseEntity<?> getSPByThuongHieu(@RequestParam("idthuonghieu") Integer idthuonghieu) {
+        List<AdminSanPhamResponse> page = sanPhamService.getSanPhamByIdThuongHieu(idthuonghieu);
         return ResponseEntity.ok(page);
     }
 

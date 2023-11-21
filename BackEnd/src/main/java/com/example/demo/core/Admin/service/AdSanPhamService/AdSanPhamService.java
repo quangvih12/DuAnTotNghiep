@@ -40,4 +40,8 @@ public interface AdSanPhamService {
     AdminSanPhamResponse khoiPhuc(Integer id);
 
     List<AdminSanPhamChiTiet2Response> locCTSP(String comboBoxValue);
+
+    List<AdminSanPhamResponse> getSanPhamByIdLoai( Integer idloai);
+
+    List<AdminSanPhamResponse> getSanPhamByIdThuongHieu( Integer idthuonghieu);
 }
