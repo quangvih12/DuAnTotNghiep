@@ -86,6 +86,16 @@ public class SanPhamServiceImpl implements AdSanPhamService {
     }
 
     @Override
+    public List<AdminSanPhamResponse> getSanPhamByIdLoai(Integer idloai) {
+        return sanPhamReponsitory.getSanPhamByIdLoai(idloai);
+    }
+
+    @Override
+    public List<AdminSanPhamResponse> getSanPhamByIdThuongHieu(Integer idthuonghieu) {
+        return sanPhamReponsitory.getSanPhamByIdThuongHieu(idthuonghieu);
+    }
+
+    @Override
     public AdminSanPhamResponse save(AdminSanPhamRepuest2 request) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         String linkAnh = getImageToAzureUtil.uploadImageToAzure(request.getAnh());
         AdminSanPhamRequest sanPhamRequest = AdminSanPhamRequest.builder()

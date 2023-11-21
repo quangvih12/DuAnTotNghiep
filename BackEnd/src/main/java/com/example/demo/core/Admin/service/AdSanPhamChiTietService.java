@@ -1,6 +1,7 @@
 package com.example.demo.core.Admin.service;
 
 import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
+import com.example.demo.core.Admin.model.response.AdminSPCTResponse;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.microsoft.azure.storage.StorageException;
@@ -31,6 +32,8 @@ public interface AdSanPhamChiTietService {
     void saveExcel(MultipartFile file) throws IOException, StorageException, InvalidKeyException, URISyntaxException;
 
     List<SanPhamChiTiet> exportCustomerToExcel(HttpServletResponse response) throws IOException;
+
+    List<AdminSPCTResponse> listCTSPBySanPham(Integer idsp);
 
 
 }

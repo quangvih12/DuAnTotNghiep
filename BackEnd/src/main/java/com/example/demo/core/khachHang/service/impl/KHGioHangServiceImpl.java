@@ -261,6 +261,16 @@ public class KHGioHangServiceImpl implements KHGiohangService {
         return gioHangCTRespon.getListGHCT(idUser);
     }
 
+    @Override
+    public GioHangCTResponse getGHCTByIdCTSP(String token, Integer idctsp) {
+
+        Integer idUser;
+        String userName = tokenService.getUserNameByToken(token);
+        User user = userRepository.findByUserName(userName);
+        idUser = user.getId();
+        return gioHangCTRespon.getGHCTByIDCTSP(idUser, idctsp);
+    }
+
 
     @Override
     public ResponseEntity<HttpStatus> deleteGioHangCT(Integer id) {
@@ -306,6 +316,33 @@ public class KHGioHangServiceImpl implements KHGiohangService {
             }
             _gioHangChiTiet.setSoLuong(_gioHangChiTiet.getSoLuong() + 1);
             GioHangChiTiet gioHang = gioHangCTRespon.save(_gioHangChiTiet);
+            return gioHangCTRespon.getGHCT(idUser, gioHang.getId());
+        }
+        return null;
+    }
+
+    @Override
+    public GioHangCTResponse updateSLGH(Integer id, String token, Integer sl) {
+        Integer idUser;
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+        String userName = tokenService.getUserNameByToken(token);
+        User user = userRepository.findByUserName(userName);
+        idUser = user.getId();
+        Optional<GioHangChiTiet> tutorialData = gioHangCTRespon.findById(id);
+        log.info("testtahnh");
+        if (tutorialData.isPresent()) {
+            log.info("khanh");
+            GioHangChiTiet _gioHangChiTiet = tutorialData.get();
+            int newSoLuong = sl;
+            if (newSoLuong > _gioHangChiTiet.getSanPhamChiTiet().getSoLuongTon()) {
+                return null;
+            }
+            log.info("khanh test");
+            _gioHangChiTiet.setSoLuong( sl);
+            GioHangChiTiet gioHang = gioHangCTRespon.save(_gioHangChiTiet);
+            log.info("test",gioHang.getSoLuong());
             return gioHangCTRespon.getGHCT(idUser, gioHang.getId());
         }
         return null;
@@ -379,6 +416,11 @@ public class KHGioHangServiceImpl implements KHGiohangService {
         User user = userRepository.findByUserName(userName);
         idUser = user.getId();
         return gioHangCTRespon.getListVoucherByUser(idUser);
+    }
+
+    @Override
+    public List<KhVoucherResponse> getListVoucherByTrangThai() {
+        return gioHangCTRespon.getListVoucherByTrangThai();
     }
 
 }

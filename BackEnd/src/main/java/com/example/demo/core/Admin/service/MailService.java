@@ -5,4 +5,6 @@ import jakarta.mail.MessagingException;
 
 public interface MailService {
     void sendHtmlMail(DataMailDTO dataMail, String templateName) throws MessagingException;
+
+    void sendHtmlMailOTP(DataMailDTO dataMail, String templateName) throws MessagingException;
 }
