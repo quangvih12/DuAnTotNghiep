@@ -107,7 +107,7 @@ public interface AdminHoaDonChitietResponse {
     @Value("#{target.anh}")
     String getAnh();
 
-    @Value("#{target.trongLuong}")
-    Integer getTrongLuong();
+    @Value("#{target.idSPCT}")
+    Integer getIdSPCT();
 
 }
