@@ -15,6 +15,8 @@ public interface KHUserRepository extends UserReponsitory {
 
     Optional<User> findAllById(Integer id);
 
+    Optional<User> findAllByEmail(String email);
+
     User findUserByEmail(String email);
 
     @Query(value = """
@@ -30,4 +32,6 @@ public interface KHUserRepository extends UserReponsitory {
             GROUP BY u.id, u.anh, u.email, u.gioi_tinh, u.ma, u.ngay_sinh, u.password, u.role, u.sdt, u.ten, u.trang_thai, u.user_name;
             """, nativeQuery = true)
     KHUserResponse findUserById(@Param("id") Integer id);
+
+    boolean existsByEmail(String email);
 }
