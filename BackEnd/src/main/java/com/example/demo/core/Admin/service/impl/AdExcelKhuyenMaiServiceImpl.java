@@ -76,8 +76,8 @@ public class AdExcelKhuyenMaiServiceImpl {
         Long thoiGianKetThuc = ExcelUtils.getCellDatetime(row.getCell(3));
         Long giamToiDa = ExcelUtils.getCellLong(row.getCell(4));
         Long giaTriGiam = ExcelUtils.getCellLong(row.getCell(5));
-        String moTa = ExcelUtils.getCellString(row.getCell(7));
-        String kieuGiamGia = ExcelUtils.getCellString(row.getCell(6));
+        String moTa = ExcelUtils.getCellString(row.getCell(6));
+       // String kieuGiamGia = ExcelUtils.getCellString(row.getCell(6));
 
 
         LocalDateTime batDauDateTime = Instant.ofEpochMilli(thoiGianBatDau)
@@ -98,10 +98,6 @@ public class AdExcelKhuyenMaiServiceImpl {
 
         } else if (!DataUltil.isNullObject(khuyenMai)) {
             userDTO.setImportMessageTen("khuyến mại đã tồn tại, tại vị trí: " + stt);
-            userDTO.setError(true);
-
-        } else if (DataUltil.isNullObject(kieuGiamGia)) {
-            userDTO.setImportMessageTen("kiểu khuyến mại không được để trống, tại vị trí: " + stt);
             userDTO.setError(true);
 
         } else if (batDauDateTime.isBefore(ngayHienTai)) {
@@ -137,49 +133,7 @@ public class AdExcelKhuyenMaiServiceImpl {
             userDTO.setError(true);
 
         } else {
-            if (!kieuGiamGia.equals("GIAM_THEO_PHAN_TRAM") || !kieuGiamGia.equals("GIAM_THEO_GIA")) {
-                userDTO.setImportMessageKieuGiamGia("kiểu giảm giá sẽ là GIAM_THEO_GIA hoặc GIAM_THEO_PHAN_TRAM ");
-                userDTO.setError(true);
 
-            }
-            if (kieuGiamGia.equals("GIAM_THEO_GIA")) {
-                if (giaTriGiam <= 10000) {
-                    System.out.println("OK");
-                    userDTO.setImportMessageGiaTriGiam("giá trị giảm phải lớn hơn 10.000đ");
-                    userDTO.setError(true);
-
-                } else if (giaTriGiam >= 1000000) {
-                    userDTO.setImportMessageGiaTriGiam("giá trị giảm phải nhỏ hơn 1.000.000đ");
-                    userDTO.setError(true);
-
-                } else if (giamToiDa <= 0) {
-                    userDTO.setImportMessageGiamToiDa("Tiền giảm tối đa phải lớn hơn 0");
-                    userDTO.setError(true);
-
-                } else {
-                    userDTO.setKieuGiamGia(KieuGiamGia.GIAM_THEO_GIA);
-                    userDTO.setImportMessageKieuGiamGia("SUCCESS");
-                    userDTO.setTen(ten);
-                    userDTO.setImportMessageTen("SUCCESS");
-                    userDTO.setThoiGianBatDau(batDauDateTime);
-                    userDTO.setImportMessageThoiGianBatDau("SUCCESS");
-                    userDTO.setThoiGianKetThuc(ketThucDateTime);
-                    userDTO.setImportMessageThoiGianKetThuc("SUCCESS");
-                    userDTO.setGiamToiDa(BigDecimal.valueOf(giamToiDa));
-                    userDTO.setImportMessageGiamToiDa("SUCCESS");
-                    userDTO.setGiaTriGiam((int) giaTriGiam.longValue());
-                    userDTO.setImportMessageGiaTriGiam("SUCCESS");
-                    if (DataUltil.isNullObject(moTa)) {
-                        userDTO.setMoTa(null);
-                        userDTO.setImportMessageMoTa("SUCCESS");
-                    } else {
-                        userDTO.setMoTa(moTa);
-                        userDTO.setImportMessageMoTa("SUCCESS");
-                    }
-                    userDTO.setError(false);
-                }
-
-            } else if (kieuGiamGia.equals("GIAM_THEO_PHAN_TRAM")) {
                 if (giaTriGiam <= 0) {
                     userDTO.setImportMessageGiaTriGiam("giá trị giảm phải lớn hơn 0");
                     userDTO.setError(true);
@@ -214,7 +168,7 @@ public class AdExcelKhuyenMaiServiceImpl {
                     }
                     userDTO.setError(false);
                 }
-            }
+
         }
         return userDTO;
     }
