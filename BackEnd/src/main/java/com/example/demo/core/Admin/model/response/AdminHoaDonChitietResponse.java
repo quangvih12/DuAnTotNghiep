@@ -110,4 +110,7 @@ public interface AdminHoaDonChitietResponse {
     @Value("#{target.idSPCT}")
     Integer getIdSPCT();
 
+    @Value("#{target.trongLuong}")
+    Integer getTrongLuong();
+
 }
