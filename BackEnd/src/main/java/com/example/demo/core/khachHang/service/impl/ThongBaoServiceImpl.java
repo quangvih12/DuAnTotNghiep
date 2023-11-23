@@ -10,6 +10,7 @@ import com.example.demo.entity.User;
 import com.example.demo.infrastructure.status.ThongBaoStatus;
 import com.example.demo.infrastructure.status.ThongBaoType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +28,9 @@ public class ThongBaoServiceImpl {
 
     @Autowired
     private KHThongBaoRepository khThongBaoRepository;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     public List<ThongBao> getAll(String token) {
         if (tokenService.getUserNameByToken(token) == null) {
@@ -63,6 +67,7 @@ public class ThongBaoServiceImpl {
         thongBao.setContent("hóa đơn " + hoaDon.getMa() + " chờ xác nhận");
         thongBao.setTrangThai(ThongBaoStatus.CHUA_XEM);
         khThongBaoRepository.save(thongBao);
+        messagingTemplate.convertAndSend("/topic/admin/hoa-don",thongBao);
     }
 
     public void yeuCauDoiTra(Integer idHD, String maSP) {
@@ -70,9 +75,10 @@ public class ThongBaoServiceImpl {
         ThongBao thongBao = new ThongBao();
         thongBao.setType(ThongBaoType.YEU_CAU_DOI_TRA);
         thongBao.setUser(User.builder().id(hoaDon.getUser().getId()).build());
-        thongBao.setContent("yêu cầu đổi trả sản phẩm có mã: "  + maSP);
+        thongBao.setContent("yêu cầu trả sản phẩm có mã: "  + maSP);
         thongBao.setTrangThai(ThongBaoStatus.CHUA_XEM);
         khThongBaoRepository.save(thongBao);
+        messagingTemplate.convertAndSend("/topic/admin/hoa-don",thongBao);
     }
 
     public void huyDonHang(Integer idHD) {
@@ -83,5 +89,6 @@ public class ThongBaoServiceImpl {
         thongBao.setContent("Khách Hàng hủy đơn hàng có mã là: " + hoaDon.getMa());
         thongBao.setTrangThai(ThongBaoStatus.CHUA_XEM);
         khThongBaoRepository.save(thongBao);
+        messagingTemplate.convertAndSend("/topic/admin/hoa-don",thongBao);
     }
 }
