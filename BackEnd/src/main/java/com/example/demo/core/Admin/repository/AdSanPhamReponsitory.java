@@ -3,6 +3,7 @@ package com.example.demo.core.Admin.repository;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTiet2Response;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.core.Admin.model.response.AdminSanPhamResponse;
+import com.example.demo.core.Admin.model.response.SanPhamDOT;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.reponsitory.SanPhamReponsitory;
@@ -33,6 +34,7 @@ public interface AdSanPhamReponsitory extends SanPhamReponsitory {
                      ORDER BY sp.id DESC;
             """, nativeQuery = true)
     List<AdminSanPhamResponse> getAll();
+
 
     @Query(value = """
                      SELECT sp.id as id,sp.anh as anh, sp.ma as ma, sp.ten as ten,

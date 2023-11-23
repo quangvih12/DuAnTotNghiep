@@ -5,6 +5,7 @@ import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
 import com.example.demo.core.Admin.model.response.AdminImageResponse;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTiet2Response;
 import com.example.demo.core.Admin.model.response.AdminSanPhamResponse;
+import com.example.demo.core.Admin.model.response.SanPhamDOT;
 import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
 import com.example.demo.core.Admin.repository.AdImageReponsitory;
 import com.example.demo.core.Admin.repository.AdSanPhamReponsitory;
@@ -21,10 +22,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -49,9 +47,33 @@ public class SanPhamServiceImpl implements AdSanPhamService {
         return sanPhamReponsitory.getAll();
     }
 
+    public List<SanPhamDOT> getAlls() {
+        List<SanPhamDOT> sanPhamDOTS = new ArrayList<>();
+        for (AdminSanPhamResponse o : sanPhamReponsitory.getAll()) {
+            List<AdminImageResponse> img = this.getProductImages(o.getId());
+            List<AdminSanPhamChiTiet2Response> spct = this.findBySanPhamCT(o.getId());
+
+
+            sanPhamDOTS.add(new SanPhamDOT(img, spct,
+                    o.getId(), o.getTen(), o.getMoTa(), o.getMa(), o.getTrangThai()
+                    , o.getNgayTao(), o.getSoLuongTon(), o.getQuaiDeo(), o.getDemLot()
+                    , o.getVatLieu(), o.getLoai(), o.getThuongHieu(), o.getAnh(), o.getNgaySua()));
+        }
+
+        return sanPhamDOTS;
+    }
+
     @Override
-    public AdminSanPhamResponse findByIdSP(Integer id) {
-        return sanPhamReponsitory.findByIdSP(id);
+    public SanPhamDOT findByIdSP(Integer id) {
+        AdminSanPhamResponse o = sanPhamReponsitory.findByIdSP(id);
+        List<AdminImageResponse> img = this.getProductImages(o.getId());
+        List<AdminSanPhamChiTiet2Response> spct = this.findBySanPhamCT(o.getId());
+        SanPhamDOT sanPhamDOT = new SanPhamDOT(img, spct,
+                o.getId(), o.getTen(), o.getMoTa(), o.getMa(), o.getTrangThai()
+                , o.getNgayTao(), o.getSoLuongTon(), o.getQuaiDeo(), o.getDemLot()
+                , o.getVatLieu(), o.getLoai(), o.getThuongHieu(), o.getAnh(), o.getNgaySua());
+
+        return sanPhamDOT;
     }
 
     @Override
@@ -76,8 +98,20 @@ public class SanPhamServiceImpl implements AdSanPhamService {
     }
 
     @Override
-    public List<AdminSanPhamResponse> loc(String comboBoxValue) {
-        return sanPhamReponsitory.loc(comboBoxValue);
+    public List<SanPhamDOT> loc(String comboBoxValue) {
+        List<SanPhamDOT> sanPhamDOTS = new ArrayList<>();
+        for (AdminSanPhamResponse o : sanPhamReponsitory.loc(comboBoxValue)) {
+            List<AdminImageResponse> img = this.getProductImages(o.getId());
+            List<AdminSanPhamChiTiet2Response> spct = this.findBySanPhamCT(o.getId());
+
+
+            sanPhamDOTS.add(new SanPhamDOT(img, spct,
+                    o.getId(), o.getTen(), o.getMoTa(), o.getMa(), o.getTrangThai()
+                    , o.getNgayTao(), o.getSoLuongTon(), o.getQuaiDeo(), o.getDemLot()
+                    , o.getVatLieu(), o.getLoai(), o.getThuongHieu(), o.getAnh(), o.getNgaySua()));
+        }
+
+        return sanPhamDOTS;
     }
 
 
@@ -96,7 +130,7 @@ public class SanPhamServiceImpl implements AdSanPhamService {
     }
 
     @Override
-    public AdminSanPhamResponse save(AdminSanPhamRepuest2 request) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
+    public SanPhamDOT save(AdminSanPhamRepuest2 request) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         String linkAnh = getImageToAzureUtil.uploadImageToAzure(request.getAnh());
         AdminSanPhamRequest sanPhamRequest = AdminSanPhamRequest.builder()
                 .loai(request.getLoai())
@@ -207,7 +241,7 @@ public class SanPhamServiceImpl implements AdSanPhamService {
 
 
     @Override
-    public AdminSanPhamResponse delete(Integer id) {
+    public SanPhamDOT delete(Integer id) {
         SanPham sanPham = sanPhamReponsitory.findById(id).get();
         if (sanPham != null) {
             sanPham.setTrangThai(0);
@@ -217,7 +251,7 @@ public class SanPhamServiceImpl implements AdSanPhamService {
     }
 
     @Override
-    public AdminSanPhamResponse khoiPhuc(Integer id) {
+    public SanPhamDOT khoiPhuc(Integer id) {
         SanPham sanPham = sanPhamReponsitory.findById(id).get();
         if (sanPham != null) {
             sanPham.setTrangThai(3);

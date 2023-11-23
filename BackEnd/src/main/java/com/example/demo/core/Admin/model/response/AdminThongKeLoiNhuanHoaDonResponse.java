@@ -51,4 +51,7 @@ public interface AdminThongKeLoiNhuanHoaDonResponse {
     @Value("#{target.tenPhuongXa}")
     String getTenPhuongXa();
 
+    @Value("#{target.hoanTien}")
+    Integer getHoanTien();
+
 }

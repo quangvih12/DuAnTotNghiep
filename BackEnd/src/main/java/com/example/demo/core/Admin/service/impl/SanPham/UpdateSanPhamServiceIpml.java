@@ -6,12 +6,14 @@ import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
 import com.example.demo.core.Admin.model.response.AdminImageResponse;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTiet2Response;
 import com.example.demo.core.Admin.model.response.AdminSanPhamResponse;
+import com.example.demo.core.Admin.model.response.SanPhamDOT;
 import com.example.demo.core.Admin.repository.AdChiTietSanPhamReponsitory;
 import com.example.demo.core.Admin.repository.AdImageReponsitory;
 import com.example.demo.core.Admin.repository.AdSanPhamReponsitory;
 import com.example.demo.core.Admin.service.AdSanPhamService.AdUpdateSanPhamService;
 import com.example.demo.entity.*;
 import com.example.demo.infrastructure.status.ChiTietSanPhamStatus;
+import com.example.demo.reponsitory.KhuyenMaiReponsitory;
 import com.example.demo.util.DatetimeUtil;
 import com.example.demo.util.ImageToAzureUtil;
 import com.microsoft.azure.storage.StorageException;
@@ -40,7 +42,10 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
     private AdSanPhamReponsitory sanPhamReponsitory;
 
     @Autowired
-    SanPhamServiceImpl sanPhamService;
+    private SanPhamServiceImpl sanPhamService;
+
+    @Autowired
+    private KhuyenMaiReponsitory khuyenMaiReponsitory;
 
 
     @Autowired
@@ -58,7 +63,7 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
             sanPhamChiTiet.setGiaNhap(BigDecimal.valueOf(dto.getGiaNhap()));
             sanPhamChiTiet.setSoLuongTon(Integer.valueOf(dto.getSoLuongTon()));
             sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(dto.getTrongLuong()).build());
-            sanPhamChiTiet.setSize(Size.builder().id(dto.getSize()).build());
+
             sanPhamChiTiet.setMauSac(MauSac.builder().id(dto.getMauSac()).build());
             sanPhamChiTiet.setTrangThai(dto.getTrangThai());
             if (sanPhamChiTiet.getAnh().equals(dto.getAnh())) {
@@ -68,9 +73,21 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
                 sanPhamChiTiet.setAnh(linkAnh);
             }
             if (dto.getIdKhuyenMai() != null && dto.getIdKhuyenMai() != "") {
+                KhuyenMai khuyenMai = khuyenMaiReponsitory.findById(Integer.valueOf(dto.getIdKhuyenMai())).get();
+                BigDecimal giaBan = sanPhamChiTiet.getGiaBan();
+                BigDecimal phanTram = new BigDecimal(khuyenMai.getGiaTriGiam()).divide(new BigDecimal(100));
+                BigDecimal giamGia = giaBan.multiply(phanTram);
+                BigDecimal giaBanSauGiam = giaBan.subtract(giamGia);
                 sanPhamChiTiet.setKhuyenMai(KhuyenMai.builder().id(Integer.valueOf(dto.getIdKhuyenMai())).build());
+                sanPhamChiTiet.setGiaSauGiam(giaBanSauGiam);
             } else {
                 sanPhamChiTiet.setKhuyenMai(null);
+                sanPhamChiTiet.setGiaSauGiam(null);
+            }
+            if (dto.getSize() != null) {
+                sanPhamChiTiet.setSize(Size.builder().id(dto.getSize()).build());
+            } else {
+                sanPhamChiTiet.setSize(null);
             }
             // Lưu sản phẩm chi tiết đã cập nhật
             SanPhamChiTiet save = chiTietSanPhamReponsitory.save(sanPhamChiTiet);
@@ -104,9 +121,21 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
         String linkAnh = getImageToAzureUtil.uploadImageToAzure(dto.getAnh());
         sanPhamChiTiet.setAnh(linkAnh);
         if (dto.getIdKhuyenMai() != null && dto.getIdKhuyenMai() != "") {
+            KhuyenMai khuyenMai = khuyenMaiReponsitory.findById(Integer.valueOf(dto.getIdKhuyenMai())).get();
+            BigDecimal giaBan = sanPhamChiTiet.getGiaBan();
+            BigDecimal phanTram = new BigDecimal(khuyenMai.getGiaTriGiam()).divide(new BigDecimal(100));
+            BigDecimal giamGia = giaBan.multiply(phanTram);
+            BigDecimal giaBanSauGiam = giaBan.subtract(giamGia);
             sanPhamChiTiet.setKhuyenMai(KhuyenMai.builder().id(Integer.valueOf(dto.getIdKhuyenMai())).build());
+            sanPhamChiTiet.setGiaSauGiam(giaBanSauGiam);
         } else {
             sanPhamChiTiet.setKhuyenMai(null);
+            sanPhamChiTiet.setGiaSauGiam(null);
+        }
+        if (dto.getSize() != null) {
+            sanPhamChiTiet.setSize(Size.builder().id(dto.getSize()).build());
+        } else {
+            sanPhamChiTiet.setSize(null);
         }
         SanPhamChiTiet sanPhamSave = chiTietSanPhamReponsitory.save(sanPhamChiTiet);
         return sanPhamReponsitory.getByid(sanPhamSave.getId());
@@ -114,7 +143,7 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
 
 
     @Override
-    public AdminSanPhamResponse updateSanPham(Integer id, AdminSanPhamRequest dto) throws
+    public SanPhamDOT updateSanPham(Integer id, AdminSanPhamRequest dto) throws
             IOException, StorageException, InvalidKeyException, URISyntaxException {
         SanPham sanPham = sanPhamReponsitory.findById(id).get();
 

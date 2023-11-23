@@ -16,7 +16,7 @@ public interface AdThongKeLoiNhuanRespository extends HoaDonReponsitory {
             SELECT  SUM( hd.tong_tien-hdct.don_gia ) as loiNhuan\s
            FROM  datn.
             hoa_don hd  JOIN datn.hoa_don_chi_tiet hdct ON  hd.id = hdct.id_hoa_don
-           where hd.trang_thai in(3,10) and  YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate) 
+           where hd.trang_thai in(3) and  YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate) 
             """, nativeQuery = true)
     Integer tongLoiNhuan(String year, String startDate, String endDate );
 
@@ -35,7 +35,7 @@ public interface AdThongKeLoiNhuanRespository extends HoaDonReponsitory {
              JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
              JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
              JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
-             WHERE hd.trang_thai IN (3,10)  and  YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
+             WHERE hd.trang_thai IN (3)  and  YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
              GROUP BY sp.ma, sp.ten,spct.gia_ban,spct.gia_nhap,sp.anh, spct.trang_thai
            )
            SELECT * FROM DoanhThuSanPham order by loiNhuan desc
@@ -56,14 +56,15 @@ public interface AdThongKeLoiNhuanRespository extends HoaDonReponsitory {
               dc.dia_chi as diaChiCuThe, dc.id_tinh_thanh as idTinhThanh,\s
               dc.ten_tinh_thanh as tenTinhThanh, dc.id_quan_huyen as idQuanHuyen, dc.ten_quan_huyen as tenQuanHuyen,\s
               dc.id_phuong_xa as idPhuongXa, dc.ten_phuong_xa as tenPhuongXa,
-              hd.tong_tien- SUM(hdct.don_gia ) as loiNhuan
+              hd.tong_tien- SUM(hdct.don_gia ) as loiNhuan,
+               (select  sum(v.don_gia) from datn.hoa_don_chi_tiet v where v.trang_thai = 8 and v.id_hoa_don = hd.id)  as hoanTien
              FROM datn.san_pham_chi_tiet spct
              JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
              JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
              JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
           left   join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt
-             join datn.phuong_thuc_thanh_toan pt on hd.id_phuong_thuc_thanh_toan = pt.id
-             WHERE hd.trang_thai IN (3,10)  and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
+            left join datn.phuong_thuc_thanh_toan pt on hd.id_phuong_thuc_thanh_toan = pt.id
+             WHERE hd.trang_thai IN (3)  and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
              GROUP BY hd.id,hd.ma,hd.ngay_tao,hd.tong_tien,hd.tien_sau_khi_giam_gia, hd.trang_thai,pt.ten,hd.tien_ship
            )
            SELECT * FROM DoanhThuSanPham
@@ -78,7 +79,7 @@ public interface AdThongKeLoiNhuanRespository extends HoaDonReponsitory {
     Integer tongDonhangHoanThanh(String year, String startDate, String endDate );
 
     @Query(value = """
-            SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=5 and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
+           select  sum(v.don_gia) from datn.hoa_don_chi_tiet v join datn.hoa_don hd on hd.id = v.id_hoa_don where v.trang_thai = 8  and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
             """, nativeQuery = true)
     Integer tongDonhangDangGiao(String year, String startDate, String endDate );
 
@@ -92,7 +93,7 @@ public interface AdThongKeLoiNhuanRespository extends HoaDonReponsitory {
             SELECT  SUM( hd.tong_tien-hdct.don_gia ) as loiNhuan\s
            FROM  datn.
             hoa_don hd  JOIN datn.hoa_don_chi_tiet hdct ON  hd.id = hdct.id_hoa_don
-           where hd.trang_thai in(3,10) and hd.hinh_thuc_giao_hang =:idPhuongThuc
+           where hd.trang_thai in(3) and hd.hinh_thuc_giao_hang =:idPhuongThuc
             """, nativeQuery = true)
     Integer tongLoiNhuanByHinhThuc(Integer idPhuongThuc);
 
@@ -111,7 +112,7 @@ public interface AdThongKeLoiNhuanRespository extends HoaDonReponsitory {
              JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
              JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
              JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
-             WHERE hd.trang_thai IN (3,10)  and hd.hinh_thuc_giao_hang =:idPhuongThuc
+             WHERE hd.trang_thai IN (3)  and hd.hinh_thuc_giao_hang =:idPhuongThuc
              GROUP BY sp.ma, sp.ten,spct.gia_ban,spct.gia_nhap,sp.anh, spct.trang_thai
            )
            SELECT * FROM DoanhThuSanPham order by loiNhuan desc
@@ -132,14 +133,15 @@ public interface AdThongKeLoiNhuanRespository extends HoaDonReponsitory {
               dc.dia_chi as diaChiCuThe, dc.id_tinh_thanh as idTinhThanh,\s
               dc.ten_tinh_thanh as tenTinhThanh, dc.id_quan_huyen as idQuanHuyen, dc.ten_quan_huyen as tenQuanHuyen,\s
               dc.id_phuong_xa as idPhuongXa, dc.ten_phuong_xa as tenPhuongXa,
-              hd.tong_tien- SUM(hdct.don_gia ) as loiNhuan
+              hd.tong_tien- SUM(hdct.don_gia ) as loiNhuan,
+                (select  sum(v.don_gia) from datn.hoa_don_chi_tiet v where v.trang_thai = 8 and v.id_hoa_don = hd.id)  as hoanTien
              FROM datn.san_pham_chi_tiet spct
              JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
              JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
              JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
           left   join datn.dia_chi dc on dc.id = hd.id_dia_chi_sdt
-             join datn.phuong_thuc_thanh_toan pt on hd.id_phuong_thuc_thanh_toan = pt.id
-             WHERE hd.trang_thai IN (3,10) and hd.hinh_thuc_giao_hang =:idPhuongThuc
+           left  join datn.phuong_thuc_thanh_toan pt on hd.id_phuong_thuc_thanh_toan = pt.id
+             WHERE hd.trang_thai IN (3) and hd.hinh_thuc_giao_hang =:idPhuongThuc
              GROUP BY hd.id,hd.ma,hd.ngay_tao,hd.tong_tien,hd.tien_sau_khi_giam_gia, hd.trang_thai,pt.ten,hd.tien_ship
            )
            SELECT * FROM DoanhThuSanPham
@@ -154,7 +156,7 @@ public interface AdThongKeLoiNhuanRespository extends HoaDonReponsitory {
     Integer tongDonhangHoanThanhByHinhThuc(Integer idPhuongThuc);
 
     @Query(value = """
-            SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=5 and hd.hinh_thuc_giao_hang =:idPhuongThuc
+            select  sum(v.don_gia) from datn.hoa_don_chi_tiet v join datn.hoa_don hd on hd.id = v.id_hoa_don where v.trang_thai = 8 and hd.hinh_thuc_giao_hang =:idPhuongThuc
                 """, nativeQuery = true)
     Integer tongDonhangDangGiaoByHinhThuc(Integer idPhuongThuc);
 

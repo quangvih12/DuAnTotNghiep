@@ -77,10 +77,10 @@ public class AdminHoaDonDoiTraServiceImpl implements AdHoaDonDoiTraService {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         HashMap<Integer, Integer> quantityMap = new HashMap<>();
         if (hoaDon != null) {
-            hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
-            hoaDon.setTrangThai(HoaDonStatus.XAC_NHAN_DOI_TRA);
-            HoaDon hd = hoaDonReponsitory.save(hoaDon);
-            List<HoaDonChiTiet> lstHDCT = hdctRepo.findByIdHoaDon(hd.getId(), sort);
+//            hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
+//            hoaDon.setTrangThai(HoaDonStatus.XAC_NHAN_DOI_TRA);
+//            HoaDon hd = hoaDonReponsitory.save(hoaDon);
+            List<HoaDonChiTiet> lstHDCT = hdctRepo.findByIdHoaDon(hoaDon.getId(), sort);
             HoaDonChiTiet hdctRespone = new HoaDonChiTiet();
             for (HoaDonChiTiet hdct : lstHDCT) {
                 if (hdct.getSanPhamChiTiet().getId() == idSPCT && hdct.getTrangThai() == 7) {
