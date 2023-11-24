@@ -96,10 +96,10 @@ public class SanPhamChiTiet {
     @Fetch(value = FetchMode.SUBSELECT)
     private List<ThongBao> thongBaoList = new ArrayList<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
-    private List<Comment> commentList = new ArrayList<>();
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
+//    @Fetch(value = FetchMode.SUBSELECT)
+//    private List<Comment> commentList = new ArrayList<>();
 
 
 }

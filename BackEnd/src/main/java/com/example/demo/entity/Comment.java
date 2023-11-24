@@ -13,7 +13,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -45,6 +44,6 @@ public class Comment {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "id_san_pham_chi_tiet")
-    private SanPhamChiTiet sanPhamChiTiet;
+    @JoinColumn(name = "id_san_pham")
+    private SanPham sanPham;
 }
