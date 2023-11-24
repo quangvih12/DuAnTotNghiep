@@ -37,10 +37,10 @@ public interface TrangChuRepository extends SanPhamReponsitory {
 
                                 FROM datn.san_pham sp
                                 join datn.loai l on l.id = sp.id_loai
-                                where l.ten like :tenLoai  and sp.trang_thai = 1
+                                where l.id =:tenLoai  and sp.trang_thai = 1
                                 ORDER BY sp.id DESC;
             """, nativeQuery = true)
-    List<TrangChuResponse> getAllByTenLoai(@Param("tenLoai") String tenLoai, Pageable pageable);
+    List<TrangChuResponse> getAllByTenLoai(@Param("tenLoai") Integer tenLoai, Pageable pageable);
 
     @Query(value = """
             select sp.id as id, sp.anh as anh, sp.dem_lot as demLot, sp.ma as ma, sp.mo_ta as moTa,\s

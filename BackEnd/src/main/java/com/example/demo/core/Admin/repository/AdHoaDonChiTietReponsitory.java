@@ -95,7 +95,7 @@ public interface AdHoaDonChiTietReponsitory extends HoaDonChiTietReponsitory {
                                                 dc.ten_tinh_thanh as tenTinhThanh, pttt.ten as tenPTTT, ms.ten as mauSac, s.ten as size,
                                                 hdct.don_gia as donGia, hdct.so_luong as soLuong, hdct.ly_do as lyDo, spct.anh as anh,
                                                 sp.ma as maSP,spct.id as idSPCT,
-                                                (select t.value from datn.trong_luong t where t.id = spct.id_trong_luong) as trongLuong,
+                                                (select t.value from datn.trong_luong t where t.id = spct.id_trong_luong) as trongLuong
                                                FROM datn.hoa_don_chi_tiet hdct join datn.hoa_don hd on hdct.id_hoa_don = hd.id
                                         										join datn.san_pham_chi_tiet spct on hdct.id_san_pham_chi_tiet = spct.id
                                                                                 join datn.san_pham sp on sp.id = spct.id_san_pham

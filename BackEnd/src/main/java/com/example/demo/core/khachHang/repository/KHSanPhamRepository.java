@@ -131,6 +131,7 @@ public interface KHSanPhamRepository extends SanPhamReponsitory {
         FROM datn.san_pham sp
         join datn.loai l on l.id = sp.id_loai
         join datn.thuong_hieu t on t.id = sp.id_thuong_hieu
+         where sp.trang_thai = 1
         ORDER BY sp.id DESC;
         """, nativeQuery = true)
     List<SanPhamResponse> getAllSP();
