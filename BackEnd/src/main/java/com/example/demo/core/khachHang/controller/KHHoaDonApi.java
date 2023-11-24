@@ -49,8 +49,8 @@ public class KHHoaDonApi {
     }
 
     @PostMapping("/doi-tra")
-    public ResponseEntity<?> doiTra(@RequestParam String token,@RequestBody KhDoiTraRequest khDoiTraRequest) {
-        return ResponseEntity.ok(khDoiTraHoaDonService.doiTra(token,khDoiTraRequest));
+    public ResponseEntity<?> doiTra(@RequestBody KhDoiTraRequest khDoiTraRequest) {
+        return ResponseEntity.ok(khDoiTraHoaDonService.doiTra(khDoiTraRequest));
     }
 
 }

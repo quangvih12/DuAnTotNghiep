@@ -50,16 +50,21 @@ public class SecurityConfig {
                                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                         .requestMatchers("/api/khach-hang/**","/api/payment-vnpay","/api/payment-callback").permitAll()
                                         .requestMatchers("/api/admin/thong-bao/**").permitAll()
+
                                        .requestMatchers("/api/admin/**").permitAll()
                                         .requestMatchers("/api/khach-hang/user/**").permitAll()
+
+                                        .requestMatchers("/api/khach-hang/hoa-don-chi-tiet/**").permitAll()
+
                                         .requestMatchers("/api/khach-hang/checkout").permitAll()
                                         .requestMatchers("/api/getUseNameByToken/**").permitAll()
                                          .requestMatchers("/api/khach-hang/user-voucher/**").permitAll()
                                          .requestMatchers("/api/genToken/**").permitAll()
+                                         .requestMatchers("/ws/**").permitAll()
                                         .requestMatchers("/api/admin/hoaDon/**").hasAnyRole("ADMIN","NHANVIEN")
                                          .requestMatchers("/api/admin/hoa-don-chi-tiet/**").hasAnyRole("ADMIN","NHANVIEN")
                                         .requestMatchers(HttpMethod.GET,"/api/admin/**").hasAnyRole("ADMIN","NHANVIEN")
-                                        .requestMatchers(HttpMethod.POST,"/api/admin/**").hasAnyRole("ADMIN")
+                                        .requestMatchers(HttpMethod.POST,"/api/admin/**").permitAll()
                                         .requestMatchers(HttpMethod.PUT,"/api/admin/**").hasAnyRole("ADMIN")
                                         .requestMatchers(HttpMethod.DELETE,"/api/admin/**").hasAnyRole("ADMIN")
                                         .anyRequest().permitAll()

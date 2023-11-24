@@ -21,5 +21,5 @@ public class KhDoiTraRequest {
 
      private String lyDo;
 
-     private  String moTa;
+     private  Integer soLuong;
 }
