@@ -4,10 +4,7 @@ import com.example.demo.core.Admin.model.request.AdminAddImageRequest;
 import com.example.demo.core.Admin.model.request.AdminImageRequest;
 import com.example.demo.core.Admin.model.request.AdminSanPhamChiTietRequest;
 import com.example.demo.core.Admin.model.request.AdminSanPhamRequest;
-import com.example.demo.core.Admin.model.response.AdminImageResponse;
-import com.example.demo.core.Admin.model.response.AdminSanPhamChiTiet2Response;
-import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
-import com.example.demo.core.Admin.model.response.AdminSanPhamResponse;
+import com.example.demo.core.Admin.model.response.*;
 import com.example.demo.entity.*;
 import com.microsoft.azure.storage.StorageException;
 
@@ -22,7 +19,7 @@ public interface AdUpdateSanPhamService {
 
     AdminImageResponse updateImage(Integer id, AdminAddImageRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
 
-    AdminSanPhamResponse updateSanPham(Integer id, AdminSanPhamRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
+    SanPhamDOT updateSanPham(Integer id, AdminSanPhamRequest dto) throws URISyntaxException, StorageException, InvalidKeyException, IOException;
 
     SanPham saveSanPham(AdminSanPhamRequest request);
 

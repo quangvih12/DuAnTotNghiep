@@ -131,5 +131,11 @@ public interface KHHoaDonChiTietResponse {
     @Value("#{target.idSPCT}")
     Integer getIdSPCT();
 
+    @Value("#{target.idSize}")
+    Integer getIdSize();
+
+    @Value("#{target.idMauSac}")
+    Integer getIdMau();
+
 
 }

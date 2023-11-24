@@ -23,7 +23,9 @@ public interface KHHoaDonChiTietRepository extends HoaDonReponsitory {
             hd.id_user as idUser ,sp.ten as tenSP, dc.dia_chi as diaChiCuThe, dc.id_phuong_xa as idPhuongXa, dc.ten_phuong_xa as tenPhuongXa,
             dc.id_quan_huyen as idQuanHuyen, dc.ten_quan_huyen as tenQuanHuyen, dc.id_tinh_thanh as idTinhThanh, hdct.ma as maHDCT,
             dc.ten_tinh_thanh as tenTinhThanh, pttt.ten as tenPTTT, hdct.don_gia as donGia, hdct.so_luong as soLuong,
-            hdct.ly_do as lyDo, sp.anh as anh, (select ms.ten from datn.mau_sac ms where ms.id = spct.id_mau_sac) as mauSac,
+            hdct.ly_do as lyDo, spct.anh as anh, (select ms.ten from datn.mau_sac ms where ms.id = spct.id_mau_sac) as mauSac,
+             (select ms.id from datn.mau_sac ms where ms.id = spct.id_mau_sac) as idMauSac,
+             (select s.id from datn.size s where s.id = spct.id_size) as idSize,
             (select s.ten from datn.size s where s.id = spct.id_size) as size, hdct.trang_thai as trangThaiHdct,spct.so_luong_ton as soLuongTon,spct.id as idSPCT,
             (select t.value from datn.trong_luong t where t.id = spct.id_trong_luong) as trongLuong
             FROM datn.hoa_don_chi_tiet hdct join datn.hoa_don hd on hdct.id_hoa_don = hd.id
@@ -45,7 +47,7 @@ public interface KHHoaDonChiTietRepository extends HoaDonReponsitory {
                     hdct.trang_thai as trangThaihdct,
                      hd.id as idHD,hd.ma as maHD, hdct.so_luong as soLuong, hdct.don_gia as donGia
                      FROM  datn.hoa_don hd  join datn.hoa_don_chi_tiet hdct on hdct.id_hoa_don = hd.id
-                     join datn.user u on u.id = hd.id_user where u.id =:idUser and hdct.trang_thai=7
+                     join datn.user u on u.id = hd.id_user where u.id =:idUser and hdct.trang_thai=7 or hdct.trang_thai=8 or hdct.trang_thai=9
             """, nativeQuery = true)
     List<KhHoaDonTraHangResponse> getHoaDonDoiTraTrangThai(Integer idUser);
 }

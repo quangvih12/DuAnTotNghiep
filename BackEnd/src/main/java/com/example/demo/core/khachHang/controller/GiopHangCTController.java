@@ -116,7 +116,6 @@ public class GiopHangCTController {
     @PutMapping("/updateSL/{idghct}")
     public ResponseEntity<?> updateSLGHCT(HttpSession httpSession, @PathVariable("idghct") Integer idghct, @RequestParam(required = false) String token, @RequestParam("sl") Integer sl) {
         GioHangCTResponse map = khGioHangService.updateSLGH(idghct, token, sl);
-        log.info("chay vao day");
         return ResponseEntity.ok(map);
     }
 
@@ -146,8 +145,6 @@ public class GiopHangCTController {
             return null;
         }
         String userName = tokenService.getUserNameByToken(token);
-        System.out.println(userName);
-        log.info("usename {}", userName);
         User user = userRepository.findByUserName(userName);
         return khGHCTRespon.countGHCTByUser(user.getId());
     }

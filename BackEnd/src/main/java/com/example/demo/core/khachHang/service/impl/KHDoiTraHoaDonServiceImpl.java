@@ -45,34 +45,47 @@ public class KHDoiTraHoaDonServiceImpl {
 
         Random random = new Random();
         int randomNumber = random.nextInt(9000) + 1000;
+
+
+
         HoaDonChiTiet hdct = hoaDonChiTietRepo.findById(request.getIdHDCT()).get();
 
-        if (request.getSoLuong() == hdct.getSoLuong()) {
-            if (hdct != null) {
-                hdct.setTrangThai(HoaDonStatus.YEU_CAU_DOI_TRA);
-                hoaDonChiTietRepo.save(hdct);
-                return khHoaDonRepo.findById(hdct.getId()).get();
-            }
-        }
-        if (request.getSoLuong() > hdct.getSoLuong()) {
-            return khHoaDonRepo.findById(hdct.getId()).get();
-        }
 
-        if(hdct != null){
-            hdct.setSoLuong(hdct.getSoLuong() - request.getSoLuong());
-            hoaDonChiTietRepo.save(hdct);
-        }
 
-        HoaDonChiTiet hoaDonChi = hoaDonChiTietRepo.findByidSPandAndTrangThai(hdct.getSanPhamChiTiet().getId());
+        HoaDonChiTiet hoaDonChi = hoaDonChiTietRepo.findByidSPandAndTrangThai(hdct.getSanPhamChiTiet().getId(),hdct.getHoaDon().getId());
+
         if (hoaDonChi != null) {
+            if(hdct != null){
+                hdct.setSoLuong(hdct.getSoLuong() - request.getSoLuong());
+                hoaDonChiTietRepo.save(hdct);
+            }
             hoaDonChi.setDonGia(hdct.getDonGia());
             hoaDonChi.setNgaySua(DatetimeUtil.getCurrentDate());
             hoaDonChi.setLyDo(request.getLyDo());
             hoaDonChi.setSoLuong(request.getSoLuong() + hoaDonChi.getSoLuong());
             hoaDonChiTietRepo.save(hoaDonChi);
+            thongBaoService.yeuCauDoiTra(hdct.getHoaDon().getId(), hdct.getSanPhamChiTiet().getSanPham().getMa());
             return khHoaDonRepo.findById(hdct.getHoaDon().getId()).get();
 
         }
+
+        if (request.getSoLuong() == hdct.getSoLuong()) {
+            if (hdct != null) {
+                hdct.setTrangThai(HoaDonStatus.YEU_CAU_DOI_TRA);
+                hoaDonChiTietRepo.save(hdct);
+                thongBaoService.yeuCauDoiTra(hdct.getHoaDon().getId(), hdct.getSanPhamChiTiet().getSanPham().getMa());
+                return khHoaDonRepo.findById(hdct.getHoaDon().getId()).get();
+            }
+        }else{
+            if(hdct != null){
+                hdct.setSoLuong(hdct.getSoLuong() - request.getSoLuong());
+                hoaDonChiTietRepo.save(hdct);
+            }
+        }
+        if (request.getSoLuong() > hdct.getSoLuong()) {
+            return khHoaDonRepo.findById(hdct.getHoaDon().getId()).get();
+        }
+
         HoaDonChiTiet hoaDonChiTiet = HoaDonChiTiet.builder()
                 .sanPhamChiTiet(SanPhamChiTiet.builder().id(hdct.getSanPhamChiTiet().getId()).build())
                 .ma("HDCTDT" + randomNumber)
