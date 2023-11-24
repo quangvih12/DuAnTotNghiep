@@ -23,7 +23,7 @@ public class TrangChuServiceImpl implements TrangChuService {
     }
 
     @Override
-    public List<TrangChuResponse> getAllByTenLoai(String tenLoai) {
+    public List<TrangChuResponse> getAllByTenLoai(Integer tenLoai) {
         Pageable pageable = PageRequest.of(0, 10);
         return trangChuRepo.getAllByTenLoai(tenLoai, pageable);
     }

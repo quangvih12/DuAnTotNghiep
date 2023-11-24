@@ -24,6 +24,8 @@ public interface KHHoaDonChiTietRepository extends HoaDonReponsitory {
             dc.id_quan_huyen as idQuanHuyen, dc.ten_quan_huyen as tenQuanHuyen, dc.id_tinh_thanh as idTinhThanh, hdct.ma as maHDCT,
             dc.ten_tinh_thanh as tenTinhThanh, pttt.ten as tenPTTT, hdct.don_gia as donGia, hdct.so_luong as soLuong,
             hdct.ly_do as lyDo, spct.anh as anh, (select ms.ten from datn.mau_sac ms where ms.id = spct.id_mau_sac) as mauSac,
+             (select ms.id from datn.mau_sac ms where ms.id = spct.id_mau_sac) as idMauSac,
+             (select s.id from datn.size s where s.id = spct.id_size) as idSize,
             (select s.ten from datn.size s where s.id = spct.id_size) as size, hdct.trang_thai as trangThaiHdct,spct.so_luong_ton as soLuongTon,spct.id as idSPCT,
             (select t.value from datn.trong_luong t where t.id = spct.id_trong_luong) as trongLuong
             FROM datn.hoa_don_chi_tiet hdct join datn.hoa_don hd on hdct.id_hoa_don = hd.id
