@@ -43,4 +43,10 @@ public interface GioHangCTResponse {
     @Value("#{target.soLuongTon}")
     Integer getSoLuongTon();
 
+    @Value("#{target.trangThaiSPCT}")
+    Integer getTrangThaiSPCT();
+
+    @Value("#{target.trangThaiSP}")
+    Integer getTrangThaiSP();
+
 }

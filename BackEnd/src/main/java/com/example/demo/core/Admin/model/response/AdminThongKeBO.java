@@ -12,6 +12,12 @@ public class AdminThongKeBO {
 
     private Integer tongDoanhThu;
 
+    private Integer tongHoanTien;
+
+    private Integer tongChietKhau;
+
+    private Integer tongDonHoanThanh;
+
     private List<AdminThongKeLoaiResponse> lstAdminThongKeLoaiResponses;
 
     private List<AdminThongKeSanPhamCaoResponse> lstAdminThongKeSanPhamCaoResponses;

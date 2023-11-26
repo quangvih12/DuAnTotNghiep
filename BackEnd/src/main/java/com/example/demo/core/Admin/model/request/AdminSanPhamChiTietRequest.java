@@ -23,7 +23,7 @@ public class AdminSanPhamChiTietRequest implements DtoToEntity<SanPhamChiTiet> {
 
     private Integer giaBan;
 
-    private Integer giaNhap;
+ //   private Integer giaNhap;
 
     private Integer trongLuong;
 
@@ -44,7 +44,7 @@ public class AdminSanPhamChiTietRequest implements DtoToEntity<SanPhamChiTiet> {
         sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(this.getTrongLuong()).build());
         sanPhamChiTiet.setSoLuongTon(Integer.valueOf(this.getSoLuongTon()));
         sanPhamChiTiet.setGiaBan(BigDecimal.valueOf(Long.valueOf(this.getGiaBan())));
-        sanPhamChiTiet.setGiaNhap(BigDecimal.valueOf(Long.valueOf(this.getGiaNhap())));
+    //    sanPhamChiTiet.setGiaNhap(BigDecimal.valueOf(Long.valueOf(this.getGiaNhap())));
         if (this.getIdKhuyenMai() != null && this.getIdKhuyenMai() != "") {
             sanPhamChiTiet.setKhuyenMai(KhuyenMai.builder().id(Integer.valueOf(this.getIdKhuyenMai())).build());
         } else {
