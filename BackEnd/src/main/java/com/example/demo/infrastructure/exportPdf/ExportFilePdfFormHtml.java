@@ -68,8 +68,14 @@ public class ExportFilePdfFormHtml {
             BigDecimal giaTriGiam = BigDecimal.valueOf(voucher.getGiaTriGiam());
 
          if (giaTriGiam.compareTo(BigDecimal.ZERO) > 0) {
+
+
                 // Giảm giá theo phần trăm
                 giaGiam = hoaDon.getTongTien().multiply(giaTriGiam.divide(BigDecimal.valueOf(100)));
+
+                if(giaGiam.compareTo(hoaDon.getVoucher().getGiamToiDa()) > 0){
+                    giaGiam = hoaDon.getVoucher().getGiamToiDa();
+                }
                 giamGiaText = formatter.format(giaGiam) + " - " + giaTriGiam + "%";
             } else {
 

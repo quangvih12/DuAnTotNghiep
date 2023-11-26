@@ -13,4 +13,8 @@ public class KHHoaDonChiTietRequest {
 
     private Integer soLuong;
 
+    private  Integer sanPhamChiTiet;
+
+
+
 }
