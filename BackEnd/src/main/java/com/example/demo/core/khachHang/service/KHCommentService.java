@@ -11,7 +11,11 @@ public interface KHCommentService {
 
     Comment addComment(CommentRequest request, String token);
 
-    List<Comment> getListComment(Integer iduser, Integer idsp);
+    Comment addPhanHoi(CommentRequest request, String token);
 
-    ResponseEntity<HttpStatus> deleteComment(Integer id);
+    List<Comment> getListComment( Integer idsp);
+
+    List<Comment> getListCommentByIdPhanHoi( );
+
+    void deleteComment(Integer id);
 }

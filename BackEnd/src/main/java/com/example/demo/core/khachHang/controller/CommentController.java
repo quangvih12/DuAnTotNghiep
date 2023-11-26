@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = {"*"})
 @RequestMapping("/api/khach-hang/comment")
 public class CommentController {
 
@@ -27,23 +28,27 @@ public class CommentController {
         return ResponseEntity.ok(khCommentService.addComment(request,token));
     }
 
-    @GetMapping()
-    public ResponseEntity<?> getList (@RequestParam(value = "token", required = false) String token,@RequestParam("idsp") Integer idsp ) {
+    @PostMapping("/addPhanHoi")
+    public ResponseEntity<?> addPhanHoi(@RequestBody CommentRequest request, @RequestParam String token) {
+        return ResponseEntity.ok(khCommentService.addPhanHoi(request,token));
+    }
 
-        Integer iduser;
-        if (tokenService.getUserNameByToken(token) == null) {
-            return null;
-        }
-        String userName = tokenService.getUserNameByToken(token);
-        User user = userRepository.findByUserName(userName);
-        iduser = user.getId();
-        return ResponseEntity.ok(khCommentService.getListComment(iduser,idsp));
+    @GetMapping()
+    public ResponseEntity<?> getList (@RequestParam("idsp") Integer idsp ) {
+
+        return ResponseEntity.ok(khCommentService.getListComment(idsp));
+    }
+
+    @GetMapping("/getList")
+    public ResponseEntity<?> getListById () {
+
+        return ResponseEntity.ok(khCommentService.getListCommentByIdPhanHoi());
     }
 
     @DeleteMapping("/{idcomment}")
-    public ResponseEntity<?> deleteGHCT(@PathVariable(value = "idcomment") Integer idcomment) {
+    public void deleteGHCT(@PathVariable(value = "idcomment") Integer idcomment) {
 
-        return ResponseEntity.ok(khCommentService.deleteComment(idcomment));
+        khCommentService.deleteComment(idcomment);
     }
 
 }

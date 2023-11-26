@@ -14,4 +14,6 @@ public class CommentRequest {
     private Integer sanPham;
 
     private Integer user;
+
+    private Integer idPhanHoi;
 }

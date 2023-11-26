@@ -39,6 +39,9 @@ public class Comment {
     @Column(name = "trang_thai")
     private Integer trangThai;
 
+    @Column(name = "id_phanhoi")
+    private Integer idPhanHoi;
+
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;

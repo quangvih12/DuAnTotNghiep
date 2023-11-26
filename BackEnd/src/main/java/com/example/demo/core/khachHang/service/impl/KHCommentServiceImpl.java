@@ -51,23 +51,44 @@ public class KHCommentServiceImpl implements KHCommentService {
     }
 
     @Override
-    public List<Comment> getListComment(Integer iduser, Integer idsp) {
-        return khCommentRepo.getListComment(iduser, idsp);
+    public Comment addPhanHoi(CommentRequest request, String token) {
+        if (tokenService.getUserNameByToken(token) == null) {
+            return null;
+        }
+
+        String userName = tokenService.getUserNameByToken(token);
+        User user = userRepository.findByUserName(userName);
+
+        Comment comment = new Comment();
+        comment.setNoiDung(request.getNoiDung());
+        comment.setIdPhanHoi(request.getIdPhanHoi());
+        comment.setUser(user);
+        comment.setSanPham(SanPham.builder().id(request.getSanPham()).build());
+
+        return khCommentRepo.save(comment);
     }
 
     @Override
-    public ResponseEntity<HttpStatus> deleteComment(Integer id) {
-        try {
-           Comment comment = khCommentRepo.findById(id).get();
-            khCommentRepo.deleteById(comment.getId());
-
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public List<Comment> getListComment(Integer idsp) {
+        return khCommentRepo.getListComment( idsp);
     }
 
+    @Override
+    public List<Comment> getListCommentByIdPhanHoi() {
+        return khCommentRepo.getListCommentByIdPhanHoi();
+    }
 
+    @Override
+    public void deleteComment(Integer id) {
 
+            Comment comment = khCommentRepo.findById(id).get();
+
+            List<Comment> listcomment = khCommentRepo.getListByIdPhanHoi(id);
+                for (Comment cm : listcomment) {
+                    khCommentRepo.deleteById(cm.getId());
+                }
+                khCommentRepo.deleteById(comment.getId());
+           // }
+        }
 
 }
