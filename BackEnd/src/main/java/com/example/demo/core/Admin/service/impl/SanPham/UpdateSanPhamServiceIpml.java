@@ -60,7 +60,7 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
             SanPhamChiTiet sanPhamChiTiet = optionalSanPhamChiTiet.get();
             sanPhamChiTiet.setNgaySua(DatetimeUtil.getCurrentDate());
             sanPhamChiTiet.setGiaBan(BigDecimal.valueOf(dto.getGiaBan()));
-            sanPhamChiTiet.setGiaNhap(BigDecimal.valueOf(dto.getGiaNhap()));
+         //   sanPhamChiTiet.setGiaNhap(BigDecimal.valueOf(dto.getGiaNhap()));
             sanPhamChiTiet.setSoLuongTon(Integer.valueOf(dto.getSoLuongTon()));
             sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(dto.getTrongLuong()).build());
 
@@ -117,7 +117,7 @@ public class UpdateSanPhamServiceIpml implements AdUpdateSanPhamService {
         sanPhamChiTiet.setTrongLuong(TrongLuong.builder().id(dto.getTrongLuong()).build());
         sanPhamChiTiet.setSoLuongTon(Integer.valueOf(dto.getSoLuongTon()));
         sanPhamChiTiet.setGiaBan(BigDecimal.valueOf(Long.valueOf(dto.getGiaBan())));
-        sanPhamChiTiet.setGiaNhap(BigDecimal.valueOf(Long.valueOf(dto.getGiaNhap())));
+       // sanPhamChiTiet.setGiaNhap(BigDecimal.valueOf(Long.valueOf(dto.getGiaNhap())));
         String linkAnh = getImageToAzureUtil.uploadImageToAzure(dto.getAnh());
         sanPhamChiTiet.setAnh(linkAnh);
         if (dto.getIdKhuyenMai() != null && dto.getIdKhuyenMai() != "") {

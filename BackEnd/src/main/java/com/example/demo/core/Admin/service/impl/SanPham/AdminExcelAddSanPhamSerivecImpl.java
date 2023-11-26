@@ -105,20 +105,20 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         String TenVatLieu = ExcelUtils.getCellString(row.getCell(2));
         String valueTrongLuong = ExcelUtils.getCellString(row.getCell(3));
         String giaBan = ExcelUtils.getCellString(row.getCell(4));
-        String giaNhap = ExcelUtils.getCellString(row.getCell(5));
-        String tenMauSac = ExcelUtils.getCellString(row.getCell(6));
+       // String giaNhap = ExcelUtils.getCellString(row.getCell(5));
+        String tenMauSac = ExcelUtils.getCellString(row.getCell(5));
         List<String> idMauSac = new ArrayList<>();
-        String tenSize = ExcelUtils.getCellString(row.getCell(7));
+        String tenSize = ExcelUtils.getCellString(row.getCell(6));
         List<String> idSizes = new ArrayList<>();
-        String soLuongSize = String.valueOf(ExcelUtils.getCellString(row.getCell(8)));
-        String anhMau1 = ExcelUtils.getCellString(row.getCell(9));
-        String anhChinh = ExcelUtils.getCellString(row.getCell(10));
-        String anh1 = ExcelUtils.getCellString(row.getCell(11));
-        String quaiDeo = ExcelUtils.getCellString(row.getCell(12));
-        String demLot = ExcelUtils.getCellString(row.getCell(13));
-        String moTa = ExcelUtils.getCellString(row.getCell(14));
-        String tenLoai = ExcelUtils.getCellString(row.getCell(15));
-        String tenThuongHieu = ExcelUtils.getCellString(row.getCell(16));
+        String soLuongSize = String.valueOf(ExcelUtils.getCellString(row.getCell(7)));
+        String anhMau1 = ExcelUtils.getCellString(row.getCell(8));
+        String anhChinh = ExcelUtils.getCellString(row.getCell(9));
+        String anh1 = ExcelUtils.getCellString(row.getCell(10));
+        String quaiDeo = ExcelUtils.getCellString(row.getCell(11));
+        String demLot = ExcelUtils.getCellString(row.getCell(12));
+        String moTa = ExcelUtils.getCellString(row.getCell(13));
+        String tenLoai = ExcelUtils.getCellString(row.getCell(14));
+        String tenThuongHieu = ExcelUtils.getCellString(row.getCell(15));
 
 
         TrongLuong trongLuong = adTrongLuongRepository.findByTenTrongLuongExcel(Integer.valueOf(valueTrongLuong));
@@ -129,13 +129,13 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
         String[] soLuongSizeArray = soLuongSize.split(",");
         List<String> listSoLuongSize = new ArrayList<>();
 
-        String[] arrayGiaNhap = giaNhap.split(",");
-        List<String> lstGiaNhap = new ArrayList<>();
-
-        for (String giaNhaps : arrayGiaNhap) {
-            String trimmedMauSac = giaNhaps.trim(); // Loại bỏ khoảng trắng trước và sau phần tử
-            lstGiaNhap.add(trimmedMauSac);
-        }
+//        String[] arrayGiaNhap = giaNhap.split(",");
+//        List<String> lstGiaNhap = new ArrayList<>();
+//
+//        for (String giaNhaps : arrayGiaNhap) {
+//            String trimmedMauSac = giaNhaps.trim(); // Loại bỏ khoảng trắng trước và sau phần tử
+//            lstGiaNhap.add(trimmedMauSac);
+//        }
 
         String[] arrayGiaBan = giaBan.split(",");
         List<String> lstGiaBan = new ArrayList<>();
@@ -190,11 +190,13 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
             userDTO.setImportMessageGiaBan("Giá bán không được để trống tại vị trí: " + stt);
             userDTO.setError(true);
 
-        } else if (DataUltil.isNullObject(giaNhap)) {
-            userDTO.setImportMessageGiaNhap("Giá Nhập không được để trống tại ví trí: " + stt);
-            userDTO.setError(true);
-
-        } else if (DataUltil.isNullObject(tenMauSac)) {
+        }
+//        else if (DataUltil.isNullObject(giaNhap)) {
+//            userDTO.setImportMessageGiaNhap("Giá Nhập không được để trống tại ví trí: " + stt);
+//            userDTO.setError(true);
+//
+//        }
+        else if (DataUltil.isNullObject(tenMauSac)) {
             userDTO.setImportMessageMauSac("Tên màu sắc không được để trống tại vị trí: " + stt);
             userDTO.setError(true);
 
@@ -261,15 +263,17 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
                 userDTO.setImportMessageGiaBan("Thừa giá bán, tổng sản phẩm là: " + listTenMauSac.size() * listTenSize.size() + " tại vị trí: " + stt);
                 userDTO.setError(true);
 
-            } else if (lstGiaNhap.size() < listTenMauSac.size() * listTenSize.size()) {
-                userDTO.setImportMessageGiaNhap("Bạn cần nhập thêm giá nhập , tổng sản phẩm là: " + listTenMauSac.size() * listTenSize.size() + " tại vị trí: " + stt);
-                userDTO.setError(true);
-
-            } else if (lstGiaNhap.size() > listTenMauSac.size() * listTenSize.size()) {
-                userDTO.setImportMessageGiaNhap("Thừa giá nhập ,tổng sản phẩm là: " + listTenMauSac.size() * listTenSize.size() + " tại vị trí: " + stt);
-                userDTO.setError(true);
-
-            } else if (listSoLuongSize.size() > listTenMauSac.size() * listTenSize.size()) {
+            }
+//            else if (lstGiaNhap.size() < listTenMauSac.size() * listTenSize.size()) {
+//                userDTO.setImportMessageGiaNhap("Bạn cần nhập thêm giá nhập , tổng sản phẩm là: " + listTenMauSac.size() * listTenSize.size() + " tại vị trí: " + stt);
+//                userDTO.setError(true);
+//
+//            } else if (lstGiaNhap.size() > listTenMauSac.size() * listTenSize.size()) {
+//                userDTO.setImportMessageGiaNhap("Thừa giá nhập ,tổng sản phẩm là: " + listTenMauSac.size() * listTenSize.size() + " tại vị trí: " + stt);
+//                userDTO.setError(true);
+//
+//            }
+            else if (listSoLuongSize.size() > listTenMauSac.size() * listTenSize.size()) {
                 userDTO.setImportMessageSoLuongSize("Thừa số lượng, tổng sản phẩm là: " + listTenMauSac.size() * listTenSize.size() + " tại vị trí: " + stt);
                 userDTO.setError(true);
 
@@ -297,8 +301,8 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
                 userDTO.setImportMessageSanPham("SUCCESS");
                 userDTO.setGiaBan(lstGiaBan);
                 userDTO.setImportMessageGiaBan("SUCCESS");
-                userDTO.setGiaNhap(lstGiaNhap);
-                userDTO.setImportMessageGiaNhap("SUCCESS");
+              //  userDTO.setGiaNhap(lstGiaNhap);
+             //   userDTO.setImportMessageGiaNhap("SUCCESS");
                 userDTO.setImportMessageImageMau("SUCCESS");
 
 
@@ -349,7 +353,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
 
         try {
             for (AdminExcelAddSanPhamResponse o : adminExcelAddSanPhamBO.getResponseList()) {
-                if (o.getTenSanPham() == null || o.getGiaBan() == null || o.getGiaNhap() == null
+                if (o.getTenSanPham() == null || o.getGiaBan() == null
                         || o.getTenMau() == null || o.getTenLoai() == null
                         || o.getTenThuongHieu() == null || o.getQuaiDeo() == null || o.getDemLot() == null
                         || o.getIdLoai() == null || o.getIdThuongHieu() == null
@@ -406,9 +410,9 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
                         SanPhamChiTiet sanPhamChiTiet = lstChiTiet.get(i);
                         String imgMauSacValue = BO.getImgMauSac().get(i);
                         BigDecimal giaBan = BigDecimal.valueOf(Long.valueOf(BO.getGiaBan().get(i)));
-                        BigDecimal giaNhap = BigDecimal.valueOf(Long.valueOf(BO.getGiaNhap().get(i)));
+                 //       BigDecimal giaNhap = BigDecimal.valueOf(Long.valueOf(BO.getGiaNhap().get(i)));
 
-                        sanPhamChiTiet.setGiaNhap(giaNhap);
+                  //      sanPhamChiTiet.setGiaNhap(giaNhap);
                         sanPhamChiTiet.setGiaBan(giaBan);
                         sanPhamChiTiet.setTrangThai(3);
                         sanPhamChiTiet.setSoLuongTon(Integer.valueOf(BO.getSoLuongSize().get(i)));
@@ -480,11 +484,11 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
             String imgMauSacValue = repuest2.getImgMauSac().get(i);
             String soluong = repuest2.getSoLuongSize().get(i);
             BigDecimal giaBan = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaBan().get(i)));
-            BigDecimal giaNhap = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaNhap().get(i)));
+         //   BigDecimal giaNhap = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaNhap().get(i)));
 
             SanPhamChiTiet chiTiet = new SanPhamChiTiet();
             chiTiet.setSanPham(sanPham);
-            chiTiet.setGiaNhap(giaNhap);
+         //   chiTiet.setGiaNhap(giaNhap);
             chiTiet.setGiaBan(giaBan);
             chiTiet.setTrangThai(3);
             chiTiet.setSoLuongTon(Integer.valueOf(soluong));
@@ -521,9 +525,9 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
             SanPhamChiTiet sanPhamChiTiet = lstChiTiet.get(i);
             String imgMauSacValue = repuest2.getImgMauSac().get(i);
             BigDecimal giaBan = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaBan().get(i)));
-            BigDecimal giaNhap = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaNhap().get(i)));
+         //   BigDecimal giaNhap = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaNhap().get(i)));
             sanPhamChiTiet.setTrangThai(3);
-            sanPhamChiTiet.setGiaNhap(giaNhap);
+         //   sanPhamChiTiet.setGiaNhap(giaNhap);
             sanPhamChiTiet.setGiaBan(giaBan);
             sanPhamChiTiet.setSoLuongTon(Integer.valueOf(repuest2.getSoLuongSize().get(i)));
             sanPhamChiTiet.setAnh(imgMauSacValue);

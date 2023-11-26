@@ -24,7 +24,7 @@ public class AdminExcelAddSanPhamResponse {
 
     private List<String> giaBan;
 
-    private List<String> giaNhap;
+  //  private List<String> giaNhap;
 
 
     private List<String> tenMau;
@@ -67,7 +67,7 @@ public class AdminExcelAddSanPhamResponse {
 
     private String importMessageGiaBan;
 
-    private String importMessageGiaNhap;
+  //  private String importMessageGiaNhap;
 
     private String importMessageImageMau;
 
