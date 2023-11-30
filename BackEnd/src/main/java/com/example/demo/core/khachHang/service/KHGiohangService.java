@@ -15,11 +15,16 @@ public interface KHGiohangService {
 
     List<GioHangCTResponse> getListGHCT(String token);
 
+
+    GioHangCTResponse getGHCTByIdCTSP (String token, Integer idctsp);
+
     ResponseEntity<HttpStatus> deleteGioHangCT(Integer id);
 
     ResponseEntity<HttpStatus> deleteAllGioHangCT();
 
     GioHangCTResponse updateCongSoLuong(Integer id,String token);
+
+    GioHangCTResponse updateSLGH(Integer id,String token, Integer sl);
 
     GioHangCTResponse updateTruSoLuong(Integer id,String token);
 
@@ -29,6 +34,8 @@ public interface KHGiohangService {
     List<KhVoucherResponse> getListVoucher(String  token);
 
     List<KhVoucherResponse> getListVoucherByUser(String  token);
+
+    List<KhVoucherResponse> getListVoucherByTrangThai();
 
 
 

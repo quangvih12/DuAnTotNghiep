@@ -51,7 +51,7 @@ public class AdminSanPhamRepuest2 {
 
     private List<String> giaBan;
 
-    private List<String> giaNhap;
+  //  private List<String> giaNhap;
 
     private List<String> soLuongSize;
 

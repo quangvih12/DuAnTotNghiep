@@ -4,16 +4,14 @@ import com.example.demo.core.Admin.repository.AdUserRepository;
 import com.example.demo.core.khachHang.model.request.KhDoiTraRequest;
 import com.example.demo.core.khachHang.repository.*;
 import com.example.demo.core.token.service.TokenService;
-import com.example.demo.entity.*;
+import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.HoaDonChiTiet;
+import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.infrastructure.status.HoaDonStatus;
-import com.example.demo.infrastructure.status.TrangThaiHoaDon;
 import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.List;
 import java.util.Random;
 
 @Service
@@ -43,59 +41,65 @@ public class KHDoiTraHoaDonServiceImpl {
     @Autowired
     private ThongBaoServiceImpl thongBaoService;
 
-    public HoaDon doiTra(String token, KhDoiTraRequest request) {
+    public HoaDon doiTra(KhDoiTraRequest request) {
 
-        if (tokenService.getUserNameByToken(token) == null) {
-            return null;
-        }
-        String userName = tokenService.getUserNameByToken(token);
-        User user = userRepository.findByUserName(userName);
-
-        User kh = khUserRepo.findById(request.getIdUser()).get();
-        DiaChi diaChi = khDiaChiRepo.findById(request.getIdDiaChi()).get();
         Random random = new Random();
         int randomNumber = random.nextInt(9000) + 1000;
 
+
+
         HoaDonChiTiet hdct = hoaDonChiTietRepo.findById(request.getIdHDCT()).get();
-        if (hdct != null) {
-            hdct.setTrangThai(HoaDonStatus.YEU_CAU_DOI_TRA);
-            hoaDonChiTietRepo.save(hdct);
+
+
+
+        HoaDonChiTiet hoaDonChi = hoaDonChiTietRepo.findByidSPandAndTrangThai(hdct.getSanPhamChiTiet().getId(),hdct.getHoaDon().getId());
+
+        if (hoaDonChi != null) {
+            if(hdct != null){
+                hdct.setSoLuong(hdct.getSoLuong() - request.getSoLuong());
+                hoaDonChiTietRepo.save(hdct);
+            }
+            hoaDonChi.setDonGia(hdct.getDonGia());
+            hoaDonChi.setNgaySua(DatetimeUtil.getCurrentDate());
+            hoaDonChi.setLyDo(request.getLyDo());
+            hoaDonChi.setSoLuong(request.getSoLuong() + hoaDonChi.getSoLuong());
+            hoaDonChiTietRepo.save(hoaDonChi);
+            thongBaoService.yeuCauDoiTra(hdct.getHoaDon().getId(), hdct.getSanPhamChiTiet().getSanPham().getMa());
+            return khHoaDonRepo.findById(hdct.getHoaDon().getId()).get();
+
         }
 
-        BigDecimal donGia = hdct.getDonGia();
-        BigDecimal soLuong = new BigDecimal(hdct.getSoLuong());
-        BigDecimal tongTien = donGia.multiply(soLuong);
-        BigDecimal tienShip = new BigDecimal(request.getTienShip());
-
-
-        HoaDon hoaDon = HoaDon.builder()
-                .ma("HDDT" + randomNumber)
-                .user(kh)
-                .tongTien(tongTien)
-                .lyDo(request.getLyDo())
-                .moTa(request.getMoTa())
-                .ngayTao(DatetimeUtil.getCurrentDateAndTimeLocal())
-                .tenNguoiNhan(kh.getTen())
-                .tienShip(tienShip)
-                .diaChi(diaChi)
-                .trangThai(HoaDonStatus.YEU_CAU_DOI_TRA)
-                .phuongThucThanhToan(PhuongThucThanhToan.builder().id(TrangThaiHoaDon.OFFLINE).build())
-                .build();
-        HoaDon saveHoaDon = khHoaDonRepo.save(hoaDon);
+        if (request.getSoLuong() == hdct.getSoLuong()) {
+            if (hdct != null) {
+                hdct.setTrangThai(HoaDonStatus.YEU_CAU_DOI_TRA);
+                hoaDonChiTietRepo.save(hdct);
+                thongBaoService.yeuCauDoiTra(hdct.getHoaDon().getId(), hdct.getSanPhamChiTiet().getSanPham().getMa());
+                return khHoaDonRepo.findById(hdct.getHoaDon().getId()).get();
+            }
+        }else{
+            if(hdct != null){
+                hdct.setSoLuong(hdct.getSoLuong() - request.getSoLuong());
+                hoaDonChiTietRepo.save(hdct);
+            }
+        }
+        if (request.getSoLuong() > hdct.getSoLuong()) {
+            return khHoaDonRepo.findById(hdct.getHoaDon().getId()).get();
+        }
 
         HoaDonChiTiet hoaDonChiTiet = HoaDonChiTiet.builder()
                 .sanPhamChiTiet(SanPhamChiTiet.builder().id(hdct.getSanPhamChiTiet().getId()).build())
                 .ma("HDCTDT" + randomNumber)
-                .soLuong(hdct.getSoLuong())
+                .soLuong(request.getSoLuong())
                 .donGia(hdct.getDonGia())
-                .hoaDon(saveHoaDon)
-                .ngaySua(DatetimeUtil.getCurrentDate())
+                .hoaDon(hdct.getHoaDon())
+                .lyDo(request.getLyDo())
+                .ngayTao(DatetimeUtil.getCurrentDate())
                 .trangThai(HoaDonStatus.YEU_CAU_DOI_TRA)
                 .build();
 
         hoaDonChiTietRepo.save(hoaDonChiTiet);
-        thongBaoService.yeuCauDoiTra(saveHoaDon.getId(),hdct.getSanPhamChiTiet().getSanPham().getMa());
-        return hoaDon;
+        thongBaoService.yeuCauDoiTra(hdct.getHoaDon().getId(), hdct.getSanPhamChiTiet().getSanPham().getMa());
+        return khHoaDonRepo.findById(hdct.getHoaDon().getId()).get();
     }
 
 }

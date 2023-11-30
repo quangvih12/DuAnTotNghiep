@@ -3,6 +3,7 @@ package com.example.demo.core.Admin.repository;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTiet2Response;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTietResponse;
 import com.example.demo.core.Admin.model.response.AdminSanPhamResponse;
+import com.example.demo.core.Admin.model.response.SanPhamDOT;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.reponsitory.SanPhamReponsitory;
@@ -33,6 +34,7 @@ public interface AdSanPhamReponsitory extends SanPhamReponsitory {
                      ORDER BY sp.id DESC;
             """, nativeQuery = true)
     List<AdminSanPhamResponse> getAll();
+
 
     @Query(value = """
                      SELECT sp.id as id,sp.anh as anh, sp.ma as ma, sp.ten as ten,
@@ -151,4 +153,37 @@ public interface AdSanPhamReponsitory extends SanPhamReponsitory {
                                    END)
             """, nativeQuery = true)
     List<AdminSanPhamChiTiet2Response> locSPCT(@Param("comboBoxValue") String comboBoxValue);
+
+
+    @Query(value = """
+                     SELECT sp.id as id,sp.anh as anh, sp.ma as ma, sp.ten as ten,
+                            sp.mo_ta as moTa, sp.trang_thai as trangThai, sp.ngay_tao as ngayTao,
+                            sp.ngay_sua as ngaySua, sp.dem_lot as demLot, sp.quai_deo as quaiDeo,
+                            th.ten as thuongHieu, vl.ten as vatLieu, l.ten as loai, SUM(spct.so_luong_ton) as SoLuongTon
+                     FROM datn.san_pham sp
+                     JOIN datn.thuong_hieu th ON sp.id_thuong_hieu = th.id
+                     JOIN datn.vat_lieu vl ON sp.id_vat_lieu = vl.id
+                     JOIN datn.loai l ON sp.id_loai = l.id
+                     JOIN datn.san_pham_chi_tiet spct ON spct.id_san_pham = sp.id
+                     WHERE sp.trang_thai IN (1, 0, 3) and l.id =:idloai
+                     GROUP BY sp.id, sp.anh, sp.ma, sp.ten, sp.mo_ta, sp.trang_thai, sp.ngay_tao, sp.ngay_sua, sp.dem_lot, sp.quai_deo, th.ten, vl.ten, l.ten
+                     ORDER BY sp.id DESC
+            """, nativeQuery = true)
+    List<AdminSanPhamResponse> getSanPhamByIdLoai(@Param("idloai") Integer idloai);
+
+    @Query(value = """
+                     SELECT sp.id as id,sp.anh as anh, sp.ma as ma, sp.ten as ten,
+                            sp.mo_ta as moTa, sp.trang_thai as trangThai, sp.ngay_tao as ngayTao,
+                            sp.ngay_sua as ngaySua, sp.dem_lot as demLot, sp.quai_deo as quaiDeo,
+                            th.ten as thuongHieu, vl.ten as vatLieu, l.ten as loai, SUM(spct.so_luong_ton) as SoLuongTon
+                     FROM datn.san_pham sp
+                     JOIN datn.thuong_hieu th ON sp.id_thuong_hieu = th.id
+                     JOIN datn.vat_lieu vl ON sp.id_vat_lieu = vl.id
+                     JOIN datn.loai l ON sp.id_loai = l.id
+                     JOIN datn.san_pham_chi_tiet spct ON spct.id_san_pham = sp.id
+                     WHERE sp.trang_thai IN (1, 0, 3) and th.id =:idthuonghieu
+                     GROUP BY sp.id, sp.anh, sp.ma, sp.ten, sp.mo_ta, sp.trang_thai, sp.ngay_tao, sp.ngay_sua, sp.dem_lot, sp.quai_deo, th.ten, vl.ten, l.ten
+                     ORDER BY sp.id DESC
+            """, nativeQuery = true)
+    List<AdminSanPhamResponse> getSanPhamByIdThuongHieu(@Param("idthuonghieu") Integer idthuonghieu);
 }

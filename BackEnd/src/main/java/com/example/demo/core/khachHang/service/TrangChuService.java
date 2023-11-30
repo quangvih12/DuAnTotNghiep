@@ -8,7 +8,7 @@ public interface TrangChuService {
 
     List<TrangChuResponse> getAll();
 
-    List<TrangChuResponse> getAllByTenLoai(String tenLoai);
+    List<TrangChuResponse> getAllByTenLoai(Integer tenLoai);
 
     List<TrangChuResponse> getSPBanChay();
 

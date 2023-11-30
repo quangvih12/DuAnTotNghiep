@@ -35,4 +35,7 @@ public interface AdKhuyenMaiReponsitory extends KhuyenMaiReponsitory {
     // lấy danh sách SPCT theo trạng thái khuyến mại
     @Query("select  pt  from  SanPhamChiTiet  pt where pt.khuyenMai.trangThai =:trangThai")
     List<SanPhamChiTiet> getCTSPByTrangThaiKhuyenMai(Integer trangThai);
+
+    @Query("SELECT i FROM KhuyenMai i WHERE i.ten=:ten")
+    KhuyenMai findKhuyenMaiByTen(String ten);
 }

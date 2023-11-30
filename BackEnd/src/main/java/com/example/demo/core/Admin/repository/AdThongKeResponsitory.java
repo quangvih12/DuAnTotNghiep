@@ -730,5 +730,162 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                     """, nativeQuery = true)
     List<AdminThongKeThangResponse> doanhThuTheoThangByThang(String startDate, String endDate);
 
+    // hoan tien
+    @Query(value = """
+           select  sum(v.don_gia) from datn.hoa_don_chi_tiet v 
+           join datn.hoa_don hd on hd.id = v.id_hoa_don 
+           where v.trang_thai = 8  and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
+            """, nativeQuery = true)
+    Integer tongHoanTienByThangNam(String year, String startDate, String endDate );
 
+    @Query(value = """
+           select  sum(v.don_gia) from datn.hoa_don_chi_tiet v 
+           join datn.hoa_don hd on hd.id = v.id_hoa_don where v.trang_thai = 8 
+            """, nativeQuery = true)
+    Integer tongHoanTien();
+
+    @Query(value = """
+            SELECT SUM(hdct.don_gia) as hoanTien
+            FROM  datn.hoa_don hd
+            join datn.hoa_don_chi_tiet hdct on hd.id = hdct.id_hoa_don
+            where hdct.trang_thai in (8)  and hd.hinh_thuc_giao_hang =:idPhuongThuc
+            """, nativeQuery = true)
+    Integer tongHoanTienByPhuongThuc(Integer idPhuongThuc);
+
+    @Query(value = """
+            SELECT SUM(hdct.don_gia) as hoanTien
+                                            FROM datn.san_pham_chi_tiet spct
+                                            JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+                                            JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+                                            JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+                                            WHERE hdct.trang_thai IN  (8) AND spct.id =:id AND YEAR(hd.ngay_tao) =:year 
+              """, nativeQuery = true)
+    Integer tongHoanTienBySanPham( Integer id, String year);
+
+    @Query(value = """
+            SELECT SUM(hdct.don_gia) as tongTien
+                                    FROM datn.san_pham_chi_tiet spct
+                                    JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+                                    JOIN datn.thuong_hieu th ON sp.id_thuong_hieu = th.id
+                                    JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+                                    JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+                                    WHERE hdct.trang_thai IN  (8) AND th.id =:id AND YEAR(hd.ngay_tao) =:year 
+              """, nativeQuery = true)
+    Integer tongHoanTienByThuongHieu(@Param("id") Integer id, String year);
+
+    @Query(value = """
+            SELECT SUM(hdct.don_gia) as tongTien
+                                    FROM datn.san_pham_chi_tiet spct
+                                    JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+                                    JOIN datn.loai th ON sp.id_loai = th.id
+                                    JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+                                    JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+                                    WHERE hdct.trang_thai IN  (8) AND th.id =:id AND YEAR(hd.ngay_tao) =:year
+              """, nativeQuery = true)
+    Integer tongHoanTienByLoai(@Param("id") Integer id,String year);
+
+
+    // chiet khau
+    @Query(value = """
+           select  sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+            from datn.hoa_don_chi_tiet v join datn.hoa_don hd on hd.id = v.id_hoa_don where hd.trang_thai in (3)  and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
+            """, nativeQuery = true)
+    Integer tongChietKhauByThangNam(String year, String startDate, String endDate );
+
+    @Query(value = """
+           select   sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+            from datn.hoa_don_chi_tiet v join datn.hoa_don hd on hd.id = v.id_hoa_don where  hd.trang_thai in (3) 
+            """, nativeQuery = true)
+    Integer tongChietKhau();
+
+    @Query(value = """
+            SELECT sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+            FROM  datn.hoa_don hd
+            join datn.hoa_don_chi_tiet hdct on hd.id = hdct.id_hoa_don
+            where  hd.trang_thai in (3)   and hd.hinh_thuc_giao_hang =:idPhuongThuc
+            """, nativeQuery = true)
+    Integer tongChietKhauByPhuongThuc(Integer idPhuongThuc);
+
+    @Query(value = """
+            SELECT sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+                                            FROM datn.san_pham_chi_tiet spct
+                                            JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+                                            JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+                                            JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+                                            WHERE  hd.trang_thai in (3)  AND spct.id =:id AND YEAR(hd.ngay_tao) =:year 
+              """, nativeQuery = true)
+    Integer tongChietKhauBySanPham( Integer id, String year);
+
+    @Query(value = """
+            SELECT sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+                                    FROM datn.san_pham_chi_tiet spct
+                                    JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+                                    JOIN datn.thuong_hieu th ON sp.id_thuong_hieu = th.id
+                                    JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+                                    JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+                                    WHERE  hd.trang_thai in (3)  AND th.id =:id AND YEAR(hd.ngay_tao) =:year 
+              """, nativeQuery = true)
+    Integer tongChietKhauByThuongHieu(@Param("id") Integer id, String year);
+
+    @Query(value = """
+            SELECT sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+                                    FROM datn.san_pham_chi_tiet spct
+                                    JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+                                    JOIN datn.loai th ON sp.id_loai = th.id
+                                    JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+                                    JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+                                    WHERE  hd.trang_thai in (3)  AND th.id =:id AND YEAR(hd.ngay_tao) =:year
+              """, nativeQuery = true)
+    Integer tongChietKhaunByLoai(@Param("id") Integer id,String year);
+
+
+    @Query(value = """
+            SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=3 and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
+             """, nativeQuery = true)
+    Integer tongDonhangHoanThanhByNamThang(String year, String startDate, String endDate );
+
+    @Query(value = """
+            SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=3 
+             """, nativeQuery = true)
+    Integer tongDonhangHoanThanh();
+
+    @Query(value = """
+            SELECT count(hd.id)
+            FROM  datn.hoa_don hd
+            join datn.hoa_don_chi_tiet hdct on hd.id = hdct.id_hoa_don
+            where  hd.trang_thai in (3)   and hd.hinh_thuc_giao_hang =:idPhuongThuc
+            """, nativeQuery = true)
+    Integer tongDonhangHoanThanhByPhuongThuc(Integer idPhuongThuc);
+
+    @Query(value = """
+            SELECT count(hd.id)
+                                            FROM datn.san_pham_chi_tiet spct
+                                            JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+                                            JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+                                            JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+                                            WHERE  hd.trang_thai in (3)  AND spct.id =:id AND YEAR(hd.ngay_tao) =:year 
+              """, nativeQuery = true)
+    Integer tongDonhangHoanThanhBySanPham( Integer id, String year);
+
+    @Query(value = """
+            SELECT count(hd.id)
+                                    FROM datn.san_pham_chi_tiet spct
+                                    JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+                                    JOIN datn.thuong_hieu th ON sp.id_thuong_hieu = th.id
+                                    JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+                                    JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+                                    WHERE  hd.trang_thai in (3)  AND th.id =:id AND YEAR(hd.ngay_tao) =:year 
+              """, nativeQuery = true)
+    Integer tongDonhangHoanThanhByThuongHieu(@Param("id") Integer id, String year);
+
+    @Query(value = """
+            SELECT count(hd.id)
+                                    FROM datn.san_pham_chi_tiet spct
+                                    JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+                                    JOIN datn.loai th ON sp.id_loai = th.id
+                                    JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+                                    JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+                                    WHERE  hd.trang_thai in (3)  AND th.id =:id AND YEAR(hd.ngay_tao) =:year
+              """, nativeQuery = true)
+    Integer tongDonhangHoanThanhByLoai(@Param("id") Integer id,String year);
 }

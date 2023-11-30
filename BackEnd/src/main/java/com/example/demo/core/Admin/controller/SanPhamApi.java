@@ -4,10 +4,10 @@ import com.example.demo.core.Admin.model.request.*;
 import com.example.demo.core.Admin.model.response.AdminImageResponse;
 import com.example.demo.core.Admin.model.response.AdminSanPhamChiTiet2Response;
 import com.example.demo.core.Admin.model.response.AdminSanPhamResponse;
+import com.example.demo.core.Admin.model.response.SanPhamDOT;
 import com.example.demo.core.Admin.service.AdSanPhamService.AdExcelAddSanPhamService;
 import com.example.demo.core.Admin.service.AdSanPhamService.AdSanPhamService;
 import com.example.demo.core.Admin.service.AdSanPhamService.AdUpdateSanPhamService;
-import com.example.demo.entity.Image;
 import com.example.demo.entity.SanPham;
 import com.microsoft.azure.storage.StorageException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +34,28 @@ public class SanPhamApi {
     private AdUpdateSanPhamService adUpdateSanPhamService;
 
     // getAll loai
-    @GetMapping()
-    public ResponseEntity<?> getAll() {
-        List<AdminSanPhamResponse> page = sanPhamService.getAll();
+//    @GetMapping()
+//    public ResponseEntity<?> getAll() {
+//        List<AdminSanPhamResponse> page = sanPhamService.getAll();
+//        return ResponseEntity.ok(page);
+//    }
+
+    @GetMapping("")
+    public ResponseEntity<?> tesst() {
+        List<SanPhamDOT> page = sanPhamService.getAlls();
+        return ResponseEntity.ok(page);
+    }
+
+
+    @GetMapping("/by-loai")
+    public ResponseEntity<?> getSPByLoai(@RequestParam("idloai") Integer idloai) {
+        List<AdminSanPhamResponse> page = sanPhamService.getSanPhamByIdLoai(idloai);
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/by-thuong-hieu")
+    public ResponseEntity<?> getSPByThuongHieu(@RequestParam("idthuonghieu") Integer idthuonghieu) {
+        List<AdminSanPhamResponse> page = sanPhamService.getSanPhamByIdThuongHieu(idthuonghieu);
         return ResponseEntity.ok(page);
     }
 
@@ -60,7 +79,7 @@ public class SanPhamApi {
 
     @GetMapping("/loc")
     public ResponseEntity<?> loc(@RequestParam String comboBoxValue) {
-        List<AdminSanPhamResponse> lisst = sanPhamService.loc(comboBoxValue);
+        List<SanPhamDOT> lisst = sanPhamService.loc(comboBoxValue);
         return ResponseEntity.ok(lisst);
     }
 
@@ -76,26 +95,26 @@ public class SanPhamApi {
 
     @PostMapping()
     public ResponseEntity<?> add(@RequestBody AdminSanPhamRepuest2 request) throws URISyntaxException, StorageException, InvalidKeyException, IOException {
-        AdminSanPhamResponse save = sanPhamService.save(request);
+        SanPhamDOT save = sanPhamService.save(request);
         return ResponseEntity.ok(save);
     }
 
     @PutMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
-        AdminSanPhamResponse sp = sanPhamService.delete(id);
+        SanPhamDOT sp = sanPhamService.delete(id);
         return ResponseEntity.ok(sp);
     }
 
     @PutMapping("/khoi-phuc/{id}")
     public ResponseEntity<?> khoiPhuc(@PathVariable Integer id) {
-        AdminSanPhamResponse sp = sanPhamService.khoiPhuc(id);
+        SanPhamDOT sp = sanPhamService.khoiPhuc(id);
         return ResponseEntity.ok(sp);
     }
 
 
     @PutMapping("/update-san-pham/{id}")
     public ResponseEntity<?> updateSanPham(@PathVariable Integer id, @RequestBody AdminSanPhamRequest sanPhamRequest) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
-        AdminSanPhamResponse sp = adUpdateSanPhamService.updateSanPham(id, sanPhamRequest);
+        SanPhamDOT sp = adUpdateSanPhamService.updateSanPham(id, sanPhamRequest);
         return ResponseEntity.ok(sp);
     }
 

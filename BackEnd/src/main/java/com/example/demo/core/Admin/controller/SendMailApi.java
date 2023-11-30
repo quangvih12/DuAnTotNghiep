@@ -1,6 +1,7 @@
 package com.example.demo.core.Admin.controller;
 
 import com.example.demo.core.Admin.model.request.AdminUserRequest;
+import com.example.demo.core.Admin.model.request.OTPResquest;
 import com.example.demo.core.Admin.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,12 @@ public class SendMailApi {
     @PostMapping(value = "send")
     public ResponseEntity<Boolean> create(@RequestBody AdminUserRequest adminUserRequest) {
         Boolean result = clientService.create(adminUserRequest);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping(value = "sendOTP")
+    public ResponseEntity<Boolean> sendMailOTP(@RequestBody OTPResquest otpResquest) {
+        Boolean result = clientService.createOTP(otpResquest);
         return ResponseEntity.ok(result);
     }
 }

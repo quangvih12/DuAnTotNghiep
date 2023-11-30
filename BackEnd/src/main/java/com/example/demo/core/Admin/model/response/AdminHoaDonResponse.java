@@ -84,5 +84,7 @@ public interface AdminHoaDonResponse {
     @Value("#{target.moTa}")
     String getMoTa();
 
+    @Value("#{target.idUser}")
+    Integer getIdUser();
 
 }

@@ -8,6 +8,7 @@ import com.example.demo.entity.User;
 import com.example.demo.infrastructure.status.ThongBaoStatus;
 import com.example.demo.infrastructure.status.ThongBaoType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,9 @@ public class AdThongBaoServiceImpl {
 
     @Autowired
     private AdHoaDonReponsitory hoaDonReponsitory;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     public List<ThongBao> getAll() {
         List<ThongBao> lst = adminThongBaoRepository.findAll();
@@ -48,6 +52,7 @@ public class AdThongBaoServiceImpl {
         thongBao.setContent("Hóa đơn mã " + hoaDon.getMa() + " đã bị hủy");
         thongBao.setTrangThai(ThongBaoStatus.CHUA_XEM);
         adminThongBaoRepository.save(thongBao);
+        messagingTemplate.convertAndSend("/topic/hoa-don/"+hoaDon.getUser().getId(),thongBao);
     }
 
     public void xacNhanHoaDon(Integer idHD) {
@@ -58,6 +63,7 @@ public class AdThongBaoServiceImpl {
         thongBao.setContent("Hóa đơn mã " + hoaDon.getMa() + " đã được xác nhận");
         thongBao.setTrangThai(ThongBaoStatus.CHUA_XEM);
         adminThongBaoRepository.save(thongBao);
+        messagingTemplate.convertAndSend("/topic/hoa-don/"+hoaDon.getUser().getId(),thongBao);
     }
 
     public void xacNhanDoiTra(Integer idHD) {
@@ -68,6 +74,7 @@ public class AdThongBaoServiceImpl {
         thongBao.setContent("Hóa đơn mã " + hoaDon.getMa() + " đã đồng ý đổi trả");
         thongBao.setTrangThai(ThongBaoStatus.CHUA_XEM);
         adminThongBaoRepository.save(thongBao);
+        messagingTemplate.convertAndSend("/topic/hoa-don/"+hoaDon.getUser().getId(),thongBao);
     }
 
     public void HuyDoiTra(Integer idHD) {
@@ -78,6 +85,7 @@ public class AdThongBaoServiceImpl {
         thongBao.setContent("Hóa đơn mã " + hoaDon.getMa() + " đã bị hủy đổi trả");
         thongBao.setTrangThai(ThongBaoStatus.CHUA_XEM);
         adminThongBaoRepository.save(thongBao);
+        messagingTemplate.convertAndSend("/topic/hoa-don/"+hoaDon.getUser().getId(),thongBao);
     }
 
     public void hoanThanhDoiTra(Integer idHD) {
@@ -88,6 +96,7 @@ public class AdThongBaoServiceImpl {
         thongBao.setContent("Hóa đơn mã " + hoaDon.getMa() + " đã hoàn thành đổi trả");
         thongBao.setTrangThai(ThongBaoStatus.CHUA_XEM);
         adminThongBaoRepository.save(thongBao);
+        messagingTemplate.convertAndSend("/topic/hoa-don/"+hoaDon.getUser().getId(),thongBao);
     }
 
     public void hoanThanh(Integer idHD) {
@@ -98,6 +107,7 @@ public class AdThongBaoServiceImpl {
         thongBao.setContent("Hóa đơn mã " + hoaDon.getMa() + " đã hoàn thành");
         thongBao.setTrangThai(ThongBaoStatus.CHUA_XEM);
         adminThongBaoRepository.save(thongBao);
+        messagingTemplate.convertAndSend("/topic/hoa-don/"+hoaDon.getUser().getId(),thongBao);
     }
 
 }

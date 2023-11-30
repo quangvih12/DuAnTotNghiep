@@ -9,14 +9,16 @@ public interface KhVoucherResponse {
     @Value("#{target.giamToiDa}")
     Integer getGiamToiDa();
 
-    @Value("#{target.dieuKien}")
-    Integer getDieuKien();
+    @Value("#{target.giaTriGiam}")
+    Integer getGiaTriGiam();
 
     @Value("#{target.moTa}")
     String getMoTa();
 
     @Value("#{target.soLuong}")
     Integer getSoLuong();
+
+
 
     @Value("#{target.thoiGianBatDau}")
     String getThoiGianBatDau();
@@ -29,6 +31,8 @@ public interface KhVoucherResponse {
 
     @Value("#{target.ten}")
     String getTen();
+
+
 
 
 }
