@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface DiaChiService {
 
-    List<DiaChiResponse> getAll(String token);
+    List<DiaChi> getAll(String token);
 
 //    List<DiaChi> getUserByDiaChi(Integer idUser);
 

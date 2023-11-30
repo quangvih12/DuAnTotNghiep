@@ -1,18 +1,16 @@
 package com.example.demo.core.khachHang.repository;
 
 import com.example.demo.core.khachHang.model.response.KHHoaDonChiTietResponse;
-import com.example.demo.core.khachHang.model.response.KHHoaDonResponse;
 import com.example.demo.core.khachHang.model.response.KhHoaDonTraHangResponse;
 import com.example.demo.entity.HoaDonChiTiet;
-import com.example.demo.reponsitory.HoaDonReponsitory;
+import com.example.demo.reponsitory.HoaDonChiTietReponsitory;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface KHHoaDonChiTietRepository extends HoaDonReponsitory {
+public interface KHHoaDonChiTietRepository extends HoaDonChiTietReponsitory {
     @Query(value = """
             SELECT ROW_NUMBER() OVER(ORDER BY hd.id DESC) AS stt,
             u.email as email ,u.sdt,hd.hinh_thuc_giao_hang as hinhThucGiaoHang, u.ten as nguoiTao,
