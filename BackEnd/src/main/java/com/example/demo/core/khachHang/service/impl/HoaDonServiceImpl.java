@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -93,6 +94,13 @@ public class HoaDonServiceImpl implements HoaDonService {
             ngayThanhToan = null;
         }
 
+        BigDecimal tienSauGiam;
+        if(hoaDonRequest.getTienSauGiam() == null || hoaDonRequest.getTienSauGiam().compareTo(BigDecimal.ZERO) == 0){
+            tienSauGiam = hoaDonRequest.getTongTien();
+        }else{
+            tienSauGiam = hoaDonRequest.getTienSauGiam();
+        }
+
 
         HoaDon hoaDon = HoaDon.builder()
                 .ma("HD" + randomNumber)
@@ -103,7 +111,7 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .ngayTao(DatetimeUtil.getCurrentDateAndTimeLocal())
                 .tienShip(hoaDonRequest.getTienShip())
                 .ngayThanhToan(ngayThanhToan)
-                .tienSauKhiGiam(hoaDonRequest.getTienSauGiam())
+                .tienSauKhiGiam(tienSauGiam)
                 .hinhThucGiaoHang(HinhThucGiaoHangStatus.GIAOHANG)
                 .trangThai(HoaDonStatus.YEU_CAU_XAC_NHAN)
 

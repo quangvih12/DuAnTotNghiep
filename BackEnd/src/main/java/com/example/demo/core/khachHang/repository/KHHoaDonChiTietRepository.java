@@ -1,18 +1,16 @@
 package com.example.demo.core.khachHang.repository;
 
 import com.example.demo.core.khachHang.model.response.KHHoaDonChiTietResponse;
-import com.example.demo.core.khachHang.model.response.KHHoaDonResponse;
 import com.example.demo.core.khachHang.model.response.KhHoaDonTraHangResponse;
 import com.example.demo.entity.HoaDonChiTiet;
-import com.example.demo.reponsitory.HoaDonReponsitory;
+import com.example.demo.reponsitory.HoaDonChiTietReponsitory;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface KHHoaDonChiTietRepository extends HoaDonReponsitory {
+public interface KHHoaDonChiTietRepository extends HoaDonChiTietReponsitory {
     @Query(value = """
             SELECT ROW_NUMBER() OVER(ORDER BY hd.id DESC) AS stt,
             u.email as email ,u.sdt,hd.hinh_thuc_giao_hang as hinhThucGiaoHang, u.ten as nguoiTao,
@@ -47,7 +45,7 @@ public interface KHHoaDonChiTietRepository extends HoaDonReponsitory {
                     hdct.trang_thai as trangThaihdct,
                      hd.id as idHD,hd.ma as maHD, hdct.so_luong as soLuong, hdct.don_gia as donGia
                      FROM  datn.hoa_don hd  join datn.hoa_don_chi_tiet hdct on hdct.id_hoa_don = hd.id
-                     join datn.user u on u.id = hd.id_user where u.id =:idUser and hdct.trang_thai=7 or hdct.trang_thai=8 or hdct.trang_thai=9
+                     join datn.user u on u.id = hd.id_user where u.id =:idUser and (hdct.trang_thai=7 or hdct.trang_thai=8 or hdct.trang_thai=9)
             """, nativeQuery = true)
     List<KhHoaDonTraHangResponse> getHoaDonDoiTraTrangThai(Integer idUser);
 }

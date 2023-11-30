@@ -78,6 +78,7 @@ public class KHHoaDonServiceImpl implements KHHoaDonService {
             HoaDon hd = hdRepo.save(hoaDon);
             List<HoaDonChiTiet> lstHDCT = hdctRepo.findByIdHoaDon(idHD, sort);
             for (HoaDonChiTiet hdct : lstHDCT) {
+                hdct.setTrangThai(0);
                 int idSP = hdct.getSanPhamChiTiet().getId();
                 int quantity = hdct.getSoLuong();
                 if (quantityMap.containsKey(idSP)) {
@@ -85,6 +86,7 @@ public class KHHoaDonServiceImpl implements KHHoaDonService {
                 } else {
                     quantityMap.put(idSP, quantity);
                 }
+                hdctRepo.save(hdct);
             }
             for (Map.Entry<Integer, Integer> entry : quantityMap.entrySet()) {
                 int idSP = entry.getKey();
