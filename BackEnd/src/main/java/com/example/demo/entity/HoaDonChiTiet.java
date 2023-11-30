@@ -38,6 +38,9 @@ public class HoaDonChiTiet {
     @Column(name = "don_gia", precision = 20, scale = 0)
     private BigDecimal donGia;
 
+    @Column(name = "chiet_khau", precision = 20, scale = 0)
+    private BigDecimal chietKhau;
+
     @Column(name = "so_luong")
     private Integer soLuong;
 

@@ -11,6 +11,8 @@ import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class KHUserRequest implements DtoToEntity<User> {
@@ -54,7 +56,7 @@ public class KHUserRequest implements DtoToEntity<User> {
         user.setTen(this.getTen());
         user.setUserName(this.getUserName());
         user.setTrangThai(this.getTrangThai());
-        user.setNgayTao(DatetimeUtil.getCurrentDate());
+        user.setNgayTao(LocalDateTime.now());
         user.setPassword(passwordEncoder.encode(this.getPassword()));
         user.setNgaySinh(this.getNgaySinh());
         user.setImage(this.getImage());

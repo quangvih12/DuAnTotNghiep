@@ -194,4 +194,6 @@ public interface AdHoaDonReponsitory extends HoaDonReponsitory {
                                              join datn.user u on u.id = hd.id_user
             """, nativeQuery = true)
     List<AdminHoaDonResponse> getAllThongKe();
+
+    List<HoaDon> findByTrangThaiOrderByNgayTaoDesc(Integer trangThai);
 }

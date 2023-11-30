@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AdHoaDonChiTietReponsitory extends HoaDonChiTietReponsitory {
@@ -77,4 +78,6 @@ public interface AdHoaDonChiTietReponsitory extends HoaDonChiTietReponsitory {
             	where hd.id = :id""", nativeQuery = true)
     List<AdminHoaDonChitietResponse> findHDCTByIDHD(@Param("id") Integer id);
 
+    List<HoaDonChiTiet> findByHoaDonId(Integer idHoaDon);
+    Optional<HoaDonChiTiet> findByHoaDonIdAndSanPhamChiTietId(Integer idHoaDon, Integer idCTSP);
 }

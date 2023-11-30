@@ -11,6 +11,8 @@ import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class KHUserServiceImpl implements KHUserService {
 
@@ -29,7 +31,7 @@ public class KHUserServiceImpl implements KHUserService {
         } else {
             User addUser = User.builder().email(email).userName(email).ten(ten).build();
             addUser.setRole(Role.USER);
-            addUser.setNgayTao(DatetimeUtil.getCurrentDateAndTime());
+            addUser.setNgayTao(LocalDateTime.now());
             addUser.setPassword("$2a$12$Xcp214DEIsQr61KrINMt5egl.2Tqfcjwhu32Y9Y5TCEFzH5yiEOlS");
             addUser.setImage(anh);
             addUser.setTrangThai(2);

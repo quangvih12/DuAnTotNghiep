@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -89,7 +90,7 @@ public class UserServiceImpl implements AdUserService {
         User u = userRepository.findById(id).get();
         if (u != null) {
             u.setEmail(request.getEmail());
-            u.setNgaySua(DatetimeUtil.getCurrentDate());
+            u.setNgaySua(LocalDateTime.now());
             u.setTen(request.getTen());
             u.setNgaySinh(request.getNgaySinh());
             u.setSdt(request.getSdt());

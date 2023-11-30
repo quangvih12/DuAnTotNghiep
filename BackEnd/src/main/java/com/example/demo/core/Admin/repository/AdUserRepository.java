@@ -8,10 +8,13 @@ import com.example.demo.reponsitory.UserReponsitory;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface AdUserRepository extends UserReponsitory {
 
     @Query(value = """
@@ -82,4 +85,6 @@ public interface AdUserRepository extends UserReponsitory {
 
     List<User> getAllByTrangThai(Integer trangThai, Sort sort);
 
+    List<User> findByRoleAndTrangThaiOrderByNgayTaoDesc(Role role, Integer trangThai);
+    Optional<User> findBySdt(String sdt);
 }

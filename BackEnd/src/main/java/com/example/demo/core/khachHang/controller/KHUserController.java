@@ -60,6 +60,8 @@ public class KHUserController {
             LoginResponseDTO jwtAuthResponse = new LoginResponseDTO();
             jwtAuthResponse.setAccessToken(token);
             jwtAuthResponse.setUsernameOrEmail(usernameOrEmail);
+//            jwtAuthResponse.setUserID(khUserService.findByToken(token) != null ? khUserService.findByToken(token).getId() : null);
+            jwtAuthResponse.setUserID(khUserService.findByToken(token).getId());
 
 //            ResponseDTO response = new ResponseDTO(true, "Logged In Successfully!", jwtAuthResponse, null, HttpStatus.OK.value());
             return ResponseEntity.ok(jwtAuthResponse);
