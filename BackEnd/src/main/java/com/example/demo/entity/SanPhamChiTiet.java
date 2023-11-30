@@ -28,6 +28,9 @@ public class SanPhamChiTiet {
     @Column(name = "Id")
     private Integer id;
 
+    @Column(name = "ma")
+    private String ma;
+
     @Column(name = "ngay_sua")
     private String ngaySua;
 

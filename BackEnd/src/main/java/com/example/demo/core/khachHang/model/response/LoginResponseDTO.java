@@ -13,6 +13,7 @@ public class LoginResponseDTO {
     private String accessToken;
     private String tokenType = "Bearer";
     private String usernameOrEmail;
+    private Integer userID;
 
     public LoginResponseDTO (String accessToken,String usernameOrEmail) {
         this.accessToken = accessToken;

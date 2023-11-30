@@ -22,6 +22,7 @@ import lombok.ToString;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,10 +46,10 @@ public class User {
     private String ma;
 
     @Column(name = "ngay_sua")
-    private String ngaySua;
+    private LocalDateTime ngaySua;
 
     @Column(name = "ngay_tao")
-    private String ngayTao;
+    private LocalDateTime ngayTao;
 
     @Column(name = "trang_thai")
     private Integer trangThai;
@@ -76,10 +77,6 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @ManyToOne
-    @JoinColumn(name = "id_chuc_vu")
-    private ChucVu chucVu;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)

@@ -16,11 +16,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -45,6 +42,9 @@ public class HoaDon {
 
     @Column(name = "tong_tien", precision = 20, scale = 0)
     private BigDecimal tongTien;
+
+    @Column(name = "tien_khach_dua", precision = 20, scale = 0)
+    private BigDecimal tienKhachDua;
 
     @Column(name = "ten_nguoi_nhan")
     private String tenNguoiNhan;
@@ -93,17 +93,23 @@ public class HoaDon {
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "id_nguoi_tao")
+    private User nguoiTao;
+
+    @ManyToOne
     @JoinColumn(name = "id_phuong_thuc_thanh_toan")
     private PhuongThucThanhToan phuongThucThanhToan;
+
+
 
     @ManyToOne
     @JoinColumn(name = "id_voucher")
     private Voucher voucher;
 
 
+
     @JsonIgnore
     @OneToMany(mappedBy = "hoaDon", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<HoaDonChiTiet> hoaDonChiTietList = new ArrayList<>();
-
 }

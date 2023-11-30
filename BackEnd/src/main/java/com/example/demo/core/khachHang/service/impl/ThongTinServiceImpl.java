@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
+import java.time.LocalDateTime;
 
 @Service
 public class ThongTinServiceImpl implements ThongTinService {
@@ -45,7 +46,7 @@ public class ThongTinServiceImpl implements ThongTinService {
         User u = repository.findById(id).get();
         if (u != null) {
             u.setEmail(request.getEmail());
-            u.setNgaySua(DatetimeUtil.getCurrentDate());
+            u.setNgaySua(LocalDateTime.now());
             u.setTen(request.getTen());
             u.setNgaySinh(request.getNgaySinh());
             u.setSdt(request.getSdt());

@@ -1,6 +1,5 @@
 package com.example.demo.core.Admin.model.request;
 
-import com.example.demo.entity.ChucVu;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.infrastructure.adapter.DtoToEntity;
@@ -11,6 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -55,7 +56,7 @@ public class AdminUserRequest implements DtoToEntity<User> {
         user.setTen(this.getTen());
         user.setUserName(this.getUserName());
         user.setTrangThai(this.getTrangThai());
-        user.setNgayTao(DatetimeUtil.getCurrentDate());
+        user.setNgayTao(LocalDateTime.now());
         user.setPassword(passwordEncoder.encode(this.getPassword()));
         user.setNgaySinh(this.getNgaySinh());
         user.setImage(this.getImage());
