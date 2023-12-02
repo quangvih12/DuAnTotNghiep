@@ -888,4 +888,40 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                                     WHERE  hd.trang_thai in (3)  AND th.id =:id AND YEAR(hd.ngay_tao) =:year
               """, nativeQuery = true)
     Integer tongDonhangHoanThanhByLoai(@Param("id") Integer id,String year);
+
+    @Query(value = """
+            SELECT SUM(hd.tong_tien) as tongTien
+            FROM  datn.hoa_don hd
+            where hd.trang_thai in (3)  and DATE(hd.ngay_tao) = CURDATE();
+              """, nativeQuery = true)
+    Integer tongDoanhThuByDayNow();
+
+    @Query(value = """
+            SELECT SUM(hd.tong_tien) as tongTien
+            FROM  datn.hoa_don hd
+            where hd.trang_thai in (3)  and hd.hinh_thuc_giao_hang =1 and DATE(hd.ngay_tao) = CURDATE();
+            """, nativeQuery = true)
+    Integer tongDoanhThuByDayNowTaiQuay();
+
+    @Query(value = """
+            SELECT SUM(hd.tong_tien) as tongTien
+            FROM  datn.hoa_don hd
+            where hd.trang_thai in (3)  and hd.hinh_thuc_giao_hang =2 and DATE(hd.ngay_tao) = CURDATE();
+            """, nativeQuery = true)
+    Integer tongDoanhThuByDayOnline();
+
+    @Query(value = """
+            SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=3 and DATE(hd.ngay_tao) = CURDATE();
+             """, nativeQuery = true)
+    Integer tongDonhangHoanThanhByDay();
+
+    @Query(value = """
+            SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=7 and DATE(hd.ngay_tao) = CURDATE();
+             """, nativeQuery = true)
+    Integer tongDonhangTraByDay();
+
+    @Query(value = """
+            SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=0 and DATE(hd.ngay_tao) = CURDATE();
+             """, nativeQuery = true)
+    Integer tongDonhangHuyByDay();
 }

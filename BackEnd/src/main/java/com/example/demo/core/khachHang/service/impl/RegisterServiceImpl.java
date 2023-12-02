@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Random;
 
@@ -40,7 +41,7 @@ public class RegisterServiceImpl implements RegisterService {
         user.setTen(payload.getTen());
         user.setSdt(payload.getSdt());
         user.setRole(Role.USER);
-        user.setNgayTao(dateFormat.format(new Date()));
+        user.setNgayTao(LocalDateTime.now());
         user.setUserName(payload.getEmail());
         user.setNgaySinh(dateFormat.format(payload.getNgaySinh()));
         user.setGioiTinh(payload.getGioiTinh());

@@ -136,12 +136,7 @@ public class KHGioHangServiceImpl implements KHGiohangService {
         Random random = new Random();
         int randomNumber = random.nextInt(9000) + 1000;
 
-        if (chiTietSanPham.get().getGiaSauGiam() == null) {
-            gioHangChiTiet.setGiaBan(chiTietSanPham.get().getGiaBan());
-        } else {
-            gioHangChiTiet.setGiaBan(chiTietSanPham.get().getGiaSauGiam());
-        }
-
+        gioHangChiTiet.setGiaBan(chiTietSanPham.get().getGiaBan());
         gioHangChiTiet.setIdGHCT(randomNumber);
         gioHangChiTiet.setSoLuong(soLuong);
         gioHangChiTiet.setIdCTSP(chiTietSanPham.get().getId());

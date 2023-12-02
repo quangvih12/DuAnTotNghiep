@@ -25,6 +25,11 @@ public class ThongKeApi {
         return ResponseEntity.ok(adminThongKeDoanhThuService.getAll());
     }
 
+    @GetMapping("/day")
+    public ResponseEntity<?> getAllByDay() {
+        return ResponseEntity.ok(adminThongKeDoanhThuService.getAllByNowDay());
+    }
+
     @GetMapping("/by-phuong-thuc")
     public ResponseEntity<?> getAllByPhuongThuc(@RequestParam(required = false) Integer idPhuongThuc) {
         return ResponseEntity.ok(adminThongKeDoanhThuService.getAllByPhuongThuc(idPhuongThuc));
