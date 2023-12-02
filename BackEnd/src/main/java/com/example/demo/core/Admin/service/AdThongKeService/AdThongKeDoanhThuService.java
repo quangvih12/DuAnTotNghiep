@@ -1,6 +1,7 @@
 package com.example.demo.core.Admin.service.AdThongKeService;
 
 import com.example.demo.core.Admin.model.response.AdminThongKeBO;
+import com.example.demo.core.Admin.model.response.AdminThongKeNowDayBO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,6 +10,7 @@ public interface AdThongKeDoanhThuService {
 
     AdminThongKeBO getAll();
 
+    AdminThongKeNowDayBO getAllByNowDay();
 
     AdminThongKeBO getAllBySanPham(Integer id,String year);
 

@@ -40,6 +40,18 @@ public class AdminThongKeDoanhThuServiceImpl implements AdThongKeDoanhThuService
         return adminThongKeBO;
     }
 
+    @Override
+    public AdminThongKeNowDayBO getAllByNowDay() {
+        Integer doanhThu = adThongKeResponsitory.tongDoanhThuByDayNow();
+         Integer doanhThuTaiQuay= adThongKeResponsitory.tongDoanhThuByDayNowTaiQuay();
+         Integer doanhThuOnline= adThongKeResponsitory.tongDoanhThuByDayOnline();
+         Integer donMua= adThongKeResponsitory.tongDonhangHoanThanhByDay();
+         Integer donTra= adThongKeResponsitory.tongDonhangTraByDay();
+         Integer donHuy= adThongKeResponsitory.tongDonhangHuyByDay();
+        AdminThongKeNowDayBO adminThongKeNowDayBO = new AdminThongKeNowDayBO(doanhThu,doanhThuTaiQuay,doanhThuOnline,donMua,donTra,donHuy);
+        return adminThongKeNowDayBO;
+    }
+
     public AdminThongKeBO getAllByPhuongThuc(Integer idPhuongThucThanhToan) {
 
         // Lấy dữ liệu từ cơ sở dữ liệu
