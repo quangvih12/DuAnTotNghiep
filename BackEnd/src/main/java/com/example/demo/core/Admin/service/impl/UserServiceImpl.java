@@ -1,5 +1,6 @@
 package com.example.demo.core.Admin.service.impl;
 
+import com.example.demo.core.Admin.model.request.AdminDiaChiRequest;
 import com.example.demo.core.Admin.model.request.AdminUserRequest;
 import com.example.demo.core.Admin.model.response.AdminHoaDonResponse;
 import com.example.demo.core.Admin.model.response.AdminUserResponse;
@@ -8,6 +9,8 @@ import com.example.demo.core.Admin.repository.AdDiaChiReponsitory;
 import com.example.demo.core.Admin.repository.AdHoaDonReponsitory;
 import com.example.demo.core.Admin.repository.AdUserRepository;
 import com.example.demo.core.Admin.service.AdUserService;
+import com.example.demo.core.khachHang.model.request.KHDiaChiRequest;
+import com.example.demo.core.khachHang.model.response.DiaChiResponse;
 import com.example.demo.entity.DiaChi;
 import com.example.demo.entity.User;
 import com.example.demo.infrastructure.status.UserStatus;
@@ -137,5 +140,37 @@ public class UserServiceImpl implements AdUserService {
     @Override
     public List<AdminUserVoucherResponse> getAllUserByTongTien(String cbbValue) {
         return userRepository.getAllUserByTongTien(cbbValue);
+    }
+
+    @Override
+    public DiaChi addDiaChi(AdminDiaChiRequest request) {
+
+        List<DiaChi> lstDiaChi =  adDiaChiReponsitory.findDiaChiByIdUser(request.getIdUser());
+        if(lstDiaChi.isEmpty()){
+            DiaChi diaChi = new DiaChi();
+            diaChi.setIdTinhThanh(request.getIdTinhThanh());
+            diaChi.setTenTinhThanh(request.getTinhThanh());
+            diaChi.setIdQuanHuyen(request.getIdQuanHuyen());
+            diaChi.setTenQuanHuyen(request.getQuanHuyen());
+            diaChi.setIdphuongXa(request.getIdPhuongXa());
+            diaChi.setTenphuongXa(request.getPhuongXa());
+            diaChi.setDiaChi(request.getDiaChi());
+            diaChi.setTrangThai(1);
+            diaChi.setUser(User.builder().id(request.getIdUser()).build());
+            DiaChi saveDiaChi =  adDiaChiReponsitory.save(diaChi);
+            return adDiaChiReponsitory.findById(saveDiaChi.getId()).get();
+        }
+        DiaChi diaChi = new DiaChi();
+        diaChi.setIdTinhThanh(request.getIdTinhThanh());
+        diaChi.setTenTinhThanh(request.getTinhThanh());
+        diaChi.setIdQuanHuyen(request.getIdQuanHuyen());
+        diaChi.setTenQuanHuyen(request.getQuanHuyen());
+        diaChi.setIdphuongXa(request.getIdPhuongXa());
+        diaChi.setTenphuongXa(request.getPhuongXa());
+        diaChi.setDiaChi(request.getDiaChi());
+        diaChi.setTrangThai(0);
+        diaChi.setUser(User.builder().id(request.getIdUser()).build());
+        DiaChi saveDiaChi =  adDiaChiReponsitory.save(diaChi);
+        return adDiaChiReponsitory.findById(saveDiaChi.getId()).get();
     }
 }

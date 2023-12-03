@@ -14,4 +14,6 @@ public class BHTQHoaDonRequest {
     Integer idPTTT;
     String moTa;
     BigDecimal tienKhachDua;
+    Integer idDiaChi;
+    Integer tienShip;
 }

@@ -1,5 +1,6 @@
 package com.example.demo.core.Admin.controller;
 
+import com.example.demo.core.Admin.model.request.AdminDiaChiRequest;
 import com.example.demo.core.Admin.model.request.AdminUserRequest;
 import com.example.demo.core.Admin.model.response.AdminUserResponse;
 import com.example.demo.core.Admin.service.AdUserService;
@@ -69,6 +70,11 @@ public class UserApi {
     @PutMapping("{id}/vo-hieu-hoa")
     public ResponseEntity<?> voHieuHoaUser(@PathVariable Integer id) {
         return ResponseEntity.ok(adUserService.VoHieuHoaUser(id));
+    }
+
+    @PostMapping("/add-dia-chi")
+    public ResponseEntity<?> addDiaChi(@RequestBody AdminDiaChiRequest request) {
+        return ResponseEntity.ok(adUserService.addDiaChi(request));
     }
 
 }
