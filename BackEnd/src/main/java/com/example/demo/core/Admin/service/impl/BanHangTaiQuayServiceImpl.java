@@ -12,12 +12,7 @@ import com.example.demo.core.Admin.repository.AdHoaDonReponsitory;
 import com.example.demo.core.Admin.repository.AdSanPhamChiTietRepository;
 import com.example.demo.core.Admin.repository.AdUserRepository;
 import com.example.demo.core.Admin.service.BanHangTaiQuayService;
-import com.example.demo.entity.HoaDon;
-import com.example.demo.entity.HoaDonChiTiet;
-import com.example.demo.entity.PhuongThucThanhToan;
-import com.example.demo.entity.Role;
-import com.example.demo.entity.SanPhamChiTiet;
-import com.example.demo.entity.User;
+import com.example.demo.entity.*;
 import com.example.demo.infrastructure.mapper.BHTQChiTietSanPhamRespMapper;
 import com.example.demo.infrastructure.mapper.BHTQHoaDonChiTietRespMapper;
 import com.example.demo.infrastructure.mapper.BHTQHoaDonRespMapper;
@@ -120,6 +115,8 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         if (tien[1].compareTo(BigDecimal.valueOf(0)) == 1) hd.setTienSauKhiGiam(tien[0].subtract(tien[1]));
         hd.setTienKhachDua(dto.getTienKhachDua());
         hd.setTrangThai(HoaDonStatus.HOAN_THANH);
+        if(dto.getIdDiaChi() != null) hd.setDiaChi(DiaChi.builder().id(dto.getIdDiaChi()).build());
+        if(dto.getTienShip() != null) hd.setTienShip( BigDecimal.valueOf((long)dto.getTienShip()));
         hoaDonRepository.save(hd);
     }
 

@@ -899,14 +899,14 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
     @Query(value = """
             SELECT SUM(hd.tong_tien) as tongTien
             FROM  datn.hoa_don hd
-            where hd.trang_thai in (3)  and hd.hinh_thuc_giao_hang =1 and DATE(hd.ngay_tao) = CURDATE();
+            where hd.trang_thai in (3)  and hd.hinh_thuc_giao_hang in (1,2) and hd.id_nguoi_tao is not null and DATE(hd.ngay_tao) = CURDATE();
             """, nativeQuery = true)
     Integer tongDoanhThuByDayNowTaiQuay();
 
     @Query(value = """
             SELECT SUM(hd.tong_tien) as tongTien
             FROM  datn.hoa_don hd
-            where hd.trang_thai in (3)  and hd.hinh_thuc_giao_hang =2 and DATE(hd.ngay_tao) = CURDATE();
+            where hd.trang_thai in (3)  and hd.hinh_thuc_giao_hang =2 and hd.id_nguoi_tao is null and DATE(hd.ngay_tao) = CURDATE();
             """, nativeQuery = true)
     Integer tongDoanhThuByDayOnline();
 

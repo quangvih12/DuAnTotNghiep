@@ -1,6 +1,7 @@
 package com.example.demo.core.Admin.service;
 
 
+import com.example.demo.core.Admin.model.request.AdminDiaChiRequest;
 import com.example.demo.core.Admin.model.request.AdminUserRequest;
 import com.example.demo.core.Admin.model.response.AdminHoaDonResponse;
 import com.example.demo.core.Admin.model.response.AdminUserResponse;
@@ -39,4 +40,5 @@ public interface AdUserService {
 
     List<AdminUserVoucherResponse> getAllUserByTongTien(String cbbValue);
 
+    DiaChi addDiaChi(AdminDiaChiRequest request);
 }
