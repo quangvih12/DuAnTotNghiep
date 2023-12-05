@@ -44,9 +44,40 @@ public class HoaDonApi {
         return ResponseEntity.ok(adminTatCaHoaDonService.getAll());
     }
 
+    @GetMapping("/find-tat-ca-by-pttt")
+    public ResponseEntity<?> getAllByPttt(@RequestParam("pttt") Integer pttt) {
+        return ResponseEntity.ok(adminTatCaHoaDonService.getAllByPttt(pttt));
+    }
+
+    @GetMapping("/find-tat-ca-by-hinh-thuc-giao")
+    public ResponseEntity<?> getAllByHinhThucGiao(@RequestParam("hinhThucGiao") Integer hinhThucGiao) {
+        return ResponseEntity.ok(adminTatCaHoaDonService.getAllByHinhThucGiao(hinhThucGiao));
+    }
+
+    @GetMapping("/find-tat-ca-by-hinh-thuc-giao-and_pttt")
+    public ResponseEntity<?> getAllByHinhThucGiaoAndPttt(@RequestParam("hinhThucGiao") Integer hinhThucGiao, @RequestParam("pttt") Integer pttt) {
+        return ResponseEntity.ok(adminTatCaHoaDonService.getAllByHinhThucGiaoAndPttt(hinhThucGiao, pttt));
+    }
+
     @GetMapping("/hoaDonTrangThai/{trangThai}")
     public ResponseEntity<?> getHoaDonHuy(@PathVariable Integer trangThai) {
         return ResponseEntity.ok(adminTatCaHoaDonService.getHoaDonTrangThai(trangThai));
+    }
+
+    @GetMapping("/hoaDonTrangThai/hinh-thuc-giao/{trangThai}")
+    public ResponseEntity<?> getHoaDonByStatusAndHinhThucGiao(@PathVariable Integer trangThai, @RequestParam("hinhThucGiao") Integer hinhThucGiao) {
+        return ResponseEntity.ok(adminTatCaHoaDonService.getHoaDonTrangThaiAndHinhThucGiao(trangThai, hinhThucGiao));
+    }
+
+    @GetMapping("/hoaDonTrangThai/pttt/{trangThai}")
+    public ResponseEntity<?> getHoaDonByStatusAndPttt(@PathVariable Integer trangThai, @RequestParam("pttt") Integer pttt) {
+        return ResponseEntity.ok(adminTatCaHoaDonService.getHoaDonTrangThaiAndPttt(trangThai, pttt));
+    }
+
+    @GetMapping("/hoaDonTrangThai/pttt-and-htgh/{trangThai}")
+    public ResponseEntity<?> getHoaDonByStatusAndPttt(@PathVariable Integer trangThai, @RequestParam("pttt") Integer pttt,
+                                                      @RequestParam("htgh") Integer htgh) {
+        return ResponseEntity.ok(adminTatCaHoaDonService.getHoaDonTrangThaiAndPtttAndHtgh(trangThai, pttt, htgh));
     }
 
     @GetMapping("/search-date")
@@ -54,9 +85,38 @@ public class HoaDonApi {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime date = LocalDateTime.parse(startDate, formatter);
         LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
-//        return null;
-
         return ResponseEntity.ok(adminTatCaHoaDonService.searchDate(date, date2, comboBoxValue));
+    }
+
+    @GetMapping("/search-date-by-hinh-thuc-giao")
+    public ResponseEntity<?> searchHDByHinhThucGiao(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate, @RequestParam String comboBoxValue, @RequestParam Integer hinhThucGiao) throws ParseException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime date = LocalDateTime.parse(startDate, formatter);
+        LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
+        return ResponseEntity.ok(adminTatCaHoaDonService.searchDateAndHinhThucGiao(date, date2, comboBoxValue, hinhThucGiao));
+    }
+
+    @GetMapping("/search-date-by-pttt")
+    public ResponseEntity<?> searchHDByPttt(@RequestParam("startDate") String startDate,
+                                            @RequestParam("endDate") String endDate,
+                                            @RequestParam String comboBoxValue,
+                                            @RequestParam Integer pttt) throws ParseException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime date = LocalDateTime.parse(startDate, formatter);
+        LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
+        return ResponseEntity.ok(adminTatCaHoaDonService.searchDateAndPttt(date, date2, comboBoxValue, pttt));
+    }
+
+    @GetMapping("/search-date-by-pttt-and-htgh")
+    public ResponseEntity<?> searchHDByPtttAndHtgd(@RequestParam("startDate") String startDate,
+                                                   @RequestParam("endDate") String endDate,
+                                                   @RequestParam String comboBoxValue,
+                                                   @RequestParam Integer pttt,
+                                                   @RequestParam Integer htgh) throws ParseException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime date = LocalDateTime.parse(startDate, formatter);
+        LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
+        return ResponseEntity.ok(adminTatCaHoaDonService.searchDateAndPtttAndHtgh(date, date2, comboBoxValue, pttt, htgh));
     }
 
     @GetMapping("/search-date-by-trang-thai")
@@ -65,7 +125,38 @@ public class HoaDonApi {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime date = LocalDateTime.parse(startDate, formatter);
         LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
+        System.out.println(adminTatCaHoaDonService.searchDateByTrangThai(date, date2, comboBoxValue, trangThai).size());
         return ResponseEntity.ok(adminTatCaHoaDonService.searchDateByTrangThai(date, date2, comboBoxValue, trangThai));
+    }
+
+    @GetMapping("/search-date-by-trang-thai-and-hinh-thuc-giao")
+    public ResponseEntity<?> getHDByTrangThaiAndHinhThucGiao(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,
+                                                             @RequestParam String comboBoxValue, @RequestParam("trangThai") Integer trangThai,
+                                                             @RequestParam Integer hinhThucGiao) throws ParseException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime date = LocalDateTime.parse(startDate, formatter);
+        LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
+        return ResponseEntity.ok(adminTatCaHoaDonService.searchDateByTrangThaiAndHinhThucGiao(date, date2, comboBoxValue, trangThai, hinhThucGiao));
+    }
+
+    @GetMapping("/search-date-by-trang-thai-and-pttt")
+    public ResponseEntity<?> getHDByTrangThaiAndPttt(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,
+                                                     @RequestParam String comboBoxValue, @RequestParam("trangThai") Integer trangThai,
+                                                     @RequestParam Integer pttt) throws ParseException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime date = LocalDateTime.parse(startDate, formatter);
+        LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
+        return ResponseEntity.ok(adminTatCaHoaDonService.searchDateByTrangThaiAndPttt(date, date2, comboBoxValue, trangThai, pttt));
+    }
+
+    @GetMapping("/search-date-by-trang-thai-and-pttt-and-htgh")
+    public ResponseEntity<?> getHDByTrangThaiAndPtttAndHtgh(@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,
+                                                            @RequestParam String comboBoxValue, @RequestParam("trangThai") Integer trangThai,
+                                                            @RequestParam Integer pttt, @RequestParam Integer htgh) throws ParseException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime date = LocalDateTime.parse(startDate, formatter);
+        LocalDateTime date2 = LocalDateTime.parse(endDate, formatter);
+        return ResponseEntity.ok(adminTatCaHoaDonService.searchDateByTrangThaiAndPtttAndHtgh(date, date2, comboBoxValue, trangThai, pttt, htgh));
     }
 
     @GetMapping("/detail/{id}")

@@ -11,7 +11,19 @@ public interface AdminTatCaHoaDonService {
 
     List<AdminHoaDonResponse> getAll();
 
+    List<AdminHoaDonResponse> getAllByHinhThucGiao(Integer hinhThucGiao);
+
+    List<AdminHoaDonResponse> getAllByPttt(Integer pttt);
+
+    List<AdminHoaDonResponse> getAllByHinhThucGiaoAndPttt(Integer hinhThucGiao, Integer pttt);
+
     List<AdminHoaDonResponse> getHoaDonTrangThai(Integer trangThai);
+
+    List<AdminHoaDonResponse> getHoaDonTrangThaiAndHinhThucGiao(Integer trangThai, Integer hinhThucGiao);
+
+    List<AdminHoaDonResponse> getHoaDonTrangThaiAndPttt(Integer trangThai, Integer pttt);
+
+    List<AdminHoaDonResponse> getHoaDonTrangThaiAndPtttAndHtgh(Integer trangThai, Integer pttt, Integer hinhThucGiao);
 
     List<AdminHoaDonResponse> getHoaDonHoanThanh();
 
@@ -25,9 +37,21 @@ public interface AdminTatCaHoaDonService {
 
     List<AdminHoaDonResponse> getHoaDonDangChuanBiHang();
 
-    List<AdminHoaDonResponse> searchDate(LocalDateTime startDate, LocalDateTime endDate, String  comboBoxValue);
+    List<AdminHoaDonResponse> searchDate(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue);
 
-    List<AdminHoaDonResponse> searchDateByTrangThai(LocalDateTime startDate, LocalDateTime endDate, String  comboBoxValue,Integer trangThai);
+    List<AdminHoaDonResponse> searchDateAndHinhThucGiao(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer hinhThucGiao);
+
+    List<AdminHoaDonResponse> searchDateAndPttt(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer pttt);
+
+    List<AdminHoaDonResponse> searchDateAndPtttAndHtgh(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer pttt, Integer hinhThucGiao);
+
+    List<AdminHoaDonResponse> searchDateByTrangThai(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer trangThai);
+
+    List<AdminHoaDonResponse> searchDateByTrangThaiAndHinhThucGiao(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer trangThai, Integer hinhThucGiao);
+
+    List<AdminHoaDonResponse> searchDateByTrangThaiAndPttt(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer trangThai, Integer pttt);
+
+    List<AdminHoaDonResponse> searchDateByTrangThaiAndPtttAndHtgh(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer trangThai, Integer pttt, Integer hinhThucGiao);
 
     AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD, LocalDateTime ngayShip);
 
