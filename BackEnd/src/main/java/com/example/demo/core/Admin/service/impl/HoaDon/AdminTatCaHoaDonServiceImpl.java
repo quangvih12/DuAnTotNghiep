@@ -32,8 +32,38 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
     }
 
     @Override
+    public List<AdminHoaDonResponse> getAllByHinhThucGiao(Integer hinhThucGiao) {
+        return hoaDonReponsitory.getAllByHinhThucGiao(hinhThucGiao);
+    }
+
+    @Override
+    public List<AdminHoaDonResponse> getAllByPttt(Integer pttt) {
+        return hoaDonReponsitory.getAllByPttt(pttt);
+    }
+
+    @Override
+    public List<AdminHoaDonResponse> getAllByHinhThucGiaoAndPttt(Integer hinhThucGiao, Integer pttt) {
+        return hoaDonReponsitory.getAllByHinhThucGiaoAndPttt(hinhThucGiao, pttt);
+    }
+
+    @Override
     public List<AdminHoaDonResponse> getHoaDonTrangThai(Integer trangThai) {
         return hoaDonReponsitory.getHoaDonTrangThai(trangThai);
+    }
+
+    @Override
+    public List<AdminHoaDonResponse> getHoaDonTrangThaiAndHinhThucGiao(Integer trangThai, Integer hinhThucGiao) {
+        return hoaDonReponsitory.getHoaDonTrangThaiAndHinhThucGiao(trangThai, hinhThucGiao);
+    }
+
+    @Override
+    public List<AdminHoaDonResponse> getHoaDonTrangThaiAndPttt(Integer trangThai, Integer pttt) {
+        return hoaDonReponsitory.getHoaDonTrangThaiAndPttt(trangThai, pttt);
+    }
+
+    @Override
+    public List<AdminHoaDonResponse> getHoaDonTrangThaiAndPtttAndHtgh(Integer trangThai, Integer pttt, Integer hinhThucGiao) {
+        return hoaDonReponsitory.getHoaDonTrangThaiAndPtttAndHtgh(trangThai, pttt, hinhThucGiao);
     }
 
     @Override
@@ -73,8 +103,38 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
     }
 
     @Override
+    public List<AdminHoaDonResponse> searchDateAndHinhThucGiao(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer hinhThucGiao) {
+        return hoaDonReponsitory.getHoaDonByDateAndHinhThucGiao(startDate, endDate, comboBoxValue, hinhThucGiao);
+    }
+
+    @Override
+    public List<AdminHoaDonResponse> searchDateAndPttt(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer pttt) {
+        return hoaDonReponsitory.getHoaDonByDateAndPttt(startDate, endDate, comboBoxValue, pttt);
+    }
+
+    @Override
+    public List<AdminHoaDonResponse> searchDateAndPtttAndHtgh(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer pttt, Integer hinhThucGiao) {
+        return hoaDonReponsitory.getHoaDonByDateAndPtttAndHtgh(startDate, endDate, comboBoxValue, pttt, hinhThucGiao);
+    }
+
+    @Override
     public List<AdminHoaDonResponse> searchDateByTrangThai(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer trangThai) {
         return hoaDonReponsitory.getHoaDonByDateByTrangThai(startDate, endDate, comboBoxValue, trangThai);
+    }
+
+    @Override
+    public List<AdminHoaDonResponse> searchDateByTrangThaiAndHinhThucGiao(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer trangThai, Integer hinhThucGiao) {
+        return hoaDonReponsitory.getHoaDonByDateByTrangThaiAndHinhThucGiao(startDate, endDate, comboBoxValue, trangThai, hinhThucGiao);
+    }
+
+    @Override
+    public List<AdminHoaDonResponse> searchDateByTrangThaiAndPttt(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer trangThai, Integer pttt) {
+        return hoaDonReponsitory.getHoaDonByDateByTrangThaiAndPttt(startDate, endDate, comboBoxValue, trangThai, pttt);
+    }
+
+    @Override
+    public List<AdminHoaDonResponse> searchDateByTrangThaiAndPtttAndHtgh(LocalDateTime startDate, LocalDateTime endDate, String comboBoxValue, Integer trangThai, Integer pttt, Integer hinhThucGiao) {
+        return hoaDonReponsitory.getHoaDonByDateByTrangThaiAndPtttAndHtgh(startDate, endDate, comboBoxValue, trangThai, pttt, hinhThucGiao);
     }
 
     @Override
