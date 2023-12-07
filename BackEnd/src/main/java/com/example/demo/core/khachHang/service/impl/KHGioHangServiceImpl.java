@@ -97,15 +97,19 @@ public class KHGioHangServiceImpl implements KHGiohangService {
 
     public GioHangChiTiet createNewCart(User kh, SanPhamChiTiet sanPhamCT, GioHangCTRequest ghct, Integer idKh) {
 
+        Random random = new Random();
+        int randomNumber = random.nextInt(9000) + 1000;
+
         GioHang gioHang = giohangRepo.finbyIdKH(idKh);
         if (gioHang == null) {
             GioHang newGioHang = new GioHang();
+            newGioHang.setNgayTao(DatetimeUtil.getCurrentDate());
+            newGioHang.setMa("GH"+randomNumber);
             newGioHang.setUser(User.builder().id(idKh).build());
             gioHang = giohangRepo.save(newGioHang);
         }
         // thêm mới vào GHCT
-        Random random = new Random();
-        int randomNumber = random.nextInt(9000) + 1000;
+
         GioHangChiTiet gioHangChiTiet = new GioHangChiTiet();
 
         if (sanPhamCT.getGiaSauGiam() == null) {
@@ -326,15 +330,15 @@ public class KHGioHangServiceImpl implements KHGiohangService {
         User user = userRepository.findByUserName(userName);
         idUser = user.getId();
         Optional<GioHangChiTiet> tutorialData = gioHangCTRespon.findById(id);
-        log.info("testtahnh");
+
         if (tutorialData.isPresent()) {
-            log.info("khanh");
+
             GioHangChiTiet _gioHangChiTiet = tutorialData.get();
             int newSoLuong = sl;
             if (newSoLuong > _gioHangChiTiet.getSanPhamChiTiet().getSoLuongTon()) {
                 return null;
             }
-            log.info("khanh test");
+
             _gioHangChiTiet.setSoLuong( sl);
             GioHangChiTiet gioHang = gioHangCTRespon.save(_gioHangChiTiet);
             log.info("test",gioHang.getSoLuong());
