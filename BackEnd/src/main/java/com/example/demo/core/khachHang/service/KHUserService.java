@@ -16,5 +16,5 @@ public interface KHUserService {
 
     String checkValiDate(LoginPayLoad loginPayload);
 
-
+    User createAccountGG(String email, String ten, String anh);
 }

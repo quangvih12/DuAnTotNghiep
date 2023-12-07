@@ -30,21 +30,22 @@ public class KHUserServiceImpl implements KHUserService {
     @Override
     public User dangNhapGoogle(String email, String ten, String anh) {
         User user = khUserRepo.findUserByEmail(email);
-        if (user != null) {
             return user;
-        } else {
-            User addUser = User.builder().email(email).userName(email).ten(ten).build();
-            addUser.setRole(Role.USER);
-            addUser.setNgayTao(LocalDateTime.now());
-            addUser.setPassword("$2a$12$Xcp214DEIsQr61KrINMt5egl.2Tqfcjwhu32Y9Y5TCEFzH5yiEOlS");
-            addUser.setImage(anh);
-            addUser.setTrangThai(2);
-            User user1 = khUserRepo.save(addUser);
-            user1.setMa("US" + user1.getId());
-            khUserRepo.save(user1);
-            return user1;
-        }
     }
+
+    public User createAccountGG(String email, String ten, String anh){
+        User addUser = User.builder().email(email).userName(email).ten(ten).build();
+        addUser.setRole(Role.USER);
+        addUser.setNgayTao(LocalDateTime.now());
+        addUser.setPassword("$2a$12$Xcp214DEIsQr61KrINMt5egl.2Tqfcjwhu32Y9Y5TCEFzH5yiEOlS");
+        addUser.setImage(anh);
+        addUser.setTrangThai(2);
+        User user1 = khUserRepo.save(addUser);
+        user1.setMa("US" + user1.getId());
+        khUserRepo.save(user1);
+        return user1;
+    }
+
 
     @Override
     public User findByToken(String token) {
