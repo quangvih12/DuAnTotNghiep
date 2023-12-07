@@ -164,7 +164,10 @@ public class HoaDonServiceImpl implements HoaDonService {
         }
         for (KHHoaDonChiTietRequest x : hoaDonRequest.getListHDCT()) {
             GioHangChiTiet gioHangChiTiet = khghctRepo.listGHCTByID(hoaDonRequest.getIdUser(), x.getIdCTSP());
-            khghctRepo.deleteById(gioHangChiTiet.getId());
+           if(gioHangChiTiet != null){
+               khghctRepo.deleteById(gioHangChiTiet.getId());
+           }
+
         }
 //        this.updateVoucher(kh.getId(), hoaDonRequest.getIdVoucher());
         this.thongBaoService.thanhToan(saveHoaDon.getId());

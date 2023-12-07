@@ -87,4 +87,11 @@ public interface AdminHoaDonResponse {
     @Value("#{target.idUser}")
     Integer getIdUser();
 
+    @Value("#{target.idVoucher}")
+    Integer getIdVoucher();
+
+    @Value("#{target.tenVoucher}")
+    String getTenVoucher();
+
+
 }
