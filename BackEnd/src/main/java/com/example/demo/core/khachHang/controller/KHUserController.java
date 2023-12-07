@@ -47,6 +47,12 @@ public class KHUserController {
         return ResponseEntity.ok(user);
     }
 
+    @PostMapping("/createAccountGG/{email}")
+    public ResponseEntity<?> createAccountGG(@PathVariable String email, @RequestParam("username") String username, @RequestParam("anh") String anh) {
+        User user = khUserService.createAccountGG(email,username,anh);
+        return ResponseEntity.ok(user);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginPayLoad loginPayload) {
         try {
