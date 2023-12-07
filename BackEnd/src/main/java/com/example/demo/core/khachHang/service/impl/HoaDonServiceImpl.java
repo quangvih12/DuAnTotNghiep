@@ -103,7 +103,6 @@ public class HoaDonServiceImpl implements HoaDonService {
 
 
         HoaDon hoaDon = HoaDon.builder()
-                .ma("HD" + randomNumber)
                 .user(kh)
                 .diaChi(diaChi)
                 .tongTien(hoaDonRequest.getTongTien())
@@ -114,9 +113,10 @@ public class HoaDonServiceImpl implements HoaDonService {
                 .tienSauKhiGiam(tienSauGiam)
                 .hinhThucGiaoHang(HinhThucGiaoHangStatus.GIAOHANG)
                 .trangThai(HoaDonStatus.YEU_CAU_XAC_NHAN)
-
                 .phuongThucThanhToan(PhuongThucThanhToan.builder().id(hoaDonRequest.getIdPayMethod()).build())
                 .build();
+
+//        hoaDon.setMa("HD".concat(new HoaDon().getId().toString()));
 
         if(hoaDonRequest.getIdVoucher() != null) {
             Voucher voucher = voucherRepo.findAllById(hoaDonRequest.getIdVoucher()).get();
@@ -124,6 +124,9 @@ public class HoaDonServiceImpl implements HoaDonService {
         }
 
         HoaDon saveHoaDon = khHoaDonRepo.save(hoaDon);
+        saveHoaDon.setMa("HD" + saveHoaDon.getId().toString());
+        khHoaDonRepo.save(saveHoaDon);
+
         if(hoaDonRequest.getIdVoucher() != null) {
             Voucher voucher = voucherRepo.findAllById(hoaDonRequest.getIdVoucher()).get();
             voucher.setSoLuong(voucher.getSoLuong() - 1);
