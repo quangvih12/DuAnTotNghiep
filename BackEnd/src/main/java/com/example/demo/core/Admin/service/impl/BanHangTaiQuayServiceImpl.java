@@ -112,9 +112,11 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
             tien[1] = tien[1].add(hdct.getChietKhau().multiply(BigDecimal.valueOf(hdct.getSoLuong()))); //Tong chiet khau
         });
         hd.setTongTien(tien[0]);
+        if (tien[1].compareTo(BigDecimal.valueOf(0)) == 0) hd.setTienSauKhiGiam(tien[0]);
         if (tien[1].compareTo(BigDecimal.valueOf(0)) == 1) hd.setTienSauKhiGiam(tien[0].subtract(tien[1]));
         hd.setTienKhachDua(dto.getTienKhachDua());
         hd.setTrangThai(HoaDonStatus.HOAN_THANH);
+        hd.setTenNguoiNhan(hd.getUser().getTen());
         if(dto.getIdDiaChi() != null) hd.setDiaChi(DiaChi.builder().id(dto.getIdDiaChi()).build());
         if(dto.getTienShip() != null) hd.setTienShip( BigDecimal.valueOf((long)dto.getTienShip()));
         hoaDonRepository.save(hd);
@@ -169,6 +171,19 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
             sanPhamChiTietRepository.save(spct);
             return hoaDonChiTietMapper.toDto(existedHDCT);
         }
+    }
+
+    @Override
+    @Transactional
+    public List<BHTQHoaDonChiTietResponse> updateSLSPCuaHDCT(Integer idHDCT, Integer soLuong) {
+        HoaDonChiTiet hdct = hoaDonChiTietRepository.findById(idHDCT).orElse(null);
+        int slThayDoi = hdct.getSoLuong() - soLuong; //SL thay doi > 0 -> giam | SL thay doi < 0 -> tang
+        SanPhamChiTiet spct = sanPhamChiTietRepository.findById(hdct.getSanPhamChiTiet().getId()).orElse(null);
+        hdct.setSoLuong(soLuong);
+        spct.setSoLuongTon(spct.getSoLuongTon() + slThayDoi);
+        hoaDonChiTietRepository.save(hdct);
+        sanPhamChiTietRepository.save(spct);
+        return getAllHDCT(hdct.getHoaDon().getId());
     }
 
     @Override
