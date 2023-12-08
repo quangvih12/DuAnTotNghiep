@@ -18,6 +18,7 @@ public interface BanHangTaiQuayService {
     List<BHTQHoaDonChiTietResponse> getAllHDCT(Integer idHoaDon);
     List<BHTQChiTietSanPhamResponse> getAllCTSP();
     BHTQHoaDonChiTietResponse addSPToHDCT(Integer idHoaDon, Integer idSPCT, Integer soLuong);
+    List<BHTQHoaDonChiTietResponse> updateSLSPCuaHDCT(Integer idHDCT, Integer soLuong);
     void deleteHDCT(Integer idHDCT);
     List<BHTQPhuongThucThanhToanResponse> getAllPTTT();
     List<BHTQUserResponse> getAllKH();

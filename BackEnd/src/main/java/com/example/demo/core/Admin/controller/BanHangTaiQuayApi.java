@@ -54,7 +54,7 @@ public class BanHangTaiQuayApi {
     @DeleteMapping("/hoa-don/{idHoaDon}")
     public ResponseEntity<?> huyHDCho(@PathVariable Integer idHoaDon) {
         service.huyHDCho(idHoaDon);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(service.getAllCTSP());
     }
 
     @GetMapping("/hoa-don-chi-tiet")
@@ -70,6 +70,15 @@ public class BanHangTaiQuayApi {
         response.put("allHDCT", service.getAllHDCT(idHoaDon));
         response.put("allSP", service.getAllCTSP());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/hoa-don-chi-tiet/{idHDCT}")
+    public ResponseEntity<?> updateSLSPCuaHDCT(@PathVariable("idHDCT") Integer idHDCT,
+                                               @RequestParam("so_luong") Integer soLuong) {
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("allHDCT", service.updateSLSPCuaHDCT(idHDCT, soLuong));
+        resp.put("allCTSP", service.getAllCTSP());
+        return ResponseEntity.ok(resp);
     }
 
     @DeleteMapping("/hoa-don-chi-tiet/{idHDCT}")
