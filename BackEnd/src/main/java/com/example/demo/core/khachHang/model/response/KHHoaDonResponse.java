@@ -83,4 +83,10 @@ public interface KHHoaDonResponse {
     @Value("#{target.moTa}")
     String getMoTa();
 
+    @Value("#{target.idVoucher}")
+    Integer getIdVoucher();
+
+    @Value("#{target.tenVoucher}")
+    String getTenVoucher();
+
 }

@@ -56,8 +56,8 @@ public class KHDoiTraHoaDonServiceImpl {
 
         if (hoaDonChi != null) {
             if(hdct != null){
-                hdct.setSoLuong(hdct.getSoLuong() - request.getSoLuong());
-                hoaDonChiTietRepo.save(hdct);
+//                hdct.setSoLuong(hdct.getSoLuong() - request.getSoLuong());
+//                hoaDonChiTietRepo.save(hdct);
             }
             hoaDonChi.setDonGia(hdct.getDonGia());
             hoaDonChi.setNgaySua(DatetimeUtil.getCurrentDate());
@@ -71,6 +71,7 @@ public class KHDoiTraHoaDonServiceImpl {
 
         if (request.getSoLuong() == hdct.getSoLuong()) {
             if (hdct != null) {
+                hdct.setLyDo(request.getLyDo());
                 hdct.setTrangThai(HoaDonStatus.YEU_CAU_DOI_TRA);
                 hoaDonChiTietRepo.save(hdct);
                 thongBaoService.yeuCauDoiTra(hdct.getHoaDon().getId(), hdct.getSanPhamChiTiet().getSanPham().getMa());
@@ -78,8 +79,8 @@ public class KHDoiTraHoaDonServiceImpl {
             }
         }else{
             if(hdct != null){
-                hdct.setSoLuong(hdct.getSoLuong() - request.getSoLuong());
-                hoaDonChiTietRepo.save(hdct);
+//                hdct.setSoLuong(hdct.getSoLuong() - request.getSoLuong());
+//                hoaDonChiTietRepo.save(hdct);
             }
         }
         if (request.getSoLuong() > hdct.getSoLuong()) {
