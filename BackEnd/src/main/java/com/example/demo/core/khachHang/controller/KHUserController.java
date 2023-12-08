@@ -53,6 +53,12 @@ public class KHUserController {
         return ResponseEntity.ok(user);
     }
 
+    @PatchMapping("/updateSDT/{id}")
+    public ResponseEntity<?> updateSDT( @PathVariable(value = "id") Integer id, @RequestParam("sdt") String sdt) {
+        User user = khUserService.updateSDT(id,sdt);
+        return ResponseEntity.ok(user);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginPayLoad loginPayload) {
         try {
