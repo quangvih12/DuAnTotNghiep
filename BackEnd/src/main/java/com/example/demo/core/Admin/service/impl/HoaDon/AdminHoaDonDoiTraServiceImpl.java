@@ -87,6 +87,10 @@ public class AdminHoaDonDoiTraServiceImpl implements AdHoaDonDoiTraService {
                     hdct.setTrangThai(HoaDonStatus.XAC_NHAN_DOI_TRA);
                     hdctRespone = hdctRepo.save(hdct);
                 }
+                if (hdct.getSanPhamChiTiet().getId() == idSPCT && hdct.getTrangThai() == HoaDonStatus.HOAN_THANH) {
+                    hdct.setSoLuong(hdct.getSoLuong() - hdctRespone.getSoLuong());
+                    hdctRepo.save(hdct);
+                }
             }
             return hdctRepo.findByIdHDCT(hdctRespone.getId());
         } else {
