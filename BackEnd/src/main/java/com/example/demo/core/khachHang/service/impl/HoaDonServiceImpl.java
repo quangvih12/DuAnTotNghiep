@@ -88,7 +88,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         LocalDateTime ngayThanhToan;
 
-        if (hoaDonRequest.getIdPayMethod() == 1) {
+        if (hoaDonRequest.getIdPayMethod() == 2) {
             ngayThanhToan = DatetimeUtil.getCurrentDateAndTimeLocal();
         } else {
             ngayThanhToan = null;
@@ -130,6 +130,9 @@ public class HoaDonServiceImpl implements HoaDonService {
         if(hoaDonRequest.getIdVoucher() != null) {
             Voucher voucher = voucherRepo.findAllById(hoaDonRequest.getIdVoucher()).get();
             voucher.setSoLuong(voucher.getSoLuong() - 1);
+            if(voucher.getSoLuong() == 0){
+                voucher.setTrangThai(3);
+            }
             voucherRepo.save(voucher);
         }
 

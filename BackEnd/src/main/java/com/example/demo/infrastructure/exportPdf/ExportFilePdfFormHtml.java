@@ -99,9 +99,16 @@ public class ExportFilePdfFormHtml {
                 .phiShip(formatter.format(hoaDon.getTienShip()))
                 .tongTien(formatter.format(hoaDon.getTongTien()))
                 .giamgia(giamGiaText )
-                .tongThanhToan(formatter.format(hoaDon.getTienSauKhiGiam()))
+                .tongThanhToan(formatter.format(hoaDon.getTongTien().add(hoaDon.getTienShip())))
                 .date(hoaDon.getNgayThanhToan())
                 .build();
+
+        if (hoaDon.getVoucher()== null) {
+
+            invoice.setTongThanhToan(formatter.format(hoaDon.getTongTien().add(hoaDon.getTienShip())));
+        }else{
+            invoice.setTongThanhToan(formatter.format(hoaDon.getTienSauKhiGiam()));
+        }
 
         List<HDCTRespon> items = billDetailResponses.stream()
                 .map(billDetailRequest -> {
