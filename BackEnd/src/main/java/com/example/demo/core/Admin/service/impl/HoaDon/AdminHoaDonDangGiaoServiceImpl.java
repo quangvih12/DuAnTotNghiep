@@ -33,6 +33,8 @@ public class AdminHoaDonDangGiaoServiceImpl implements AdHoaDonDangGiaoService {
                 hdct.setTrangThai(3);
                 hdctRepo.save(hdct);
             }
+
+            hoaDon.setNgayThanhToan(DatetimeUtil.getCurrentDateAndTimeLocal());
             hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
             hoaDon.setNgayNhan(DatetimeUtil.getCurrentDateAndTimeLocal());
             hoaDon.setTrangThai(HoaDonStatus.HOAN_THANH);
