@@ -213,11 +213,12 @@ public class HoaDonApi {
 
     // chuẩn bị xong -> đang giao
     @PutMapping("/XacNhanGiaoHang/{id}")
-    public ResponseEntity<?> XacNhanGiaoHang(@PathVariable Integer id, @RequestParam("ngayShip") String ngayShip) {
+    public ResponseEntity<?> XacNhanGiaoHang(@PathVariable Integer id, @RequestParam("ngayShip") String ngayShip,
+                                             @RequestParam Integer tongTien,@RequestParam Integer tienShip) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime date = LocalDateTime.parse(ngayShip, formatter);
         adThongBaoService.xacNhanHoaDon(id);
-        return ResponseEntity.ok(adminTatCaHoaDonService.giaoHoaDonChoVanChuyen(id, date));
+        return ResponseEntity.ok(adminTatCaHoaDonService.giaoHoaDonChoVanChuyen(id, date,tongTien,tienShip));
     }
 
     // Trả hàng -> Xác nhận trả

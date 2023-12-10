@@ -916,7 +916,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
     Integer tongDonhangHoanThanhByDay();
 
     @Query(value = """
-            SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=7 and DATE(hd.ngay_tao) = CURDATE();
+            SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=8 and DATE(hd.ngay_tao) = CURDATE();
              """, nativeQuery = true)
     Integer tongDonhangTraByDay();
 

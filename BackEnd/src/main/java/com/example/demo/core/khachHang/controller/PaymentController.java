@@ -37,15 +37,14 @@ public class PaymentController {
     public ResponseEntity<Boolean> paymentCallback(@RequestParam Map<String, String> queryParams, HttpServletResponse response) throws IOException {
         String vnp_ResponseCode = queryParams.get("vnp_ResponseCode");
 
-        log.info("test parm {}",queryParams);
         if ("00".equals(vnp_ResponseCode)) {
             // Giao dịch thành công
 //           hoaDonService.createHoaDon(request);
-            response.sendRedirect("http://localhost:5173/#/success");
-            log.info("test {}",ResponseEntity.ok(true) );
+            response.sendRedirect("http://localhost:5173/gio-hang/thanh-toan/thanh-cong");
+
             return ResponseEntity.ok(true);
         } else{
-            response.sendRedirect("http://localhost:5173/#/failed");
+            response.sendRedirect("http://localhost:5173/gio-hang/thanh-toan/that-bai");
         }
 
 

@@ -48,7 +48,7 @@ public class KHHoaDonServiceImpl implements KHHoaDonService {
             return null;
         }
         String userName = tokenService.getUserNameByToken(token);
-        log.info("aaaaaaaaaaaaaaaaaa{}",userName);
+      //  log.info("aaaaaaaaaaaaaaaaaa{}",userName);
         User user = userRepository.findByUserName(userName);
         idKh = user.getId();
         return hdRepo.getHoaDonByIdUser(idKh);

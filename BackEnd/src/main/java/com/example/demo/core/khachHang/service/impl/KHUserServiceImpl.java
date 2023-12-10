@@ -46,6 +46,17 @@ public class KHUserServiceImpl implements KHUserService {
         return user1;
     }
 
+    @Override
+    public User updateSDT(Integer id, String sdt) {
+
+        User user = khUserRepo.findAllById(id).orElseThrow();
+
+        user.setSdt(sdt);
+
+        khUserRepo.save(user);
+        return user;
+    }
+
 
     @Override
     public User findByToken(String token) {
