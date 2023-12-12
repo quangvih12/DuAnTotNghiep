@@ -158,7 +158,7 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
             hoaDon.setNgayShip(ngayShip);
             hoaDon.setTrangThai(HoaDonStatus.GIAO_CHO_DON_VI_VAN_CHUYEN);
             HoaDon hd = hoaDonReponsitory.save(hoaDon);
-            return hoaDonReponsitory.getByIds(hd.getId());
+            return hoaDonReponsitory.getByIds(idHD);
         } else {
             return null;
         }

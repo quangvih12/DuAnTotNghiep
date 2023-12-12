@@ -46,22 +46,23 @@ public class AdminHoaDonDoiTraServiceImpl implements AdHoaDonDoiTraService {
             HoaDonChiTiet hdctRespone = new HoaDonChiTiet();
             for (HoaDonChiTiet hdct : lstHDCT) {
                 if (hdct.getSanPhamChiTiet().getId() == spct.getId() && hdct.getTrangThai() == HoaDonStatus.YEU_CAU_DOI_TRA) {
-                    int count = 0;
-                    for (HoaDonChiTiet hdct1 : lstHDCT) {
-                        if (hdct1.getSanPhamChiTiet().getId() == spct.getId() && hdct1.getTrangThai() != HoaDonStatus.YEU_CAU_DOI_TRA) {
-                            count = 1;
-                            hdct1.setSoLuong(hdct1.getSoLuong() + hdct.getSoLuong());
-                            hdctRepo.save(hdct1);
-                        }
-                    }
-                    if (count == 0){
-                        hdct.setTrangThai(HoaDonStatus.HUY_DOI_TRA);
-                        hdctRespone = hdctRepo.save(hdct);
-                    }else{
-                        hdct.setTrangThai(HoaDonStatus.HUY_DOI_TRA);
-                        hdctRespone = hdctRepo.save(hdct);
-                    }
-
+//                    int count = 0;
+//                    for (HoaDonChiTiet hdct1 : lstHDCT) {
+//                        if (hdct1.getSanPhamChiTiet().getId() == spct.getId() && hdct1.getTrangThai() != HoaDonStatus.YEU_CAU_DOI_TRA) {
+//                            count = 1;
+//                            hdct1.setSoLuong(hdct1.getSoLuong() + hdct.getSoLuong());
+//                            hdctRepo.save(hdct1);
+//                        }
+//                    }
+//                    if (count == 0){
+//                        hdct.setTrangThai(HoaDonStatus.HUY_DOI_TRA);
+//                        hdctRespone = hdctRepo.save(hdct);
+//                    }else{
+//                        hdct.setTrangThai(HoaDonStatus.HUY_DOI_TRA);
+//                        hdctRespone = hdctRepo.save(hdct);
+//                    }
+                    hdct.setTrangThai(HoaDonStatus.HUY_DOI_TRA);
+                    hdctRespone = hdctRepo.save(hdct);
                 }
 
             }

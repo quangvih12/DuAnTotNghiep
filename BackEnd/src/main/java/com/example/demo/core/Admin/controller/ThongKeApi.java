@@ -36,26 +36,25 @@ public class ThongKeApi {
     }
 
     @GetMapping("/loi-nhuan")
-    public ResponseEntity<?> getAllLoiNhuan(@RequestParam(required = false) String year,@RequestParam(required = false) String startDate,@RequestParam(required = false) String endDate ) {
+    public ResponseEntity<?> getAllLoiNhuan(@RequestParam(required = false) String year, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
         LocalDateTime date = null;
         LocalDateTime date2 = null;
-        if(startDate != null && !startDate.isEmpty()){
+        if (startDate != null && !startDate.isEmpty()) {
             date = LocalDateTime.parse(startDate, formatter);
         }
-        if(endDate != null && !endDate.isEmpty()){
+        if (endDate != null && !endDate.isEmpty()) {
             date2 = LocalDateTime.parse(endDate, formatter);
         }
         return ResponseEntity.ok(adThongKeLoiNhuanService.getAll(year, date != null ? date.toString() : null, date2 != null ? date2.toString() : null));
     }
 
     @GetMapping("/loi-nhuan-hinh-thuc-giao-hang")
-    public ResponseEntity<?> getAllLoiNhuanByHinhThucGiaoHang(@RequestParam(required = false) Integer idHinhThuc ) {
+    public ResponseEntity<?> getAllLoiNhuanByHinhThucGiaoHang(@RequestParam(required = false) Integer idHinhThuc) {
 
         return ResponseEntity.ok(adThongKeLoiNhuanService.getAllByHinhThucGiaoHang(idHinhThuc));
     }
-
 
 
     @GetMapping("/san-pham/{id}")
@@ -64,13 +63,13 @@ public class ThongKeApi {
     }
 
     @GetMapping("/thuong-hieu/{id}")
-    public ResponseEntity<?> getAllByThuongHieu(@PathVariable Integer id,@RequestParam(required = false) String year) {
-        return ResponseEntity.ok(adminThongKeDoanhThuService.getAllByThuongHieu(id,year));
+    public ResponseEntity<?> getAllByThuongHieu(@PathVariable Integer id, @RequestParam(required = false) String year) {
+        return ResponseEntity.ok(adminThongKeDoanhThuService.getAllByThuongHieu(id, year));
     }
 
     @GetMapping("/loai/{id}")
-    public ResponseEntity<?> getAllByLoai(@PathVariable Integer id,@RequestParam(required = false) String year) {
-        return ResponseEntity.ok(adminThongKeDoanhThuService.getAllByLoai(id,year));
+    public ResponseEntity<?> getAllByLoai(@PathVariable Integer id, @RequestParam(required = false) String year) {
+        return ResponseEntity.ok(adminThongKeDoanhThuService.getAllByLoai(id, year));
     }
 
     @GetMapping("/year/{year}")
@@ -87,6 +86,10 @@ public class ThongKeApi {
         return ResponseEntity.ok(adminThongKeDoanhThuService.getAllByMonth(date, date2));
     }
 
+    @GetMapping("/xuat-bao-cao")
+    public ResponseEntity<?> xuatBaoCao() {
+        return ResponseEntity.ok(adminThongKeDoanhThuService.xuatBaoCaoThongKe());
+    }
 
 
 }
