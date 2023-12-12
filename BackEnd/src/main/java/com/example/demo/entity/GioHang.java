@@ -55,5 +55,5 @@ public class GioHang {
     @JsonIgnore
     @OneToMany(mappedBy = "gioHang", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<GioHangChiTiet> gioHangChiTietList = new ArrayList<>();
+    private List<GioHangChiTiet> gioHangChiTietList;
 }

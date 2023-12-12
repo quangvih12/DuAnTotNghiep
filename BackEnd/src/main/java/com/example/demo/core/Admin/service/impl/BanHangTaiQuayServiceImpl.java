@@ -19,6 +19,7 @@ import com.example.demo.infrastructure.mapper.BHTQHoaDonRespMapper;
 import com.example.demo.infrastructure.mapper.BHTQPhuongThucThanhToanRespMapper;
 import com.example.demo.infrastructure.mapper.BHTQUserReqMapper;
 import com.example.demo.infrastructure.mapper.BHTQUserRespMapper;
+import com.example.demo.infrastructure.status.HinhThucGiaoHangStatus;
 import com.example.demo.infrastructure.status.HoaDonStatus;
 import com.example.demo.infrastructure.status.UserStatus;
 import com.example.demo.reponsitory.PhuongThucThanhToanRepository;
@@ -115,7 +116,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         if (tien[1].compareTo(BigDecimal.valueOf(0)) == 0) hd.setTienSauKhiGiam(tien[0]);
         if (tien[1].compareTo(BigDecimal.valueOf(0)) == 1) hd.setTienSauKhiGiam(tien[0].subtract(tien[1]));
         hd.setTienKhachDua(dto.getTienKhachDua());
-        hd.setTrangThai(HoaDonStatus.HOAN_THANH);
+        hd.setTrangThai(dto.getIdHTGH() == HinhThucGiaoHangStatus.GIAOHANG ? HoaDonStatus.YEU_CAU_XAC_NHAN : HoaDonStatus.HOAN_THANH);
         hd.setTenNguoiNhan(hd.getUser().getTen());
         if(dto.getIdDiaChi() != null) hd.setDiaChi(DiaChi.builder().id(dto.getIdDiaChi()).build());
         if(dto.getTienShip() != null) hd.setTienShip( BigDecimal.valueOf((long)dto.getTienShip()));

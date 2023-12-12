@@ -5,3 +5,9 @@ mailServer:
   password: ftrm ywog ooqk emqb
   protocol: smtp
   isSSL: false
+
+frontend:
+  base-endpoint: http://localhost:5173
+
+backend:
+  base-endpoint: http://localhost:8080

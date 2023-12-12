@@ -78,22 +78,15 @@ public class SanPhamChiTiet {
     @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<GioHangChiTiet> gioHangList = new ArrayList<>();
+    private List<GioHangChiTiet> gioHangList;
 
     @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<HoaDonChiTiet> donChiTietList = new ArrayList<>();
+    private List<HoaDonChiTiet> donChiTietList;
 
     @JsonIgnore
     @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<ThongBao> thongBaoList = new ArrayList<>();
-
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "sanPhamChiTiet", fetch = FetchType.EAGER)
-//    @Fetch(value = FetchMode.SUBSELECT)
-//    private List<Comment> commentList = new ArrayList<>();
-
-
+    private List<ThongBao> thongBaoList;
 }

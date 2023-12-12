@@ -52,5 +52,5 @@ public class PhuongThucThanhToan {
     @JsonIgnore
     @OneToMany(mappedBy = "phuongThucThanhToan", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<HoaDon> hoaDonList = new ArrayList<>();
+    private List<HoaDon> hoaDonList;
 }

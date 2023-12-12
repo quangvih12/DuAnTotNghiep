@@ -15,10 +15,10 @@ import com.example.demo.infrastructure.sendmail.SendEmailService;
 import com.example.demo.infrastructure.status.ChiTietSanPhamStatus;
 import com.example.demo.infrastructure.status.HinhThucGiaoHangStatus;
 import com.example.demo.infrastructure.status.HoaDonStatus;
-import com.example.demo.reponsitory.UserVoucherRepository;
 import com.example.demo.util.DatetimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -30,6 +30,8 @@ import java.util.Random;
 @Service
 @Slf4j
 public class HoaDonServiceImpl implements HoaDonService {
+    @Value("${frontend.base-endpoint}")
+    private static String BASE_FRONTEND_ENDPOINT;
 
     @Autowired
     KHUserRepository khUserRepo;
@@ -48,9 +50,6 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Autowired
     KHVoucherRepository voucherRepo;
-
-    @Autowired
-    VoucherUserRepository userVoucherRepository;
 
     @Autowired
     KHGioHangRepository khGioHangRepo;
@@ -178,16 +177,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         return hoaDon;
     }
 
-    public  void updateVoucher(Integer idUser, Integer idVoucher){
-        UserVoucher userVoucher = userVoucherRepository.getVoucherByUser(idUser,idVoucher);
-        if(userVoucher != null){
-            userVoucher.setTrangThai(1);
-            userVoucherRepository.save(userVoucher);
-        }
-    }
-
-
-
     public void sendMailOnline(Integer idHoaDon) {
         String finalHtml = null;
         HoaDon hoaDon = hoaDonRepo.findAllById(idHoaDon);
@@ -195,7 +184,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
         User user = khUserRepo.findAllById(hoaDon.getUser().getId()).get();
 
-        sendMail(invoice, "http://localhost:5173/success", user.getEmail());
+        sendMail(invoice, BASE_FRONTEND_ENDPOINT + "/success", user.getEmail());
         //}
     }
 

@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class PaymentController {
+    @Value("${frontend.base-endpoint}")
+    private static String BASE_FRONTEND_ENDPOINT;
 
     @Autowired
     PaymentService paymentService;
@@ -40,11 +43,11 @@ public class PaymentController {
         if ("00".equals(vnp_ResponseCode)) {
             // Giao dịch thành công
 //           hoaDonService.createHoaDon(request);
-            response.sendRedirect("http://localhost:5173/gio-hang/thanh-toan/thanh-cong");
+            response.sendRedirect(BASE_FRONTEND_ENDPOINT + "/gio-hang/thanh-toan/thanh-cong");
 
             return ResponseEntity.ok(true);
         } else{
-            response.sendRedirect("http://localhost:5173/gio-hang/thanh-toan/that-bai");
+            response.sendRedirect(BASE_FRONTEND_ENDPOINT + "/gio-hang/thanh-toan/that-bai");
         }
 
 
