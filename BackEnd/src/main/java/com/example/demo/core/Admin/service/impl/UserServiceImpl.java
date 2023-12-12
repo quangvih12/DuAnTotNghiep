@@ -4,13 +4,10 @@ import com.example.demo.core.Admin.model.request.AdminDiaChiRequest;
 import com.example.demo.core.Admin.model.request.AdminUserRequest;
 import com.example.demo.core.Admin.model.response.AdminHoaDonResponse;
 import com.example.demo.core.Admin.model.response.AdminUserResponse;
-import com.example.demo.core.Admin.model.response.AdminUserVoucherResponse;
 import com.example.demo.core.Admin.repository.AdDiaChiReponsitory;
 import com.example.demo.core.Admin.repository.AdHoaDonReponsitory;
 import com.example.demo.core.Admin.repository.AdUserRepository;
 import com.example.demo.core.Admin.service.AdUserService;
-import com.example.demo.core.khachHang.model.request.KHDiaChiRequest;
-import com.example.demo.core.khachHang.model.response.DiaChiResponse;
 import com.example.demo.entity.DiaChi;
 import com.example.demo.entity.User;
 import com.example.demo.infrastructure.status.UserStatus;
@@ -135,11 +132,6 @@ public class UserServiceImpl implements AdUserService {
     @Override
     public List<AdminUserResponse> getAllUser() {
         return userRepository.getAllUser();
-    }
-
-    @Override
-    public List<AdminUserVoucherResponse> getAllUserByTongTien(String cbbValue) {
-        return userRepository.getAllUserByTongTien(cbbValue);
     }
 
     @Override

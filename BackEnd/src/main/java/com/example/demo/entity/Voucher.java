@@ -53,5 +53,5 @@ public class Voucher {
 
     @JsonIgnore
     @OneToMany(mappedBy = "voucher")
-    private List<HoaDon> hoaDonList = new ArrayList<>();
+    private List<HoaDon> hoaDonList;
 }

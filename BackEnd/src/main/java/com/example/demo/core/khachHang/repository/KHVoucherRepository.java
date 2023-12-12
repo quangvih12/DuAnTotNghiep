@@ -1,8 +1,6 @@
 package com.example.demo.core.khachHang.repository;
 
-import com.example.demo.core.khachHang.model.response.KhVoucherResponse;
 import com.example.demo.core.khachHang.model.response.VoucherResponse;
-import com.example.demo.entity.UserVoucher;
 import com.example.demo.entity.Voucher;
 import com.example.demo.reponsitory.VoucherReponsitory;
 import org.springframework.data.jpa.repository.Query;

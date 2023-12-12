@@ -81,27 +81,30 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<ThongBao> thongBaoList = new ArrayList<>();
+    private List<ThongBao> thongBaoList;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<DiaChi> diaChiList = new ArrayList<>();
+    private List<DiaChi> diaChiList;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<GioHang> gioHangList = new ArrayList<>();
+    private List<GioHang> gioHangList;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<HoaDon> hoaDonList = new ArrayList<>();
+    private List<HoaDon> hoaDonList;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<Comment> commentList = new ArrayList<>();
+    private List<Comment> commentList;
 
-
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<ResetPasswordToken> resetPasswordTokenList;
 }

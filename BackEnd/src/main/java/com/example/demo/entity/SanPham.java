@@ -78,15 +78,15 @@ public class SanPham {
     @JsonIgnore
     @OneToMany(mappedBy = "sanPham", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<SanPhamChiTiet> sanPhamChiTietList = new ArrayList<>();
+    private List<SanPhamChiTiet> sanPhamChiTietList;
 
     @JsonIgnore
     @OneToMany(mappedBy = "sanPham", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<Image> imageList = new ArrayList<>();
+    private List<Image> imageList;
 
     @JsonIgnore
     @OneToMany(mappedBy = "sanPham", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<Comment> commentList = new ArrayList<>();
+    private List<Comment> commentList;
 }
