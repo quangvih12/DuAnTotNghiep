@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ResetPasswordTokenRepository extends JpaRepository<ResetPasswordToken, Integer> {
     Optional<ResetPasswordToken> findFirstByOrderByThoiGianTaoDesc();
-    Optional<ResetPasswordToken> findByTokenAndUserIdAndThoiGianHetHanGreaterThanEqual(String token, Integer userId, LocalDateTime time);
+    Optional<ResetPasswordToken> findByTokenAndUserId(String token, Integer userId);
 }

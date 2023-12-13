@@ -27,7 +27,7 @@ public class ResetPasswordApi {
     @PostMapping
     public ResponseEntity<?> resetPassword(@RequestParam("email") String email,
                                            @RequestParam("token") String token,
-                                           @RequestHeader("password") String password) {
+                                           @RequestHeader(required = false) String password) {
         return resetPasswordService.resetPassword(token, email, password) ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
 }

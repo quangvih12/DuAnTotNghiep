@@ -6,9 +6,9 @@ import com.example.demo.entity.ResetPasswordToken;
 import com.example.demo.entity.User;
 import com.example.demo.reponsitory.ResetPasswordTokenRepository;
 import com.example.demo.reponsitory.UserReponsitory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,16 +76,23 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
 
     @Override
     @Transactional
-    public boolean resetPassword(String token, String email, String password) {
+    public boolean resetPassword(String token, String email, @Nullable String password) {
         User user = userRepository.findByEmail(email).orElse(null);
-        if (user != null) {
-            ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByTokenAndUserIdAndThoiGianHetHanGreaterThanEqual(token, user.getId(), LocalDateTime.now()).orElse(null);
-            if (resetPasswordToken != null) {
-                user.setPassword(passwordEncoder.encode(password));
-                return true;
-            }
+        ResetPasswordToken resetPasswordToken = user != null ? resetPasswordTokenRepository.findByTokenAndUserId(token, user.getId()).orElse(null) : null;
+        if (resetPasswordToken == null) return false;
+        if (!resetPasswordToken.getHieuLuc()) return false;
+        if (resetPasswordToken.getThoiGianHetHan().isBefore(LocalDateTime.now())) {
+            resetPasswordToken.setHieuLuc(false);
+            resetPasswordTokenRepository.save(resetPasswordToken);
             return false;
         }
-        return false;
+        if (password != null) {
+            user.setPassword(passwordEncoder.encode(password));
+            resetPasswordToken.setHieuLuc(false);
+            userRepository.save(user);
+            resetPasswordTokenRepository.save(resetPasswordToken);
+            return true;
+        }
+        return true;
     }
 }
