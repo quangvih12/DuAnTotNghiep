@@ -12,4 +12,6 @@ public interface HoaDonChiTietRepository extends HoaDonChiTietReponsitory {
     @Query("select im from  HoaDonChiTiet im where im.sanPhamChiTiet.id=:idSp and im.trangThai =7 and im.hoaDon.id=:idHD")
     HoaDonChiTiet findByidSPandAndTrangThai(Integer idSp,Integer idHD);
 
+    @Query("select im from  HoaDonChiTiet im where im.sanPhamChiTiet.id=:idSp and  im.trangThai =3 and im.hoaDon.id=:idHD")
+    HoaDonChiTiet findByidHoaDonHuyTra(Integer idSp,Integer idHD);
 }
