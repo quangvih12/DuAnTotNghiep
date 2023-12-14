@@ -187,7 +187,7 @@ public class SanPhamServiceImpl implements AdSanPhamService {
          //   BigDecimal giaNhap = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaNhap().get(i)));
 
             SanPhamChiTiet chiTiet = new SanPhamChiTiet();
-            chiTiet.setTrangThai(ChiTietSanPhamStatus.TON_KHO);
+            chiTiet.setTrangThai(ChiTietSanPhamStatus.CON_HANG);
             chiTiet.setSanPham(sanPham);
          //   chiTiet.setGiaNhap(giaNhap);
             chiTiet.setGiaBan(giaBan);
@@ -201,6 +201,11 @@ public class SanPhamServiceImpl implements AdSanPhamService {
             lstsanPhamChiTiet.add(chiTiet);
         }
         List<SanPhamChiTiet> lstChiTiet = chiTietSanPhamReponsitory.saveAll(lstsanPhamChiTiet);
+        for (int i = 0; i < lstChiTiet.size(); i++) {
+            SanPhamChiTiet sanPhamChiTiet = lstChiTiet.get(i);
+            sanPhamChiTiet.setMa("CTSP"+sanPhamChiTiet.getId());
+            chiTietSanPhamReponsitory.save(sanPhamChiTiet);
+        }
         return lstChiTiet;
     }
 
@@ -227,8 +232,8 @@ public class SanPhamServiceImpl implements AdSanPhamService {
             String imgMauSacValue = repuest2.getImgMauSac().get(i);
             BigDecimal giaBan = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaBan().get(i)));
         //    BigDecimal giaNhap = BigDecimal.valueOf(Long.valueOf(repuest2.getGiaNhap().get(i)));
-            sanPhamChiTiet.setTrangThai(ChiTietSanPhamStatus.TON_KHO);
-        //    sanPhamChiTiet.setGiaNhap(giaNhap);
+            sanPhamChiTiet.setTrangThai(ChiTietSanPhamStatus.CON_HANG);
+            sanPhamChiTiet.setMa("CTSP"+sanPhamChiTiet.getId());
             sanPhamChiTiet.setGiaBan(giaBan);
             sanPhamChiTiet.setSoLuongTon(Integer.valueOf(repuest2.getSoLuongSize().get(i)));
             String linkAnh = getImageToAzureUtil.uploadImageToAzure(imgMauSacValue);

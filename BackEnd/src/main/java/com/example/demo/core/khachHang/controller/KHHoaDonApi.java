@@ -53,4 +53,9 @@ public class KHHoaDonApi {
         return ResponseEntity.ok(khDoiTraHoaDonService.doiTra(khDoiTraRequest));
     }
 
+    @DeleteMapping("/huy-doi-tra/{id}")
+    public ResponseEntity<?> huyDoiTra(@PathVariable Integer id) {
+        return ResponseEntity.ok(khDoiTraHoaDonService.huyTra(id));
+    }
+
 }

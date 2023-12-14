@@ -57,9 +57,15 @@ public interface KHSanPhamRepository extends SanPhamReponsitory {
     List<KhImageResponse> findImage(@Param("id") Integer id);
 
     @Query(value = """
-                    select distinct  spct.id_mau_sac as idMauSac,s.ten as ten, spct.anh as anh \s
-                                                               from datn.san_pham_chi_tiet spct join datn.mau_sac s on spct.id_mau_sac = s.id\s
-                                                                where spct.id_san_pham =:id and spct.trang_thai=1
+                    WITH numbered_rows AS (
+                    SELECT spct.id_mau_sac as idMauSac, s.ten as ten, spct.anh as anh,
+                           ROW_NUMBER() OVER(PARTITION BY spct.id_mau_sac, s.ten ORDER BY spct.anh) as row_num
+                    FROM datn.san_pham_chi_tiet spct\s
+                    JOIN datn.mau_sac s ON spct.id_mau_sac = s.id
+                    WHERE spct.id_san_pham =:id AND spct.trang_thai = 1)
+                    SELECT idMauSac, ten, anh
+                    FROM numbered_rows
+                    WHERE row_num = 1
             """, nativeQuery = true)
     List<KhMauSacResponse> findMauSac(@Param("id") Integer id);
 
