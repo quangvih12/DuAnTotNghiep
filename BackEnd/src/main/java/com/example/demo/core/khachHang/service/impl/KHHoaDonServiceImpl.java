@@ -106,5 +106,10 @@ public class KHHoaDonServiceImpl implements KHHoaDonService {
         return hdRepo.getByIds(idHD);
     }
 
+    @Override
+    public KHHoaDonResponse findByMaHD(String maHD) {
+        return hdRepo.getByMaHD(maHD);
+    }
+
 
 }

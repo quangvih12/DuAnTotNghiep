@@ -15,5 +15,5 @@ public interface KHHoaDonService {
 
     KHHoaDonResponse findById(Integer idHD);
 
-
+    KHHoaDonResponse findByMaHD(String maHD);
 }

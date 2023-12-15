@@ -18,9 +18,10 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
-//@EnableScheduling
+@EnableScheduling
 public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
 
     @Autowired
@@ -36,6 +37,9 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
 
     @Override
     public HashMap<String, Object> add(AdminKhuyenMaiRequest dto) {
+        Random random = new Random();
+        int randomNumber = random.nextInt(9000) + 1000;
+
         KhuyenMai khuyenMai = dto.dtoToEntity(new KhuyenMai());
         LocalDateTime thoiGianHienTai = LocalDateTime.now();
         try {
@@ -46,6 +50,7 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
             } else {
                 khuyenMai.setTrangThai(0);
             }
+            khuyenMai.setMa("KM"+randomNumber);
             KhuyenMai khuyenmais = khuyenMaiRepo.save(khuyenMai);
             return DataUltil.setData("success", khuyenmais);
         } catch (Exception e) {
