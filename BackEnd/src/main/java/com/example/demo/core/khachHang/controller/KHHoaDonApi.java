@@ -48,6 +48,12 @@ public class KHHoaDonApi {
         ));
     }
 
+    @GetMapping("/find-by-ma/{maHD}")
+    public ResponseEntity<?> findByMaHD(@PathVariable String maHD) {
+        return ResponseEntity.ok(hdService.findByMaHD(maHD));
+
+    }
+
     @PostMapping("/doi-tra")
     public ResponseEntity<?> doiTra(@RequestBody KhDoiTraRequest khDoiTraRequest) {
         return ResponseEntity.ok(khDoiTraHoaDonService.doiTra(khDoiTraRequest));

@@ -131,7 +131,7 @@ public class HoaDonServiceImpl implements HoaDonService {
             Voucher voucher = voucherRepo.findAllById(hoaDonRequest.getIdVoucher()).get();
             voucher.setSoLuong(voucher.getSoLuong() - 1);
             if(voucher.getSoLuong() == 0){
-                voucher.setTrangThai(3);
+                voucher.setTrangThai(2);
             }
             voucherRepo.save(voucher);
         }

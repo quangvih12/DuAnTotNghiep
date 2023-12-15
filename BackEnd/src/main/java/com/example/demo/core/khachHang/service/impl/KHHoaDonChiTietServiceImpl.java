@@ -30,6 +30,11 @@ public class KHHoaDonChiTietServiceImpl implements KHHoaDonChiTietService {
     }
 
     @Override
+    public List<KHHoaDonChiTietResponse> findHDCTByMaHoaDon(String maHD) {
+        return hdctRepo.findHDCTByMaHD(maHD);
+    }
+
+    @Override
     public List<KhHoaDonTraHangResponse> findHDCTByIdHoaDonTraHang(String token) {
         Integer idKh;
         if (tokenService.getUserNameByToken(token) == null) {

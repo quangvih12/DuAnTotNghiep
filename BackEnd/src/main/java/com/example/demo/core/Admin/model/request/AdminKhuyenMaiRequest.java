@@ -34,7 +34,7 @@ public class AdminKhuyenMaiRequest implements DtoToEntity<KhuyenMai> {
 
     @Override
     public KhuyenMai dtoToEntity(KhuyenMai khuyenmai) {
-        khuyenmai.setMa(this.ma);
+//        khuyenmai.setMa(this.ma);
         khuyenmai.setTen(this.ten);
         khuyenmai.setThoiGianBatDau(this.thoiGianBatDau);
         khuyenmai.setThoiGianKetThuc(this.thoiGianKetThuc);

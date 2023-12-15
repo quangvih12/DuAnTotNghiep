@@ -9,5 +9,7 @@ public interface KHHoaDonChiTietService {
 
     List<KHHoaDonChiTietResponse> findHDCTByIdHoaDon(Integer idHD);
 
+    List<KHHoaDonChiTietResponse> findHDCTByMaHoaDon(String maHD);
+
     List<KhHoaDonTraHangResponse> findHDCTByIdHoaDonTraHang(String token);
 }
