@@ -55,5 +55,5 @@ public class MauSac {
     @JsonIgnore
     @OneToMany(mappedBy = "mauSac", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<SanPhamChiTiet> sanPhamChiTietList = new ArrayList<>();
+    private List<SanPhamChiTiet> sanPhamChiTietList;
 }

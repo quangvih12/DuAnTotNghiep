@@ -108,7 +108,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
     List<AdminThongKeLoaiResponse> doanhThuTheoLoai();//
 
 
-     @Query(value = """
+    @Query(value = """
             SELECT SUM(hd.tong_tien) as tongTien
             FROM  datn.hoa_don hd
             where hd.trang_thai in (3,10)  and hd.hinh_thuc_giao_hang =:idPhuongThuc
@@ -214,7 +214,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                                             JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
                                             WHERE hd.trang_thai IN  (3,10) AND spct.id =:id AND YEAR(hd.ngay_tao) =:year 
               """, nativeQuery = true)
-    Integer tongDoanhThuBySanPham( Integer id, String year);
+    Integer tongDoanhThuBySanPham(Integer id, String year);
 
     // bảng top 5 sp có doanh thu cao và thấp nhất
     @Query(value = """
@@ -439,7 +439,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                                     JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
                                     WHERE hd.trang_thai IN  (3,10) AND th.id =:id AND YEAR(hd.ngay_tao) =:year
               """, nativeQuery = true)
-    Integer tongDoanhThuByLoai(@Param("id") Integer id,String year);
+    Integer tongDoanhThuByLoai(@Param("id") Integer id, String year);
 
     // bảng top 5 sp có doanh thu cao và thấp nhất
     @Query(value = """
@@ -458,7 +458,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
             )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien DESC LIMIT 5;
               """, nativeQuery = true)
-    List<AdminThongKeSanPhamCaoResponse> sanPhamDoanhThuCaoNhatByLoai(Integer id,String year);
+    List<AdminThongKeSanPhamCaoResponse> sanPhamDoanhThuCaoNhatByLoai(Integer id, String year);
 
     @Query(value = """
             WITH DoanhThuSanPham AS (
@@ -476,7 +476,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
             )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien  LIMIT 5;
               """, nativeQuery = true)
-    List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhatByLoai(Integer id,String year);
+    List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhatByLoai(Integer id, String year);
 
     @Query(value = """
             SELECT  MONTH(hd.ngay_tao) AS thang, SUM(hd.tong_tien) AS tongTien,YEAR(hd.ngay_tao) as nam
@@ -488,7 +488,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
             WHERE th.id =:id and hd.trang_thai IN  (3,10) AND YEAR(hd.ngay_tao) =:year
             GROUP BY MONTH(hd.ngay_tao),YEAR(hd.ngay_tao) ORDER BY MONTH(hd.ngay_tao)
                """, nativeQuery = true)
-    List<AdminThongKeThangResponse> doanhThuTheoThangByLoai(Integer id,String year);
+    List<AdminThongKeThangResponse> doanhThuTheoThangByLoai(Integer id, String year);
 
     @Query(value = """
                         
@@ -522,7 +522,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
             SELECT ten,ma, SUM(tongTien) AS tongTien
             FROM DoanhThuThuongHieu GROUP BY ten,ma ORDER BY tongTien DESC;
               """, nativeQuery = true)
-    List<AdminThongKeThuongHieuResponse> doanhThuTheoThuongHieuByLoai(Integer id,String year);
+    List<AdminThongKeThuongHieuResponse> doanhThuTheoThuongHieuByLoai(Integer id, String year);
 
     @Query(value = """
             WITH DoanhThuThuongHieu AS (
@@ -542,7 +542,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
             SELECT ten,ma, SUM(tongTien) AS tongTien
             FROM DoanhThuThuongHieu GROUP BY ten,ma ORDER BY tongTien DESC;
                 """, nativeQuery = true)
-    List<AdminThongKeLoaiResponse> doanhThuTheoLoaiByLoai(Integer id,String year);
+    List<AdminThongKeLoaiResponse> doanhThuTheoLoaiByLoai(Integer id, String year);
 
     // doanh số theo năm
 
@@ -732,16 +732,16 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
 
     // hoan tien
     @Query(value = """
-           select  sum(v.don_gia) from datn.hoa_don_chi_tiet v 
-           join datn.hoa_don hd on hd.id = v.id_hoa_don 
-           where v.trang_thai = 8  and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
-            """, nativeQuery = true)
-    Integer tongHoanTienByThangNam(String year, String startDate, String endDate );
+            select  sum(v.don_gia) from datn.hoa_don_chi_tiet v 
+            join datn.hoa_don hd on hd.id = v.id_hoa_don 
+            where v.trang_thai = 8  and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
+             """, nativeQuery = true)
+    Integer tongHoanTienByThangNam(String year, String startDate, String endDate);
 
     @Query(value = """
-           select  sum(v.don_gia) from datn.hoa_don_chi_tiet v 
-           join datn.hoa_don hd on hd.id = v.id_hoa_don where v.trang_thai = 8 
-            """, nativeQuery = true)
+            select  sum(v.don_gia) from datn.hoa_don_chi_tiet v 
+            join datn.hoa_don hd on hd.id = v.id_hoa_don where v.trang_thai = 8 
+             """, nativeQuery = true)
     Integer tongHoanTien();
 
     @Query(value = """
@@ -760,7 +760,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                                             JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
                                             WHERE hdct.trang_thai IN  (8) AND spct.id =:id AND YEAR(hd.ngay_tao) =:year 
               """, nativeQuery = true)
-    Integer tongHoanTienBySanPham( Integer id, String year);
+    Integer tongHoanTienBySanPham(Integer id, String year);
 
     @Query(value = """
             SELECT SUM(hdct.don_gia) as tongTien
@@ -782,20 +782,20 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                                     JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
                                     WHERE hdct.trang_thai IN  (8) AND th.id =:id AND YEAR(hd.ngay_tao) =:year
               """, nativeQuery = true)
-    Integer tongHoanTienByLoai(@Param("id") Integer id,String year);
+    Integer tongHoanTienByLoai(@Param("id") Integer id, String year);
 
 
     // chiet khau
     @Query(value = """
-           select  sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
-            from datn.hoa_don_chi_tiet v join datn.hoa_don hd on hd.id = v.id_hoa_don where hd.trang_thai in (3)  and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
-            """, nativeQuery = true)
-    Integer tongChietKhauByThangNam(String year, String startDate, String endDate );
+            select  sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+             from datn.hoa_don_chi_tiet v join datn.hoa_don hd on hd.id = v.id_hoa_don where hd.trang_thai in (3)  and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
+             """, nativeQuery = true)
+    Integer tongChietKhauByThangNam(String year, String startDate, String endDate);
 
     @Query(value = """
-           select   sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
-            from datn.hoa_don_chi_tiet v join datn.hoa_don hd on hd.id = v.id_hoa_don where  hd.trang_thai in (3) 
-            """, nativeQuery = true)
+            select   sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+             from datn.hoa_don_chi_tiet v join datn.hoa_don hd on hd.id = v.id_hoa_don where  hd.trang_thai in (3) 
+             """, nativeQuery = true)
     Integer tongChietKhau();
 
     @Query(value = """
@@ -814,7 +814,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                                             JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
                                             WHERE  hd.trang_thai in (3)  AND spct.id =:id AND YEAR(hd.ngay_tao) =:year 
               """, nativeQuery = true)
-    Integer tongChietKhauBySanPham( Integer id, String year);
+    Integer tongChietKhauBySanPham(Integer id, String year);
 
     @Query(value = """
             SELECT sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
@@ -836,13 +836,13 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                                     JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
                                     WHERE  hd.trang_thai in (3)  AND th.id =:id AND YEAR(hd.ngay_tao) =:year
               """, nativeQuery = true)
-    Integer tongChietKhaunByLoai(@Param("id") Integer id,String year);
+    Integer tongChietKhaunByLoai(@Param("id") Integer id, String year);
 
 
     @Query(value = """
             SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=3 and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
              """, nativeQuery = true)
-    Integer tongDonhangHoanThanhByNamThang(String year, String startDate, String endDate );
+    Integer tongDonhangHoanThanhByNamThang(String year, String startDate, String endDate);
 
     @Query(value = """
             SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=3 
@@ -865,7 +865,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                                             JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
                                             WHERE  hd.trang_thai in (3)  AND spct.id =:id AND YEAR(hd.ngay_tao) =:year 
               """, nativeQuery = true)
-    Integer tongDonhangHoanThanhBySanPham( Integer id, String year);
+    Integer tongDonhangHoanThanhBySanPham(Integer id, String year);
 
     @Query(value = """
             SELECT count(hd.id)
@@ -887,7 +887,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                                     JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
                                     WHERE  hd.trang_thai in (3)  AND th.id =:id AND YEAR(hd.ngay_tao) =:year
               """, nativeQuery = true)
-    Integer tongDonhangHoanThanhByLoai(@Param("id") Integer id,String year);
+    Integer tongDonhangHoanThanhByLoai(@Param("id") Integer id, String year);
 
     @Query(value = """
             SELECT SUM(hd.tong_tien) as tongTien
@@ -916,7 +916,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
     Integer tongDonhangHoanThanhByDay();
 
     @Query(value = """
-            SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=7 and DATE(hd.ngay_tao) = CURDATE();
+            SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=8 and DATE(hd.ngay_tao) = CURDATE();
              """, nativeQuery = true)
     Integer tongDonhangTraByDay();
 
@@ -924,4 +924,19 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
             SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=0 and DATE(hd.ngay_tao) = CURDATE();
              """, nativeQuery = true)
     Integer tongDonhangHuyByDay();
+
+    @Query(value = """
+            SELECT
+                months.month AS thang,
+                COALESCE(SUM(hoa_don.tong_tien), 0) AS tong_tien_thang
+            FROM
+                (SELECT 1 AS month UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) AS months
+            LEFT JOIN
+                hoa_don ON MONTH(hoa_don.ngay_tao) = months.month AND YEAR(hoa_don.ngay_tao) = YEAR(CURRENT_DATE) AND hoa_don.trang_thai IN (3, 10)
+            GROUP BY
+                months.month
+            ORDER BY
+                months.month;
+            """, nativeQuery = true)
+    public List<xuatBaoCaoThongKeRespone> xuatBaoCaoThongKe();
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -36,6 +37,8 @@ public class AdminKhuyenMaiResponse {
 
     private Integer giaTriGiam;
 
+    private BigDecimal giamToiDa;
+
     public AdminKhuyenMaiResponse(KhuyenMai khuyenMai) {
 
 
@@ -55,5 +58,6 @@ public class AdminKhuyenMaiResponse {
         this.giaTriGiam = khuyenMai.getGiaTriGiam();
         this.ngayTao = khuyenMai.getNgayTao();
         this.ngaySua = khuyenMai.getNgaySua();
+
     }
 }

@@ -100,16 +100,12 @@ public class HoaDon {
     @JoinColumn(name = "id_phuong_thuc_thanh_toan")
     private PhuongThucThanhToan phuongThucThanhToan;
 
-
-
     @ManyToOne
     @JoinColumn(name = "id_voucher")
     private Voucher voucher;
 
-
-
     @JsonIgnore
     @OneToMany(mappedBy = "hoaDon", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<HoaDonChiTiet> hoaDonChiTietList = new ArrayList<>();
+    private List<HoaDonChiTiet> hoaDonChiTietList;
 }

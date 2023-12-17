@@ -76,5 +76,5 @@ public class DiaChi {
     @JsonIgnore
     @OneToMany(mappedBy = "diaChi", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<HoaDon> hoaDonList = new ArrayList<>();
+    private List<HoaDon> hoaDonList;
 }

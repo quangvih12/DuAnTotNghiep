@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,7 +139,7 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
     }
 
     @Override
-    public AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD, LocalDateTime ngayShip) {
+    public AdminHoaDonResponse giaoHoaDonChoVanChuyen(Integer idHD, LocalDateTime ngayShip,Integer tongTien,Integer tienShip) {
         HoaDon hoaDon = hoaDonReponsitory.findById(idHD).get();
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         if (hoaDon != null) {
@@ -147,11 +148,17 @@ public class AdminTatCaHoaDonServiceImpl implements AdminTatCaHoaDonService {
                 hdct.setTrangThai(HoaDonStatus.GIAO_CHO_DON_VI_VAN_CHUYEN);
                 hdctRepo.save(hdct);
             }
+            if(hoaDon.getVoucher() != null){
+                hoaDon.setTienSauKhiGiam(BigDecimal.valueOf((long) tongTien));
+            }else{
+                hoaDon.setTongTien(BigDecimal.valueOf((long) tongTien));
+            }
+            hoaDon.setTienShip(BigDecimal.valueOf((long) tienShip));
             hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
             hoaDon.setNgayShip(ngayShip);
             hoaDon.setTrangThai(HoaDonStatus.GIAO_CHO_DON_VI_VAN_CHUYEN);
             HoaDon hd = hoaDonReponsitory.save(hoaDon);
-            return hoaDonReponsitory.getByIds(hd.getId());
+            return hoaDonReponsitory.getByIds(idHD);
         } else {
             return null;
         }

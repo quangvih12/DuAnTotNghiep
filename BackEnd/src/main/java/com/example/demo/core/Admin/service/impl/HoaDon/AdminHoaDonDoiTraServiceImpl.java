@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,22 +47,23 @@ public class AdminHoaDonDoiTraServiceImpl implements AdHoaDonDoiTraService {
             HoaDonChiTiet hdctRespone = new HoaDonChiTiet();
             for (HoaDonChiTiet hdct : lstHDCT) {
                 if (hdct.getSanPhamChiTiet().getId() == spct.getId() && hdct.getTrangThai() == HoaDonStatus.YEU_CAU_DOI_TRA) {
-                    int count = 0;
-                    for (HoaDonChiTiet hdct1 : lstHDCT) {
-                        if (hdct1.getSanPhamChiTiet().getId() == spct.getId() && hdct1.getTrangThai() != HoaDonStatus.YEU_CAU_DOI_TRA) {
-                            count = 1;
-                            hdct1.setSoLuong(hdct1.getSoLuong() + hdct.getSoLuong());
-                            hdctRepo.save(hdct1);
-                        }
-                    }
-                    if (count == 0){
-                        hdct.setTrangThai(HoaDonStatus.HUY_DOI_TRA);
-                        hdctRespone = hdctRepo.save(hdct);
-                    }else{
-                        hdct.setTrangThai(HoaDonStatus.HUY_DOI_TRA);
-                        hdctRespone = hdctRepo.save(hdct);
-                    }
-
+//                    int count = 0;
+//                    for (HoaDonChiTiet hdct1 : lstHDCT) {
+//                        if (hdct1.getSanPhamChiTiet().getId() == spct.getId() && hdct1.getTrangThai() != HoaDonStatus.YEU_CAU_DOI_TRA) {
+//                            count = 1;
+//                            hdct1.setSoLuong(hdct1.getSoLuong() + hdct.getSoLuong());
+//                            hdctRepo.save(hdct1);
+//                        }
+//                    }
+//                    if (count == 0){
+//                        hdct.setTrangThai(HoaDonStatus.HUY_DOI_TRA);
+//                        hdctRespone = hdctRepo.save(hdct);
+//                    }else{
+//                        hdct.setTrangThai(HoaDonStatus.HUY_DOI_TRA);
+//                        hdctRespone = hdctRepo.save(hdct);
+//                    }
+                    hdct.setTrangThai(HoaDonStatus.HUY_DOI_TRA);
+                    hdctRespone = hdctRepo.save(hdct);
                 }
 
             }
@@ -77,17 +79,34 @@ public class AdminHoaDonDoiTraServiceImpl implements AdHoaDonDoiTraService {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         HashMap<Integer, Integer> quantityMap = new HashMap<>();
         if (hoaDon != null) {
-//            hoaDon.setNgaySua(DatetimeUtil.getCurrentDateAndTimeLocal());
-//            hoaDon.setTrangThai(HoaDonStatus.XAC_NHAN_DOI_TRA);
-//            HoaDon hd = hoaDonReponsitory.save(hoaDon);
             List<HoaDonChiTiet> lstHDCT = hdctRepo.findByIdHoaDon(hoaDon.getId(), sort);
             HoaDonChiTiet hdctRespone = new HoaDonChiTiet();
+            Long sum = 0l;
+            Long tienTra = 0l;
             for (HoaDonChiTiet hdct : lstHDCT) {
                 if (hdct.getSanPhamChiTiet().getId() == idSPCT && hdct.getTrangThai() == 7) {
                     hdct.setTrangThai(HoaDonStatus.XAC_NHAN_DOI_TRA);
+                    tienTra =  hdct.getSoLuong() *  Long.valueOf(String.valueOf(hdct.getDonGia()));
                     hdctRespone = hdctRepo.save(hdct);
                 }
+                if (hdct.getSanPhamChiTiet().getId() == idSPCT && hdct.getTrangThai() == HoaDonStatus.HOAN_THANH) {
+                    hdct.setSoLuong(hdct.getSoLuong() - hdctRespone.getSoLuong());
+                    hdctRepo.save(hdct);
+                }
+                if ( hdct.getTrangThai() == 3 ) {
+                 Long tongTien =    hdct.getSoLuong() *  Long.valueOf(String.valueOf(hdct.getDonGia()));
+                  sum += tongTien;
+                }
             }
+            if(hoaDon.getTienSauKhiGiam() == hoaDon.getTongTien()){
+                hoaDon.setTienSauKhiGiam(BigDecimal.valueOf(sum));
+                hoaDon.setTongTien(BigDecimal.valueOf(sum));
+            }else{
+                hoaDon.setTienSauKhiGiam( hoaDon.getTienSauKhiGiam().subtract(BigDecimal.valueOf(tienTra)));
+                hoaDon.setTongTien(BigDecimal.valueOf(sum));
+            }
+            hoaDonReponsitory.save(hoaDon);
+
             return hdctRepo.findByIdHDCT(hdctRespone.getId());
         } else {
             return null;

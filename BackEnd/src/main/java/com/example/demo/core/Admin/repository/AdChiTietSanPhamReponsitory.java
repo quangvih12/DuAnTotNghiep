@@ -121,7 +121,7 @@ public interface AdChiTietSanPhamReponsitory extends ChiTietSanPhamReponsitory {
     @Query(value = """
             select a.id, b.ten as tenSP, a.gia_ban as giaBan, ms.ten as tenMauSac, s.ten as tenSize, a.trang_thai as trangThai from san_pham_chi_tiet a join san_pham b on a.id_san_pham = b.id\s
             join mau_sac ms on ms.id = a.id_mau_sac
-            join size s on s.id = a.id_size
+          left  join size s on s.id = a.id_size
             LEFT JOIN khuyen_mai km on km.id = a.id_khuyen_mai
              where b.id =:idsp and (a.id_khuyen_mai IS NULL) OR (a.id_khuyen_mai IS NOT NULL AND km.trang_thai not in (0,2))
             """, nativeQuery = true)

@@ -24,7 +24,7 @@ public class DBGenerationConfig {
         properties.setProperty("hibernate.hbm2ddl.auto", "none");
         properties.setProperty("hibernate.physical_naming_strategy",
                 "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy");
-        properties.setProperty("hibernate.show_sql", "true");
+//        properties.setProperty("hibernate.show_sql", "true");
         em.setJpaProperties(properties);
 
         return em;

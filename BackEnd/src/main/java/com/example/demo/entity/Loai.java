@@ -52,5 +52,5 @@ public class Loai {
     @JsonIgnore
     @OneToMany(mappedBy = "loai", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<SanPham> sanPhamList = new ArrayList<>();
+    private List<SanPham> sanPhamList;
 }

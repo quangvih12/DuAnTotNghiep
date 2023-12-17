@@ -2,6 +2,7 @@ package com.example.demo.core.Admin.service.AdThongKeService;
 
 import com.example.demo.core.Admin.model.response.AdminThongKeBO;
 import com.example.demo.core.Admin.model.response.AdminThongKeNowDayBO;
+import com.example.demo.core.Admin.model.response.xuatBaoCaoThongKeRespone;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,4 +24,7 @@ public interface AdThongKeDoanhThuService {
     AdminThongKeBO getAllByMonth(LocalDateTime startDate, LocalDateTime endDate);
 
     AdminThongKeBO getAllByPhuongThuc(Integer idPhuongThucThanhToan);
+
+    List<xuatBaoCaoThongKeRespone> xuatBaoCaoThongKe();
+
 }

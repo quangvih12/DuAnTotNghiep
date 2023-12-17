@@ -5,9 +5,7 @@ import com.example.demo.core.Admin.model.request.AdminDiaChiRequest;
 import com.example.demo.core.Admin.model.request.AdminUserRequest;
 import com.example.demo.core.Admin.model.response.AdminHoaDonResponse;
 import com.example.demo.core.Admin.model.response.AdminUserResponse;
-import com.example.demo.core.Admin.model.response.AdminUserVoucherResponse;
 import com.example.demo.entity.DiaChi;
-import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 
 import java.util.List;
@@ -37,8 +35,6 @@ public interface AdUserService {
     List<AdminUserResponse> getAllUserByRole(String role);
 
     List<AdminUserResponse> getAllUser();
-
-    List<AdminUserVoucherResponse> getAllUserByTongTien(String cbbValue);
 
     DiaChi addDiaChi(AdminDiaChiRequest request);
 }
