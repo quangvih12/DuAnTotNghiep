@@ -787,19 +787,19 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
 
     // chiet khau
     @Query(value = """
-            select  sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+            select  Sum(tong_tien + tien_ship - tien_sau_khi_giam_gia) as chietKhau
              from datn.hoa_don_chi_tiet v join datn.hoa_don hd on hd.id = v.id_hoa_don where hd.trang_thai in (3)  and   YEAR(hd.ngay_tao) =:year or (hd.ngay_tao BETWEEN :startDate AND :endDate)
              """, nativeQuery = true)
     Integer tongChietKhauByThangNam(String year, String startDate, String endDate);
 
     @Query(value = """
-            select   sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+            select  Sum(tong_tien + tien_ship - tien_sau_khi_giam_gia) as chietKhau
              from datn.hoa_don_chi_tiet v join datn.hoa_don hd on hd.id = v.id_hoa_don where  hd.trang_thai in (3) 
              """, nativeQuery = true)
     Integer tongChietKhau();
 
     @Query(value = """
-            SELECT sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+            SELECT Sum(tong_tien + tien_ship - tien_sau_khi_giam_gia) as chietKhau
             FROM  datn.hoa_don hd
             join datn.hoa_don_chi_tiet hdct on hd.id = hdct.id_hoa_don
             where  hd.trang_thai in (3)   and hd.hinh_thuc_giao_hang =:idPhuongThuc
@@ -807,7 +807,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
     Integer tongChietKhauByPhuongThuc(Integer idPhuongThuc);
 
     @Query(value = """
-            SELECT sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+            SELECT Sum(tong_tien + tien_ship - tien_sau_khi_giam_gia) as chietKhau
                                             FROM datn.san_pham_chi_tiet spct
                                             JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
                                             JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
@@ -817,7 +817,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
     Integer tongChietKhauBySanPham(Integer id, String year);
 
     @Query(value = """
-            SELECT sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+            SELECT Sum(tong_tien + tien_ship - tien_sau_khi_giam_gia) as chietKhau
                                     FROM datn.san_pham_chi_tiet spct
                                     JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
                                     JOIN datn.thuong_hieu th ON sp.id_thuong_hieu = th.id
@@ -828,7 +828,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
     Integer tongChietKhauByThuongHieu(@Param("id") Integer id, String year);
 
     @Query(value = """
-            SELECT sum(hd.tong_tien)- sum(hd.tien_sau_khi_giam_gia) as chietKhau
+            SELECT Sum(tong_tien + tien_ship - tien_sau_khi_giam_gia) as chietKhau
                                     FROM datn.san_pham_chi_tiet spct
                                     JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
                                     JOIN datn.loai th ON sp.id_loai = th.id
@@ -916,7 +916,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
     Integer tongDonhangHoanThanhByDay();
 
     @Query(value = """
-            SELECT count(hd.id) FROM datn.hoa_don hd where hd.trang_thai=8 and DATE(hd.ngay_tao) = CURDATE();
+            SELECT count(hd.id) FROM datn.hoa_don_chi_tiet hd where hd.trang_thai=8 and DATE(hd.ngay_tao) = CURDATE();
              """, nativeQuery = true)
     Integer tongDonhangTraByDay();
 
