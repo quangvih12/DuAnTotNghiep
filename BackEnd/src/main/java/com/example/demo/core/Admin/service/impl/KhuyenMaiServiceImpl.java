@@ -8,6 +8,7 @@ import com.example.demo.core.Admin.service.AdKhuyenMaiService;
 import com.example.demo.entity.KhuyenMai;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.util.DataUltil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,12 +16,14 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 @Service
+@Slf4j
 @EnableScheduling
 public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
 
@@ -46,7 +49,7 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
             if (khuyenMai.getThoiGianKetThuc().isBefore(thoiGianHienTai)) {
                 khuyenMai.setTrangThai(1);
             } else if (khuyenMai.getThoiGianBatDau().isAfter(thoiGianHienTai)) {
-                khuyenMai.setTrangThai(3);
+                khuyenMai.setTrangThai(2);
             } else {
                 khuyenMai.setTrangThai(0);
             }
@@ -61,19 +64,35 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
     @Override
     public HashMap<String, Object> update(AdminKhuyenMaiRequest dto, Integer id) {
         Optional<KhuyenMai> optional = khuyenMaiRepo.findById(id);
+
+
+//        String pattern = "yyyy/MM/dd HH:mm:ss";
+//
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+//        LocalDateTime thoiGianBatDau = LocalDateTime.parse(dto.getThoiGianBatDau(), formatter);
+//        LocalDateTime thoiGianKetThuc = LocalDateTime.parse(dto.getThoiGianKetThuc(), formatter);
+
+        LocalDateTime thoiGianHienTai = LocalDateTime.now();
         if (optional.isPresent()) {
             KhuyenMai khuyenMai = optional.get();
             khuyenMai.setTen(dto.getTen());
             khuyenMai.setMoTa(dto.getMoTa());
             khuyenMai.setThoiGianBatDau(dto.getThoiGianBatDau());
             khuyenMai.setThoiGianKetThuc(dto.getThoiGianKetThuc());
-            khuyenMai.setSoLuong(dto.getSoLuong());
             khuyenMai.setGiaTriGiam(dto.getGiaTriGiam());
+            if (khuyenMai.getThoiGianKetThuc().isBefore(thoiGianHienTai)) {
+                khuyenMai.setTrangThai(1);
+            } else if (khuyenMai.getThoiGianBatDau().isAfter(thoiGianHienTai)) {
+                khuyenMai.setTrangThai(2);
+            } else {
+                khuyenMai.setTrangThai(0);
+            }
 
             try {
                 khuyenMaiRepo.save(khuyenMai);
                 return DataUltil.setData("success", khuyenMaiRepo.save(khuyenMai));
             } catch (Exception e) {
+                log.info("loi {}",e);
                 return DataUltil.setData("error", "error");
             }
         } else {
@@ -84,13 +103,19 @@ public class KhuyenMaiServiceImpl implements AdKhuyenMaiService {
     @Override
     public HashMap<String, Object> delete(AdminKhuyenMaiRequest dto, Integer id) {
         Optional<KhuyenMai> optional = khuyenMaiRepo.findById(id);
+
+//        String pattern = "yyyy/MM/dd HH:mm:ss";
+//
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+//        LocalDateTime thoiGianBatDau = LocalDateTime.parse(dto.getThoiGianBatDau(), formatter);
+//        LocalDateTime thoiGianKetThuc = LocalDateTime.parse(dto.getThoiGianKetThuc(), formatter);
+
         if (optional.isPresent()) {
             KhuyenMai khuyenMai = optional.get();
             khuyenMai.setTen(dto.getTen());
             khuyenMai.setMoTa(dto.getMoTa());
             khuyenMai.setThoiGianBatDau(dto.getThoiGianBatDau());
             khuyenMai.setThoiGianKetThuc(dto.getThoiGianKetThuc());
-            khuyenMai.setSoLuong(dto.getSoLuong());
             khuyenMai.setGiaTriGiam(dto.getGiaTriGiam());
             khuyenMai.setTrangThai(4);
             try {
