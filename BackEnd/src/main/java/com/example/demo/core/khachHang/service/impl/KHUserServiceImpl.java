@@ -9,7 +9,9 @@ import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDateTime;
@@ -26,6 +28,8 @@ public class KHUserServiceImpl implements KHUserService {
     @Autowired
     TokenService tokenService;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     public User dangNhapGoogle(String email, String ten, String anh) {
@@ -57,6 +61,20 @@ public class KHUserServiceImpl implements KHUserService {
         return user;
     }
 
+    @Override
+    @Transactional
+    public boolean doiMatKhau(Integer userId, String oldPassword, String newPassword) {
+        User user = khUserRepo.findById(userId).orElse(null);
+        if (user != null) {
+            if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(newPassword));
+                khUserRepo.save(user);
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
 
     @Override
     public User findByToken(String token) {

@@ -7,6 +7,8 @@ import com.example.demo.core.Admin.model.response.BHTQHoaDonChiTietResponse;
 import com.example.demo.core.Admin.model.response.BHTQHoaDonResponse;
 import com.example.demo.core.Admin.model.response.BHTQPhuongThucThanhToanResponse;
 import com.example.demo.core.Admin.model.response.BHTQUserResponse;
+import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.User;
 
 import java.util.List;
 
@@ -24,4 +26,5 @@ public interface BanHangTaiQuayService {
     List<BHTQUserResponse> getAllKH();
     void updateKHForHD(Integer idHD, Integer idKH);
     BHTQUserResponse addOrUpdateKH(BHTQUserRequest dto);
+    void guiMailThongBao(HoaDon hd, User user);
 }
