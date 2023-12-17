@@ -21,13 +21,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepo.findUsersByUserNameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() ->
                         new RuntimeException("Đăng nhập không thành công "));
-
-        System.out.println("user"+user.getEmail());
         Role role = user.getRole();
-
         return new org.springframework.security.core.userdetails.User(user.getEmail(),
                 user.getPassword(),
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name())));
-
     }
 }

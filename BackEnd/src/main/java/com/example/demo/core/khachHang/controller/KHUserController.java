@@ -18,6 +18,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/khach-hang/user")
 @CrossOrigin(origins = {"*"})
@@ -100,7 +102,8 @@ public class KHUserController {
         return ResponseEntity.ok(khUserService.findByEmail(email));
     }
 
-
-
-
+    @PutMapping("/{id}/doi-mat-khau")
+    public ResponseEntity<?> doiMatKhau(@PathVariable("id") Integer userId, @RequestBody Map<String, String> reqBody) {
+        return khUserService.doiMatKhau(userId, reqBody.get("oldPassword"), reqBody.get("newPassword")) ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body("Mật khẩu cũ chưa chính xác") ;
+    }
 }

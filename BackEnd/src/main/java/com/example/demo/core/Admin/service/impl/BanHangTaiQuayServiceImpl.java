@@ -12,6 +12,7 @@ import com.example.demo.core.Admin.repository.AdHoaDonReponsitory;
 import com.example.demo.core.Admin.repository.AdSanPhamChiTietRepository;
 import com.example.demo.core.Admin.repository.AdUserRepository;
 import com.example.demo.core.Admin.service.BanHangTaiQuayService;
+import com.example.demo.core.Admin.service.EmailSenderService;
 import com.example.demo.entity.*;
 import com.example.demo.infrastructure.mapper.BHTQChiTietSanPhamRespMapper;
 import com.example.demo.infrastructure.mapper.BHTQHoaDonChiTietRespMapper;
@@ -23,12 +24,18 @@ import com.example.demo.infrastructure.status.HinhThucGiaoHangStatus;
 import com.example.demo.infrastructure.status.HoaDonStatus;
 import com.example.demo.infrastructure.status.UserStatus;
 import com.example.demo.reponsitory.PhuongThucThanhToanRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +51,9 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
     private final AdUserRepository userRepository;
     private final AdSanPhamChiTietRepository sanPhamChiTietRepository;
     private final PhuongThucThanhToanRepository phuongThucThanhToanRepository;
+    private final SpringTemplateEngine springTemplateEngine;
+    private final EmailSenderService emailSenderService;
+    private final String BASE_FRONTEND_ENDPOINT;
 
     public BanHangTaiQuayServiceImpl(AdHoaDonReponsitory hoaDonRepository,
                                      AdHoaDonChiTietReponsitory hoaDonChiTietRepository,
@@ -55,7 +65,10 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                                      BHTQChiTietSanPhamRespMapper chiTietSanPhamMapper,
                                      BHTQPhuongThucThanhToanRespMapper phuongThucThanhToanMapper,
                                      BHTQUserRespMapper userRespMapper,
-                                     BHTQUserReqMapper userReqMapper) {
+                                     BHTQUserReqMapper userReqMapper,
+                                     SpringTemplateEngine springTemplateEngine,
+                                     EmailSenderService emailSenderService,
+                                     @Value("${frontend.base-endpoint}") String BASE_FRONTEND_ENDPOINT) {
         this.hoaDonMapper = hoaDonMapper;
         this.hoaDonChiTietMapper = hoaDonChiTietMapper;
         this.chiTietSanPhamMapper = chiTietSanPhamMapper;
@@ -67,6 +80,9 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         this.phuongThucThanhToanMapper = phuongThucThanhToanMapper;
         this.userRespMapper = userRespMapper;
         this.userReqMapper = userReqMapper;
+        this.springTemplateEngine = springTemplateEngine;
+        this.emailSenderService = emailSenderService;
+        this.BASE_FRONTEND_ENDPOINT = BASE_FRONTEND_ENDPOINT;
     }
 
     @Override
@@ -121,6 +137,7 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
         if(dto.getIdDiaChi() != null) hd.setDiaChi(DiaChi.builder().id(dto.getIdDiaChi()).build());
         if(dto.getTienShip() != null) hd.setTienShip( BigDecimal.valueOf((long)dto.getTienShip()));
         hoaDonRepository.save(hd);
+        if (hd.getUser().getEmail() != null) this.guiMailThongBao(hd, hd.getUser());
     }
 
     @Override
@@ -246,5 +263,16 @@ public class BanHangTaiQuayServiceImpl implements BanHangTaiQuayService {
                 return new BHTQUserResponse("SĐT đã tồn tại trong hệ thống");
             }
         }
+    }
+
+    @Override
+    public void guiMailThongBao(HoaDon hd, User user) {
+        Map<String, Object> templateProps = new HashMap<>();
+        templateProps.put("ten", user.getTen());
+        templateProps.put("url", BASE_FRONTEND_ENDPOINT + "/tra-cuu/" + hd.getId());
+        Context context = new Context();
+        context.setVariables(templateProps);
+        String mailContent = springTemplateEngine.process("order-success", context);
+        emailSenderService.sendMailAsync(user.getEmail(), "[VNK] Thông báo đặt hàng thành công", mailContent);
     }
 }
