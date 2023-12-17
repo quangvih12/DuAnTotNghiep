@@ -23,13 +23,13 @@ public class AdminKhuyenMaiResponse {
 
     private String moTa;
 
-    private String thoiGianBatDau;
+    private LocalDateTime thoiGianBatDau;
 
-    private String thoiGianKetThuc;
+    private LocalDateTime thoiGianKetThuc;
 
-    private String ngayTao;
+    private LocalDateTime ngayTao;
 
-    private String ngaySua;
+    private LocalDateTime ngaySua;
 
     private Integer trangThai;
 
@@ -41,23 +41,23 @@ public class AdminKhuyenMaiResponse {
 
     public AdminKhuyenMaiResponse(KhuyenMai khuyenMai) {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd"); // Định dạng tùy chỉnh
-        String thoigianBĐ = khuyenMai.getThoiGianBatDau().format(formatter);
-        String thoigianKT = khuyenMai.getThoiGianKetThuc().format(formatter);
-        String ngayTao = khuyenMai.getNgayTao().format(formatter);
-        String ngaySua = khuyenMai.getNgaySua().format(formatter);
+
+//        String thoigianBĐ = khuyenMai.getThoiGianBatDau().format(formatter);
+//        String thoigianKT = khuyenMai.getThoiGianKetThuc().format(formatter);
+//        String ngayTao = khuyenMai.getNgayTao().format(formatter);
+//        String ngaySua = khuyenMai.getNgaySua().format(formatter);
 
         this.id = khuyenMai.getId();
         this.ten = khuyenMai.getTen();
         this.ma = khuyenMai.getMa();
         this.moTa = khuyenMai.getMoTa();
-        this.thoiGianBatDau = thoigianKT;
-        this.thoiGianKetThuc = thoigianKT;
+        this.thoiGianBatDau = khuyenMai.getThoiGianBatDau();
+        this.thoiGianKetThuc = khuyenMai.getThoiGianKetThuc();
         this.trangThai = khuyenMai.getTrangThai();
         this.soLuong = khuyenMai.getSoLuong();
         this.giaTriGiam = khuyenMai.getGiaTriGiam();
-        this.ngayTao = ngayTao;
-        this.ngaySua = ngaySua;
-        this.giamToiDa = khuyenMai.getGiamToiDa();
+        this.ngayTao = khuyenMai.getNgayTao();
+        this.ngaySua = khuyenMai.getNgaySua();
+
     }
 }

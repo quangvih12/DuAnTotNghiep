@@ -75,7 +75,16 @@ public class VoucherServiceImpl implements AdVoucherService {
             voucher.setSoLuong(dto.getSoLuong());
             voucher.setGiamToiDa(dto.getGiamToiDa());
             voucher.setGiaTriGiam(dto.getGiaTriGiam());
-            if (currentTime.isBefore(voucher.getThoiGianKetThuc()) || currentTime.isEqual(voucher.getThoiGianKetThuc())) {
+//            if (currentTime.isBefore(voucher.getThoiGianKetThuc()) && currentTime.isEqual(voucher.getThoiGianKetThuc())) {
+//                voucher.setTrangThai(0);
+//            }
+
+            if (voucher.getThoiGianKetThuc().isBefore(currentTime)) {
+                voucher.setTrangThai(1);
+            } else if (voucher.getThoiGianBatDau().isAfter(currentTime)) {
+                voucher.setTrangThai(3);
+            }
+            else {
                 voucher.setTrangThai(0);
             }
             try {

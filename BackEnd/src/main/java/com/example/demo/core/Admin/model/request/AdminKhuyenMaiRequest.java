@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,8 +19,6 @@ public class AdminKhuyenMaiRequest implements DtoToEntity<KhuyenMai> {
 
     private String ten;
 
-    private String ma;
-
     private String moTa;
 
     private LocalDateTime thoiGianBatDau;
@@ -28,12 +27,17 @@ public class AdminKhuyenMaiRequest implements DtoToEntity<KhuyenMai> {
 
     private Integer trangThai;
 
-    private Integer soLuong;
-
     private Integer giaTriGiam;
 
     @Override
     public KhuyenMai dtoToEntity(KhuyenMai khuyenmai) {
+
+//        String pattern = "yyyy-MM-dd HH:mm:ss";
+//
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+//        LocalDateTime thoiGianBatDau = LocalDateTime.parse(this.thoiGianBatDau, formatter);
+//        LocalDateTime thoiGianKetThuc = LocalDateTime.parse(this.thoiGianKetThuc, formatter);
+
 //        khuyenmai.setMa(this.ma);
         khuyenmai.setTen(this.ten);
         khuyenmai.setThoiGianBatDau(this.thoiGianBatDau);
@@ -41,7 +45,6 @@ public class AdminKhuyenMaiRequest implements DtoToEntity<KhuyenMai> {
         khuyenmai.setMoTa(this.moTa);
         khuyenmai.setGiaTriGiam(this.giaTriGiam);
         khuyenmai.setTrangThai(this.trangThai);
-        khuyenmai.setSoLuong(this.soLuong);
         return khuyenmai;
     }
 }
