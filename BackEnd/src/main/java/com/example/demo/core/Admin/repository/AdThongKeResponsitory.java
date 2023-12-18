@@ -20,19 +20,20 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
 
 
     @Query(value = """
-            WITH DoanhThuSanPham AS (
-              SELECT
+           WITH DoanhThuSanPham AS (
+           SELECT
                 sp.ma as ma,
                 sp.ten as ten,
                 SUM(hd.tong_tien) AS tongTien
-              FROM datn.san_pham_chi_tiet spct
-              JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
-              JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
-              JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
-              WHERE hd.trang_thai IN (3,10) 
-              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-            )
-            SELECT * FROM DoanhThuSanPham ORDER BY tongTien DESC LIMIT 5;
+           FROM datn.san_pham_chi_tiet spct
+            JOIN datn.san_pham sp ON spct.id_san_pham = sp.id
+            JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
+             JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
+             WHERE hd.trang_thai IN (3)
+             GROUP BY sp.ma, sp.ten
+           )
+           SELECT * FROM DoanhThuSanPham ORDER BY tongTien desc LIMIT 5;
+                                                                         
               """, nativeQuery = true)
     List<AdminThongKeSanPhamCaoResponse> sanPhamDoanhThuCaoNhat(); //
 
@@ -47,8 +48,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
               WHERE hd.trang_thai IN  (3,10) 
-              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-            )
+       GROUP BY sp.ma, sp.ten       )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien  LIMIT 5;
               """, nativeQuery = true)
     List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhat();//
@@ -127,8 +127,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
               WHERE hd.trang_thai IN (3,10) and hd.hinh_thuc_giao_hang =:idPhuongThuc
-              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-            )
+             GROUP BY sp.ma, sp.ten  )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien DESC LIMIT 5;
               """, nativeQuery = true)
     List<AdminThongKeSanPhamCaoResponse> sanPhamDoanhThuCaoNhatByPhuongThuc(Integer idPhuongThuc); //
@@ -144,8 +143,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
               WHERE hd.trang_thai IN  (3,10)  and hd.hinh_thuc_giao_hang =:idPhuongThuc
-              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-            )
+            GROUP BY sp.ma, sp.ten )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien  LIMIT 5;
               """, nativeQuery = true)
     List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhatByPhuongThuc(Integer idPhuongThuc);//
@@ -228,8 +226,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
               WHERE hd.trang_thai IN  (3,10) AND spct.id =:id AND YEAR(hd.ngay_tao) =:year  
-              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-            )
+             GROUP BY sp.ma, sp.ten )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien DESC LIMIT 5;
               """, nativeQuery = true)
     List<AdminThongKeSanPhamCaoResponse> sanPhamDoanhThuCaoNhatBySanPham(Integer id, String year);
@@ -245,8 +242,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
               WHERE hd.trang_thai IN  (3,10)  AND spct.id =:id AND YEAR(hd.ngay_tao) =:year  
-              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-            )
+           GROUP BY sp.ma, sp.ten  )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien  LIMIT 5;
               """, nativeQuery = true)
     List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhatBySanPham(Integer id, String year);
@@ -339,8 +335,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
               WHERE hd.trang_thai IN  (3,10)  AND th.id =:id AND YEAR(hd.ngay_tao) =:year 
-              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-            )
+            GROUP BY sp.ma, sp.ten )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien DESC LIMIT 5;
               """, nativeQuery = true)
     List<AdminThongKeSanPhamCaoResponse> sanPhamDoanhThuCaoNhatByThuongHieu(Integer id, String year);
@@ -357,8 +352,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
               WHERE hd.trang_thai IN  (3,10)   AND th.id =:id AND YEAR(hd.ngay_tao) =:year 
-              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-            )
+           GROUP BY sp.ma, sp.ten )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien  LIMIT 5;
               """, nativeQuery = true)
     List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhatByThuongHieu(Integer id, String year);
@@ -454,8 +448,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
               WHERE hd.trang_thai IN  (3,10) AND th.id =:id AND YEAR(hd.ngay_tao) =:year
-              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-            )
+           GROUP BY sp.ma, sp.ten   )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien DESC LIMIT 5;
               """, nativeQuery = true)
     List<AdminThongKeSanPhamCaoResponse> sanPhamDoanhThuCaoNhatByLoai(Integer id, String year);
@@ -472,8 +465,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
               WHERE hd.trang_thai IN  (3,10)   AND th.id =:id AND YEAR(hd.ngay_tao) =:year
-              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-            )
+            GROUP BY sp.ma, sp.ten  )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien  LIMIT 5;
               """, nativeQuery = true)
     List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhatByLoai(Integer id, String year);
@@ -564,8 +556,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                                        JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
                                        JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
                                        WHERE hd.trang_thai IN  (3,10) AND  YEAR(hd.ngay_tao)  =:year
-                                       GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-                                      )
+                                      GROUP BY sp.ma, sp.ten )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien DESC LIMIT 5;
              """, nativeQuery = true)
     List<AdminThongKeSanPhamCaoResponse> sanPhamDoanhThuCaoNhatByNam(String year);
@@ -581,8 +572,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
                                        JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
                                        JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
                                        WHERE hd.trang_thai IN  (3,10) AND  YEAR(hd.ngay_tao)  =:year
-                                       GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-                                      )
+                                     GROUP BY sp.ma, sp.ten  )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien DESC LIMIT 5;
              """, nativeQuery = true)
     List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhatByNam(String year);
@@ -662,8 +652,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
               WHERE hd.trang_thai IN  (3,10) AND hd.ngay_tao BETWEEN :startDate AND :endDate
-              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-            )
+            GROUP BY sp.ma, sp.ten )
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien DESC LIMIT 5;                      
                        """, nativeQuery = true)
     List<AdminThongKeSanPhamCaoResponse> sanPhamDoanhThuCaoNhatByThang(String startDate, String endDate);
@@ -679,8 +668,7 @@ public interface AdThongKeResponsitory extends HoaDonReponsitory {
               JOIN datn.hoa_don_chi_tiet hdct ON hdct.id_san_pham_chi_tiet = spct.id
               JOIN datn.hoa_don hd ON hd.id = hdct.id_hoa_don
               WHERE hd.trang_thai IN  (3,10) AND hd.ngay_tao BETWEEN :startDate AND :endDate
-              GROUP BY spct.id, sp.ma, sp.ten, spct.gia_ban, spct.gia_nhap, spct.so_luong_ton, spct.trang_thai, sp.quai_deo, sp.dem_lot, sp.mo_ta, spct.gia_sau_giam
-            )
+             GROUP BY sp.ma, sp.ten)
             SELECT * FROM DoanhThuSanPham ORDER BY tongTien  LIMIT 5;                      
                        """, nativeQuery = true)
     List<AdminThongKeSanPhamThapResponse> sanPhamDoanhThuThapNhatByThang(String startDate, String endDate);
