@@ -7,7 +7,7 @@ mailServer:
   isSSL: false
 
 frontend:
-  base-endpoint: http://localhost:5173
+  base-endpoint: https://vnk25.store
 
 backend:
-  base-endpoint: http://localhost:8080
+  base-endpoint: https://vnk-backend-application.azuremicroservices.io
