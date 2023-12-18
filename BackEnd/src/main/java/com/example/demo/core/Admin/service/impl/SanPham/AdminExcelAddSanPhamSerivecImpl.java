@@ -414,7 +414,7 @@ public class AdminExcelAddSanPhamSerivecImpl implements AdExcelAddSanPhamService
 
                   //      sanPhamChiTiet.setGiaNhap(giaNhap);
                         sanPhamChiTiet.setGiaBan(giaBan);
-                        sanPhamChiTiet.setTrangThai(3);
+                        sanPhamChiTiet.setTrangThai(1);
                         sanPhamChiTiet.setSoLuongTon(Integer.valueOf(BO.getSoLuongSize().get(i)));
                         sanPhamChiTiet.setAnh(imgMauSacValue);
                         chiTietSanPhamReponsitory.save(sanPhamChiTiet);

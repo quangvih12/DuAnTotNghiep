@@ -20,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/api")
 public class PaymentController {
     @Value("${frontend.base-endpoint}")
-    private static String BASE_FRONTEND_ENDPOINT;
+    private  String BASE_FRONTEND_ENDPOINT;
 
     @Autowired
     PaymentService paymentService;
@@ -39,12 +39,8 @@ public class PaymentController {
     @GetMapping("/payment-callback")
     public ResponseEntity<Boolean> paymentCallback(@RequestParam Map<String, String> queryParams, HttpServletResponse response) throws IOException {
         String vnp_ResponseCode = queryParams.get("vnp_ResponseCode");
-
         if ("00".equals(vnp_ResponseCode)) {
-            // Giao dịch thành công
-//           hoaDonService.createHoaDon(request);
             response.sendRedirect(BASE_FRONTEND_ENDPOINT + "/gio-hang/thanh-toan/thanh-cong");
-
             return ResponseEntity.ok(true);
         } else{
             response.sendRedirect(BASE_FRONTEND_ENDPOINT + "/gio-hang/thanh-toan/that-bai");
