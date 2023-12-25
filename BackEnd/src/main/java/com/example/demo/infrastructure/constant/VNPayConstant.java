@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 @AllArgsConstructor
 public abstract class VNPayConstant {
    // @Value("${backend.base-endpoint}")
-    private static String BASE_BACKEND_ENDPOINT = "https://vnk-backend-application.azuremicroservices.io";
+    private static String BASE_BACKEND_ENDPOINT = "http://localhost:8080";
 
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "2.1.0";
